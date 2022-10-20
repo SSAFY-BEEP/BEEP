@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class User extends BaseEntity{
 
@@ -20,7 +20,7 @@ public class User extends BaseEntity{
     private String password;
 
     @Column
-    private String introduce_audio; //녹음 주소 url
+    private String introduceAudio; //녹음 주소 url
 
     @Column(length = 10)
     private String engrave;
