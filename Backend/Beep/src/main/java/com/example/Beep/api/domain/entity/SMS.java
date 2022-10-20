@@ -14,22 +14,27 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicInsert
 public class SMS extends BaseEntity{
+    //보낸사람
     @Column
     @ManyToOne
     private User senderId;
 
-    @Column     //받는사람
+    //받는사람
+    @Column
     @ManyToOne
     private User receiverId;
 
-    @Column(nullable = false, length = 11)  //내용
+    //내용
+    @Column(nullable = false, length = 11)
     private String content;
 
-    @Column(nullable = false)   //보낸 시간
+    //보낸 시간
+    @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime time;
 
-    @Column(nullable = false)   //음성메세지 주소
-    private String audio_uri;
+    //음성메세지 주소
+    @Column(nullable = false)
+    private String audioUri;
 }
