@@ -4,12 +4,16 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class User extends BaseEntity{
 
@@ -41,4 +45,9 @@ public class User extends BaseEntity{
     @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴
     private int active;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL )
+    private List<Preset> presetList=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<PhoneBook>phoneBookList=new ArrayList<>();
 }
