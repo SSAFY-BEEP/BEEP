@@ -13,14 +13,14 @@ public class PhoneBook extends BaseEntity{
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User userId;
 
-    @Column(length = 11)
-    private String target_id;
+    @Column(length = 11,nullable = false)
+    private String targetId;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private int install;
 }
