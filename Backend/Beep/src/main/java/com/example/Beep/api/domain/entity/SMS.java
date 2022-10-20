@@ -17,13 +17,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SMS extends BaseEntity{
     //보낸사람
-    @Column
     @JoinColumn(name="sender_id")
     @ManyToOne
     private User sender;
 
     //받는사람
-    @Column
     @JoinColumn(name="receiver_id")
     @ManyToOne
     private User receiver;
