@@ -26,5 +26,5 @@ public class Relation extends BaseEntity{
 
     @Column(nullable = false)
     @CreatedDate
-    LocalDateTime time;
+    private LocalDateTime time;
 }
