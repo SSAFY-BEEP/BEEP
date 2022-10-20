@@ -16,7 +16,7 @@ public class PhoneBook extends BaseEntity{
     private User user;
 
     @Column(length = 11,nullable = false)
-    private String target;
+    private String targetId;
 
     @Column(nullable = false)
     private String name;
