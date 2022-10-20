@@ -29,13 +29,11 @@ public class Message extends BaseEntity{
     private String audioUri;
 
     //보낸 사람
-    @Column
     @JoinColumn(name="sender_id")
     @ManyToOne
     private User sender;
 
     //받는 사람
-    @Column
     @JoinColumn(name="receiver_id")
     @ManyToOne
     private User receiver;
