@@ -13,7 +13,7 @@ public class Preset extends BaseEntity{
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userId;
+    private User user;
 
     @Column(nullable = false)
     private int number;

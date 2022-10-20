@@ -13,10 +13,10 @@ public class PhoneBook extends BaseEntity{
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userId;
+    private User user;
 
     @Column(length = 11,nullable = false)
-    private String targetId;
+    private String target;
 
     @Column(nullable = false)
     private String name;
