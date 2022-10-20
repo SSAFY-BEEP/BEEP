@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
@@ -17,13 +18,15 @@ import java.time.LocalDateTime;
 public class SMS extends BaseEntity{
     //보낸사람
     @Column
+    @JoinColumn(name="sender_id")
     @ManyToOne
-    private User senderId;
+    private User sender;
 
     //받는사람
     @Column
+    @JoinColumn(name="receiver_id")
     @ManyToOne
-    private User receiverId;
+    private User receiver;
 
     //내용
     @Column(nullable = false, length = 11)

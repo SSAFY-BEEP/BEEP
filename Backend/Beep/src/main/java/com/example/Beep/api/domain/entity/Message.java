@@ -7,10 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,13 +30,15 @@ public class Message extends BaseEntity{
 
     //보낸 사람
     @Column
+    @JoinColumn(name="sender_id")
     @ManyToOne
-    private User senderId;
+    private User sender;
 
     //받는 사람
     @Column
+    @JoinColumn(name="receiver_id")
     @ManyToOne
-    private User receiverId;
+    private User receiver;
 
     //1-보관메세지, 2-차단메세지지
     @Column
