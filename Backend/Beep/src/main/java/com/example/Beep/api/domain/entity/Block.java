@@ -16,9 +16,9 @@ public class Block extends BaseEntity{
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userId;
+    private User user;
 
     @JoinColumn(name = "target_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User targetId;
+    private User target;
 }

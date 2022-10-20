@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 public class Relation extends BaseEntity{
     @JoinColumn(name = "sender_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User senderId;
+    private User sender;
 
     @JoinColumn(name = "receiver_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User receiverId;
+    private User receiver;
 
     @Column(nullable = false)
     @CreatedDate
