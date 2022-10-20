@@ -1,0 +1,44 @@
+package com.example.Beep.api.domain.entity;
+
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@DynamicInsert
+public class User extends BaseEntity{
+
+    @Column(length = 11,unique = true)
+    private String phone_number;
+
+    @Column
+    private String password;
+
+    @Column
+    private String introduce_audio; //녹음 주소 url
+
+    @Column(length = 10)
+    private String engrave;
+
+    @Column(nullable = false)
+    @ColumnDefault("1") //각각의 번호
+    private int theme;
+
+    @Column(nullable = false)
+    @ColumnDefault("1") //각각의 번호
+    private int font;
+
+    @Column(nullable = false)
+    @ColumnDefault("1") //각각의 번호
+    private int alarm;
+
+    @Column(nullable = false)
+    @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴
+    private int active;
+
+}
