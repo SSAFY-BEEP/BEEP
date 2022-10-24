@@ -53,9 +53,6 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user",cascade = ALL)
     private List<PhoneBook>phoneBookList=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = ALL)
-    private List<Relation> relationList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = ALL)
+    @OneToMany(mappedBy = "user", cascade = ALL)        //차단하는 사람을 기준으로 한 블록리스트
     private List<Block> blockList = new ArrayList<>();
 }
