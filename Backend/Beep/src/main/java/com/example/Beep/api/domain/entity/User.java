@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,12 +44,18 @@ public class User extends BaseEntity{
     private int alarm;
 
     @Column(nullable = false)
-    @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴
-    private int active;
+    @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴, 2면 관리자
+    private int roll;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "user",cascade = ALL )
     private List<Preset> presetList=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = ALL)
     private List<PhoneBook>phoneBookList=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Relation> relationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<Block> blockList = new ArrayList<>();
 }
