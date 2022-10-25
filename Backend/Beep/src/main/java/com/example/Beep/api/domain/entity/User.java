@@ -47,6 +47,10 @@ public class User extends BaseEntity{
     @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴, 2면 관리자
     private int type;
 
+    @Column(nullable = false)      //가입을 할 때 토큰을 받아와야 함
+    @ColumnDefault("0")     //토큰이 없는 상태
+    private String fcmToken;
+
     @OneToMany(mappedBy = "user",cascade = ALL )
     private List<Preset> presetList=new ArrayList<>();
 
