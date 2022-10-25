@@ -20,7 +20,7 @@ import static javax.persistence.CascadeType.ALL;
 public class User extends BaseEntity{
 
     @Column(length = 11,unique = true)
-    private String phone_number;
+    private String phoneNumber;
 
     @Column
     private String password;
@@ -59,4 +59,11 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = ALL)        //차단하는 사람을 기준으로 한 블록리스트
     private List<Block> blockList = new ArrayList<>();
+
+    @Builder
+    public User(String phoneNumber, String password, String fcmToken) {
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.fcmToken = fcmToken;
+    }
 }
