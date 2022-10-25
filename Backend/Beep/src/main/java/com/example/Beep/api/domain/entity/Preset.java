@@ -16,10 +16,10 @@ public class Preset extends BaseEntity{
     private User user;
 
     @Column(nullable = false)
-    private int number;
+    private Integer number;
 
     @Column(nullable = false)
-    private int part;
+    private Integer part;
 
     @Column(length = 11,nullable = false)
     private String content;

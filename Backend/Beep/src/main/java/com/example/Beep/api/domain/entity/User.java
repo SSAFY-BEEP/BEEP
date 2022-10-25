@@ -4,10 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,19 +30,19 @@ public class User extends BaseEntity{
 
     @Column(nullable = false)
     @ColumnDefault("1") //각각의 번호
-    private int theme;
+    private Integer theme;
 
     @Column(nullable = false)
     @ColumnDefault("1") //각각의 번호
-    private int font;
+    private Integer font;
 
     @Column(nullable = false)
     @ColumnDefault("1") //각각의 번호
-    private int alarm;
+    private Integer alarm;
 
     @Column(nullable = false)
     @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴, 2면 관리자
-    private int type;
+    private Integer type;
 
     @Column(nullable = false)      //가입을 할 때 토큰을 받아와야 함
     @ColumnDefault("0")     //토큰이 없는 상태
@@ -65,5 +62,13 @@ public class User extends BaseEntity{
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.fcmToken = fcmToken;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.alarm = this.alarm == null ? 1 : this.alarm;
+        this.type = this.type == null ? 1 : this.type;
+        this.theme = this.theme == null ? 1 : this.theme;
+        this.font = this.font == null ? 1 : this.font;
     }
 }
