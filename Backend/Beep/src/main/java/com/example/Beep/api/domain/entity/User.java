@@ -40,9 +40,9 @@ public class User extends BaseEntity{
     @ColumnDefault("1") //각각의 번호
     private Integer alarm;
 
-    @Column(nullable = false)
-    @ColumnDefault("1")  //1이면 회원, 0이면 회원탈퇴, 2면 관리자
-    private Integer type;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Authority authority;
 
     @Column(nullable = false)      //가입을 할 때 토큰을 받아와야 함
     @ColumnDefault("0")     //토큰이 없는 상태
@@ -67,8 +67,8 @@ public class User extends BaseEntity{
     @PrePersist
     public void prePersist() {
         this.alarm = this.alarm == null ? 1 : this.alarm;
-        this.type = this.type == null ? 1 : this.type;
         this.theme = this.theme == null ? 1 : this.theme;
         this.font = this.font == null ? 1 : this.font;
+        this.authority = this.authority == null ? Authority.ROLE_USER : this.authority;
     }
 }
