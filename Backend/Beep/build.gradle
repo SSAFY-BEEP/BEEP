@@ -35,10 +35,17 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//redis
+	// https://mvnrepository.com/artifact/org.springframework.session/spring-session-data-redis
+	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'org.springframework.session', name: 'spring-session-data-redis', version: '2.7.0'
+
 	//swagger
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
+	//JUNIT
+	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+
 }
 
 tasks.named('test') {

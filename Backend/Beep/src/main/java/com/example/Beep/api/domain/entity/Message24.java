@@ -1,6 +1,7 @@
 package com.example.Beep.api.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "message24", timeToLive = 60*60*24)
 public class Message24{
     @Id
@@ -38,6 +40,7 @@ public class Message24{
     //익명 내에서 구분
     private Integer distinction;
 
+    @Builder
     public Message24(Long id,String content, String audioUri, Long sender, Long receiver, Integer type, Integer distinction) {
         this.id = id;
         this.content = content;
