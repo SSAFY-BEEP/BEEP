@@ -22,5 +22,5 @@ public class PhoneBook extends BaseEntity{
     private String name;
 
     @Column(nullable = false)
-    private int install;
+    private Integer install;
 }

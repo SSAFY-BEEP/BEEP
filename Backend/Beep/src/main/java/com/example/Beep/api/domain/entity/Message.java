@@ -40,9 +40,9 @@ public class Message extends BaseEntity{
 
     //1-보관메세지, 2-차단메세지지
     @Column
-    private int type;
+    private Integer type;
 
     //익명 내에서 구분
     @Column
-    private int distinction;
+    private Integer distinction;
 }
