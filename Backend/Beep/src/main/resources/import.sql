@@ -162,4 +162,6 @@ insert into Dictionary (value,word) values ('굿바이','982');
 insert into Dictionary (value,word) values ('할 이야기가 너무 많다(구구절절)','9977');
 insert into Dictionary (value,word) values ('행운을 빌어','9999');
 
+
+insert into User (authority,fcm_token,password,phone_number) values ("ROLE_USER","string","$2a$10$PZksvg1TXbZgVQOZ/gZA0uk/NNfqmzGKXIrmuorv0Wn3A7Zyd2A5G","01012345678");
 -- INSERT INTO user(password, phone_number) VALUES('ssafy','01074794185');

@@ -1,14 +1,14 @@
 package com.example.Beep.api.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@AllArgsConstructor
+@Builder
 public class Preset extends BaseEntity{
 
     @JoinColumn(name = "user_id")
@@ -23,4 +23,10 @@ public class Preset extends BaseEntity{
 
     @Column(length = 11,nullable = false)
     private String content;
+
+    public Preset update(Integer number, String content) {
+        this.number = number;
+        this.content = content;
+        return this;
+    }
 }
