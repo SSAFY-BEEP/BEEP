@@ -10,4 +10,6 @@ public interface UserService {
     String login(UserRequestDto.Login login);
     User getUser(String phone);
     Optional<User> getMyUserWithAuth();
+    void withdrawal();
+    void withdrawal(String phone);
 }

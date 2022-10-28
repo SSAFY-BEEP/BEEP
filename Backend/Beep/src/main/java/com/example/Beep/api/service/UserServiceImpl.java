@@ -1,6 +1,7 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.UserRequestDto;
+import com.example.Beep.api.domain.entity.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
@@ -69,6 +70,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getMyUserWithAuth() {
         return SecurityUtil.getCurrentUsername().flatMap(userRepository::findByPhoneNumber);
+    }
+
+    @Override
+    public void withdrawal() {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        user.update("0","0","0",Authority.ROLE_LEAVE);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void withdrawal(String phone) {
+        User user = userRepository.findByPhoneNumber(phone).get();
+        user.update("0","0","0",Authority.ROLE_LEAVE);
+
+        userRepository.save(user);
     }
 
 }

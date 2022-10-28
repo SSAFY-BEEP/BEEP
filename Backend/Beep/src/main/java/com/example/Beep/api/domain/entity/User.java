@@ -3,6 +3,7 @@ package com.example.Beep.api.domain.entity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import static javax.persistence.CascadeType.ALL;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
+@DynamicUpdate
 public class User extends BaseEntity{
 
     @Column(length = 11,unique = true)
@@ -58,10 +60,18 @@ public class User extends BaseEntity{
     private List<Block> blockList = new ArrayList<>();
 
     @Builder
-    public User(String phoneNumber, String password, String fcmToken) {
+    public User(String phoneNumber, String password, String fcmToken, Authority authority) {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.fcmToken = fcmToken;
+        this.authority = authority;
+    }
+    public User update(String phoneNumber, String password, String fcmToken, Authority authority) {
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.fcmToken = fcmToken;
+        this.authority = authority;
+        return this;
     }
 
     @PrePersist
