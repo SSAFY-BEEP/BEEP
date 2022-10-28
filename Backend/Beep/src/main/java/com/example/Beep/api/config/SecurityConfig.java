@@ -7,6 +7,7 @@ import com.example.Beep.api.security.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +31,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/static/css/**, /static/js/**, *.ico");
+
+        // swagger
+        web.ignoring().antMatchers(
+                "/v2/api-docs",  "/configuration/ui",
+                "/swagger-resources/**", "/configuration/security",
+                "/swagger-ui.html", "/webjars/**","/swagger/**", "swagger-ui/**");
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -49,8 +61,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()        //HttpServletRequest를 사용하는 요청들에 대한 접근 제한을 설정
-                .antMatchers("/user/login", "/user/signup").permitAll()
+                .antMatchers("/user/login", "/user/signup", "/swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
+
+                .and()
+                .logout()
+                .logoutUrl("/user/logout")
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));   //filter 적용
