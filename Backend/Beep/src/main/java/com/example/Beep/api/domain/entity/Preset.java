@@ -7,8 +7,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@AllArgsConstructor
-@Builder
 public class Preset extends BaseEntity{
 
     @JoinColumn(name = "user_id")
@@ -23,6 +21,14 @@ public class Preset extends BaseEntity{
 
     @Column(length = 11,nullable = false)
     private String content;
+
+    @Builder
+    public Preset(User user,Integer number,Integer part,String content){
+        this.user=user;
+        this.number=number;
+        this.part=part;
+        this.content=content;
+    }
 
     public Preset update(Integer number, String content) {
         this.number = number;

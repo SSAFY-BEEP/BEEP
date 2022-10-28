@@ -52,26 +52,22 @@ public class PresetServiceImpl implements PresetService{
 
     @Override
     public List<PresetResponseDto> PresetFind(Long id) {
-        List<PresetResponseDto> presetResponseDtoList = new ArrayList<>();
         try {
             User user = userRepository.findById(id).get();
             if(user.getAuthority().equals(Authority.ROLE_LEAVE)){
                 return null;
             }
-            //for문 말고 그냥 처리하는 방법 아시는분???
-            List<Preset> presetList = user.getPresetList();
-            for (Preset preset : presetList) {
-                PresetResponseDto presetResponseDto = PresetResponseDto.builder()
-                        .uid(id)
-                        .number(preset.getNumber())
-                        .part(preset.getPart())
-                        .content(preset.getContent())
-                        .build();
-                presetResponseDtoList.add(presetResponseDto);
-            }
+            List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
+                    .map(Preset -> PresetResponseDto.builder()
+                            .uid(id)
+                            .number(Preset.getNumber())
+                            .part(Preset.getPart())
+                            .content(Preset.getContent())
+                            .build()).collect(Collectors.toList());
+            return presetResponseDtoList;
         }catch (NoSuchElementException n){
             System.out.println("없는 유저 입니다");
         }
-        return presetResponseDtoList;
+        return null;
     }
 }

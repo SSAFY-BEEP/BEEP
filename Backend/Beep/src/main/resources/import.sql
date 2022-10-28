@@ -164,4 +164,4 @@ insert into Dictionary (value,word) values ('행운을 빌어','9999');
 
 
 insert into User (authority,fcm_token,password,phone_number) values ("ROLE_USER","string","$2a$10$PZksvg1TXbZgVQOZ/gZA0uk/NNfqmzGKXIrmuorv0Wn3A7Zyd2A5G","01012345678");
--- INSERT INTO user(password, phone_number) VALUES('ssafy','01074794185');
+insert into user(phone_number, password, authority, fcm_token) values ("01050123883", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_ADMIN", "0");
