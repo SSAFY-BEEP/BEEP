@@ -79,4 +79,18 @@ public class UserController {
         if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "유저의 차단", notes = "사용자의 전화번호를 통해서 차단 기능")
+    @PostMapping("/block")
+    public ResponseEntity<?> blockUser(@RequestBody UserRequestDto.Block block) {
+        userService.blockUser(block);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저의 차단 해제", notes = "사용자의 전화번호를 통해서 차단 해제 가능")
+    @DeleteMapping("/block")
+    public ResponseEntity<?> blockDelete(@RequestBody UserRequestDto.Block block) {
+        userService.blockDelete(block);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }
