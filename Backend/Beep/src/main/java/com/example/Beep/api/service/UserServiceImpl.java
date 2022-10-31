@@ -22,6 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +36,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Value("${sms.url}")
     private String smsUrl;
-
 
     @Override
     @Transactional
@@ -73,6 +73,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String phone) {
         return userRepository.findByPhoneNumber(phone).get();
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
     }
 
     @Transactional

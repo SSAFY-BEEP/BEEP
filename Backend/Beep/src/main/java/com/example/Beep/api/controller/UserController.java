@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @Api(value = "회원 관리", tags={"회원 관리"})
 @RestController
 @RequestMapping("/user")
@@ -38,6 +41,14 @@ public class UserController {
         //토큰을 헤더와 바디에 넣어서 리턴해줌
         return new ResponseEntity<>(new UserResponseDto.Token(jwt), httpHeaders, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "회원 전체 조회", notes = "관리자가 전체 회원 정보를 조회")
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> getAllUser() {
+        return new ResponseEntity<List<User>>(userService.getAllUser(), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "관리자의 회원 조회", notes = "회원 전화번호를 통해 정보 조회")
     @GetMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ADMIN')")
@@ -69,14 +80,12 @@ public class UserController {
     @GetMapping("/findPw/{phone}")
     public ResponseEntity<?> findPassword(@PathVariable String phone) {
         String result = userService.findPassword(phone);
-        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "비밀번호 변경", notes = "비밀번호를 원하는대로 변경해줌")
     @PatchMapping("/pw")
     public ResponseEntity<?> changePassword(@RequestBody UserRequestDto.Login newPw) {
         String result = userService.changePassword(newPw);
-        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
