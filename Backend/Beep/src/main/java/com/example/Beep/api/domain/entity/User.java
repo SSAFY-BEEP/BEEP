@@ -66,6 +66,7 @@ public class User extends BaseEntity{
         this.fcmToken = fcmToken;
         this.authority = authority;
     }
+
     public User update(String phoneNumber, String password, String fcmToken, Authority authority) {
         this.phoneNumber = phoneNumber;
         this.password = password;
@@ -76,6 +77,14 @@ public class User extends BaseEntity{
 
     public User changePw(String password) {
         this.password = password;
+        return this;
+    }
+
+    public User changeConfig(String engrave, Integer theme, Integer font, Integer alarm) {
+        this.engrave = engrave;
+        this.theme = theme == null ? 1 : theme;
+        this.font = font == null ? 1 : font;
+        this.alarm = alarm == null ? 1 : alarm;
         return this;
     }
 
