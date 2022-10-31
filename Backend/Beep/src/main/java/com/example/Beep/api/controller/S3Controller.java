@@ -22,18 +22,18 @@ public class S3Controller {
     @Autowired
     S3Service s3Service;
 
-    @PostMapping("/upload/image")
-    @ApiOperation(value = "사진 1개 등록")
+    @PostMapping("/voice")
+    @ApiOperation(value = "음성녹음 1개 등록")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile image) {
-        System.out.println(image+"확인하기");
-        String photoUrl = s3Service.uploadFile(image);
-        System.out.println(photoUrl+"url 주소");
-        return ResponseEntity.ok().body(photoUrl);
+    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile voice) {
+        System.out.println(voice+"확인하기");
+        String voiceUrl = s3Service.uploadFile(voice);
+        System.out.println(voiceUrl+"url 주소");
+        return ResponseEntity.ok().body(voiceUrl);
     }
 
 }

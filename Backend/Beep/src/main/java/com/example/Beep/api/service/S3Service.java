@@ -25,7 +25,6 @@ public class S3Service {
     private final AmazonS3 amazonS3;
     //파일 하나 업로드
     public String uploadFile(MultipartFile multipartFile) {
-        System.out.println(multipartFile+"좌표 값");
         String fileName = createFileName(multipartFile.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());

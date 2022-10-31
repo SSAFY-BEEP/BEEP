@@ -45,8 +45,6 @@ jwt:
 cloud:
   aws:
     credentials:
-      accessKey: AKIAXPGC75BT4B53MXGA  # IAM 사용자 엑세스 키
-      secretKey: a9ZgQ3e83XrT61NEvmFPtMVjUZt5/1O9LPwsHZXc # IAM 사용자 비밀 엑세스 키
     s3:
       bucket: beep-a406 # 버킷명
     region:
