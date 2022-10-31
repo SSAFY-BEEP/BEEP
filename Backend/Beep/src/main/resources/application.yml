@@ -1,43 +1,48 @@
-server:
-  servlet:
-    encoding:
-      force: 'true'
-      enabled: 'true'
-      charset: UTF-8
-    context-path: /api
-  port: '8081'
-spring:
-  redis:
-    password: ssafyA406
-    host: k7a406.p.ssafy.io
-    port: '6379'
-  jpa:
-    database: mysql
-    defer-datasource-initialization: 'true'
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: 'true'
-        show_sql: 'true'
-  datasource:
-    password: ssafyA406
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: a406
-    url: jdbc:mysql://127.0.0.1:3306/BEEP?serverTimezone=UTC
-  jackson:
-    serialization:
-      FAIL_ON_EMPTY_BEANS: 'false'
-  cache:
-    type: redis
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  sql:
-    init:
-      encoding: UTF-8
-
+#server:
+#  servlet:
+#    encoding:
+#      force: 'true'
+#      enabled: 'true'
+#      charset: UTF-8
+#    context-path: /api
+#  port: '8081'
+#spring:
+#  redis:
+#    password: ssafyA406
+#    host: k7a406.p.ssafy.io
+#    port: '6379'
+#  jpa:
+#    database: mysql
+#    defer-datasource-initialization: 'true'
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        format_sql: 'true'
+#        show_sql: 'true'
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/BEEP?serverTimezone=UTC
+#    password: ssafyA406
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: a406
+#  jackson:
+#    serialization:
+#      FAIL_ON_EMPTY_BEANS: 'false'
+#  cache:
+#    type: redis
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  sql:
+#    init:
+#      encoding: UTF-8
+#
 jwt:
   header: Authorization
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
+
+sms:
+  userid: "tlsrbwls999"
+  callback: "01020178439"
+  url: "https://message.ppurio.com/api/send_utf8_json.php"

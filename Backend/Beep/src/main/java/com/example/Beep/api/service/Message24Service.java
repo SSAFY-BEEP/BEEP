@@ -1,9 +1,7 @@
 package com.example.Beep.api.service;
 
-
-import com.example.Beep.api.domain.dto.Message24Dto;
+import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
-
 import java.util.List;
 
 public interface Message24Service {
@@ -16,7 +14,7 @@ public interface Message24Service {
     //해당 메세지 조회
 
     //메세지 발송(저장)
-    void saveMessage(Message24Dto.sendMessage message);
+    void saveMessage(Message24RequestDto.sendMessage message);
 
     //메세지 보관
 

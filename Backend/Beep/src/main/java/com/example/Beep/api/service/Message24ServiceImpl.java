@@ -2,6 +2,7 @@ package com.example.Beep.api.service;
 
 ;
 import com.example.Beep.api.domain.dto.Message24Dto;
+import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.exception.CustomException;
@@ -30,7 +31,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
     @Transactional
     @Override
-    public void saveMessage(Message24Dto.sendMessage message) {
+    public void saveMessage(Message24RequestDto.sendMessage message) {
 //        System.out.println(message.getId()+","+ message.getReceiver()+","+ message.getDistinction());
 //        Message24 message24 = repository.findById(message.getId()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         

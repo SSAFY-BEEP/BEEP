@@ -1,8 +1,6 @@
 package com.example.Beep.api.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -23,4 +21,18 @@ public class Preset extends BaseEntity{
 
     @Column(length = 11,nullable = false)
     private String content;
+
+    @Builder
+    public Preset(User user,Integer number,Integer part,String content){
+        this.user=user;
+        this.number=number;
+        this.part=part;
+        this.content=content;
+    }
+
+    public Preset update(Integer number, String content) {
+        this.number = number;
+        this.content = content;
+        return this;
+    }
 }
