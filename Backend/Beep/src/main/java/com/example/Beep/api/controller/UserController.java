@@ -1,5 +1,6 @@
 package com.example.Beep.api.controller;
 
+import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.entity.User;
@@ -62,5 +63,13 @@ public class UserController {
     public ResponseEntity<?> withdrawalByAdmin(@PathVariable String phone) {
         userService.withdrawal(phone);
         return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호를 찾고 바꾼 메시지를 리턴해줌")
+    @GetMapping("/findPw/{phone}")
+    public ResponseEntity<?> findPassword(@PathVariable String phone) {
+        String result = userService.findPassword(phone);
+        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

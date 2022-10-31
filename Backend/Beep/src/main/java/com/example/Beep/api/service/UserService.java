@@ -12,4 +12,5 @@ public interface UserService {
     Optional<User> getMyUserWithAuth();
     void withdrawal();
     void withdrawal(String phone);
+    String findPassword(String phone);
 }

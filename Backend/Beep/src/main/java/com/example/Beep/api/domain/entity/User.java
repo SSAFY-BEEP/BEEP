@@ -74,6 +74,11 @@ public class User extends BaseEntity{
         return this;
     }
 
+    public User findPw(String password) {
+        this.password = password;
+        return this;
+    }
+
     @PrePersist
     public void prePersist() {
         this.alarm = this.alarm == null ? 1 : this.alarm;
