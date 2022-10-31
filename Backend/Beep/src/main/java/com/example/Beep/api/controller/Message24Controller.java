@@ -1,6 +1,6 @@
 package com.example.Beep.api.controller;
 
-import com.example.Beep.api.domain.dto.Message24Dto;
+import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.service.Message24ServiceImpl;
 import io.swagger.annotations.Api;
@@ -34,7 +34,7 @@ public class Message24Controller {
 
     @ApiOperation(value = "메세지 발송/저장", notes = "메세지 발송 시, 레디스에 메세지 저장")
     @PostMapping
-    public ResponseEntity<?> saveMessage(@RequestBody Message24Dto.sendMessage message){
+    public ResponseEntity<?> saveMessage(@RequestBody Message24RequestDto.sendMessage message){
         service.saveMessage(message);
         return ResponseEntity.ok().build();
     }
