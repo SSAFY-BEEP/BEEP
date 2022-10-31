@@ -29,7 +29,7 @@ public class S3Controller {
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile voice) {
+    public ResponseEntity<?> uploadVoice(@RequestPart MultipartFile voice) {
         System.out.println(voice+"확인하기");
         String voiceUrl = s3Service.uploadFile(voice);
         System.out.println(voiceUrl+"url 주소");
