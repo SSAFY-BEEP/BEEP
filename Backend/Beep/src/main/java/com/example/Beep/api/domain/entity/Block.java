@@ -1,6 +1,7 @@
 package com.example.Beep.api.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,15 @@ public class Block extends BaseEntity{
     @JoinColumn(name = "target_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private User target;
+
+    @Builder
+    public Block(User user1,User user2){
+        this.user=user1;
+        this.target=user2;
+    }
+
+    public void Update(User Puser, User Buser) {
+        this.user=Puser;
+        this.target=Buser;
+    }
 }

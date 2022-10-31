@@ -3,7 +3,9 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.security.TokenProvider;
@@ -29,6 +31,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final BlockRepository blockRepository;
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
@@ -147,6 +151,32 @@ public class UserServiceImpl implements UserService {
         user.changePw(passwordEncoder.encode(newPw.getPassword()));
         userRepository.save(user);
         return "Success";
+    }
+
+    @Override
+    @Transactional
+    public void blockUser(UserRequestDto.Block block) {
+        User user=userRepository.findByPhoneNumber(block.getPNum()).orElse(null);
+        User Buser=userRepository.findByPhoneNumber(block.getBNum()).orElse(null);
+
+        Block newBlock= Block.builder()
+                .user1(user)
+                .user2(Buser)
+                .build();
+        blockRepository.save(newBlock);
+    }
+
+    @Override
+    @Transactional
+    public void blockDelete(UserRequestDto.Block block) {
+        User Puser=userRepository.findByPhoneNumber(block.getPNum()).orElse(null);
+        User Buser=userRepository.findByPhoneNumber(block.getBNum()).orElse(null);
+        try{
+            Block dBlock=blockRepository.findDelete(Puser.getId(),Buser.getId());
+            blockRepository.deleteById(dBlock.getId());
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
     }
 
 
