@@ -22,6 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +36,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Value("${sms.url}")
     private String smsUrl;
-
 
     @Override
     @Transactional
@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPhoneNumber(phone).get();
     }
 
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
+
     @Transactional
     @Override
     public Optional<User> getMyUserWithAuth() {
@@ -107,7 +112,7 @@ public class UserServiceImpl implements UserService {
 //        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
         User user = userRepository.findByPhoneNumber(phone).orElse(null);
         if(user == null) return "존재하지 않는 회원입니다.";
-        user.findPw(newPw);
+        user.changePw(newPw);
 
         //뿌리오 api로 요청
         String msg = "임시비밀번호 : " + newPw;
@@ -134,5 +139,15 @@ public class UserServiceImpl implements UserService {
         //바뀐 비밀번호 리턴
         return newPw;
     }
+
+    @Override
+    public String changePassword(UserRequestDto.Login newPw) {
+        User user = userRepository.findByPhoneNumber(newPw.getPhoneNumber()).orElse(null);
+        if(user == null) return "존재하지 않는 회원입니다.";
+        user.changePw(passwordEncoder.encode(newPw.getPassword()));
+        userRepository.save(user);
+        return "Success";
+    }
+
 
 }
