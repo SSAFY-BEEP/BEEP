@@ -42,6 +42,18 @@ jwt:
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
 
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAXPGC75BT4B53MXGA  # IAM 사용자 엑세스 키
+      secretKey: a9ZgQ3e83XrT61NEvmFPtMVjUZt5/1O9LPwsHZXc # IAM 사용자 비밀 엑세스 키
+    s3:
+      bucket: beep-a406 # 버킷명
+    region:
+      static: ap-northeast-2 # 리전
+    stack:
+      auto: false # Spring Cloud는 환경 또는 스택을 기반으로 이를 자동으로 감지
+
 sms:
   userid: "tlsrbwls999"
   callback: "01020178439"
