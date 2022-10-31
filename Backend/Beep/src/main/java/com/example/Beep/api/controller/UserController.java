@@ -66,10 +66,10 @@ public class UserController {
     }
 
     @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호를 찾고 바꾼 메시지를 리턴해줌")
-    @PostMapping("/findPw")
+    @GetMapping("/findPw/{phone}")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<?> findPassword(@RequestBody SMSRequest.Msg msg) {
-        String result = userService.findPassword(msg.getMsg());
+    public ResponseEntity<?> findPassword(@PathVariable String phone) {
+        String result = userService.findPassword(phone);
         if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(result, HttpStatus.OK);
     }

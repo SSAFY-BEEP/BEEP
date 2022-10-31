@@ -98,16 +98,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String findPassword(String msg) {
+    public String findPassword(String phone) {
 
         //난수로 8자리 임시 비밀번호 생성
         UUID uid = UUID.randomUUID();
         String newPw = uid.toString().substring(0,8);
         //유저의 비밀번호를 임시 비밀번호로 변환
-        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+//        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        User user = userRepository.findByPhoneNumber(phone).get();
         user.findPw(newPw);
 
         //뿌리오 api로 요청
+        String msg = "임시비밀번호 : " + newPw;
         SMSRequest req = new SMSRequest(user.getPhoneNumber(), msg);
         // Header set
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -118,17 +120,18 @@ public class UserServiceImpl implements UserService {
         body.add("callback", req.getCallback());
         body.add("phone", user.getPhoneNumber());
         body.add("msg", msg);
-
+        // API 요청 객체
         HttpEntity entity = new HttpEntity(body, httpHeaders);
 
         RestTemplate restTemplate = new RestTemplate();
+        // 뿌리오 API 요청 (성공하면 문자가 감)
         ResponseEntity<String> res = restTemplate.exchange(smsUrl, HttpMethod.POST, entity, String.class);
+        //결과 성공이면 유저에 저장
         if(res.getBody().substring(0,2).equals("ok")) {
             userRepository.save(user);
-            return newPw;
-        } else {
-            return newPw;
         }
+        //바뀐 비밀번호 리턴 (메시지가 아직 연동이 안됨)
+        return newPw;
     }
 
 }
