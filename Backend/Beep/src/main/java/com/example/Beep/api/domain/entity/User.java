@@ -74,7 +74,7 @@ public class User extends BaseEntity{
         return this;
     }
 
-    public User findPw(String password) {
+    public User changePw(String password) {
         this.password = password;
         return this;
     }
