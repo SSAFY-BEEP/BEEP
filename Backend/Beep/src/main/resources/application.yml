@@ -44,5 +44,5 @@ jwt:
 
 sms:
   userid: "tlsrbwls999"
-  callback: "010-2017-8439"
+  callback: "01020178439"
   url: "https://message.ppurio.com/api/send_utf8_json.php"
