@@ -13,4 +13,5 @@ public interface UserService {
     void withdrawal();
     void withdrawal(String phone);
     String findPassword(String phone);
+    String changePassword(UserRequestDto.Login newPw);
 }

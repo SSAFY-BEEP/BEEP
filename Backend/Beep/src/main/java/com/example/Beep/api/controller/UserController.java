@@ -72,4 +72,11 @@ public class UserController {
         if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PatchMapping("/pw")
+    public ResponseEntity<?> changePassword(@RequestBody UserRequestDto.Login newPw) {
+        String result = userService.changePassword(newPw);
+        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

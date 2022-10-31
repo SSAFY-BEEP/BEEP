@@ -1,7 +1,5 @@
 package com.example.Beep.api.service;
 
-;
-import com.example.Beep.api.domain.dto.Message24Dto;
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.enums.ErrorCode;
