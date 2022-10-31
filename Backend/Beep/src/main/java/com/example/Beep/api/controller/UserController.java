@@ -67,7 +67,6 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호를 찾고 바꾼 메시지를 리턴해줌")
     @GetMapping("/findPw/{phone}")
-    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> findPassword(@PathVariable String phone) {
         String result = userService.findPassword(phone);
         if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);

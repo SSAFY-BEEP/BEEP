@@ -105,7 +105,8 @@ public class UserServiceImpl implements UserService {
         String newPw = uid.toString().substring(0,8);
         //유저의 비밀번호를 임시 비밀번호로 변환
 //        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
-        User user = userRepository.findByPhoneNumber(phone).get();
+        User user = userRepository.findByPhoneNumber(phone).orElse(null);
+        if(user == null) return "존재하지 않는 회원입니다.";
         user.findPw(newPw);
 
         //뿌리오 api로 요청
@@ -126,11 +127,11 @@ public class UserServiceImpl implements UserService {
         RestTemplate restTemplate = new RestTemplate();
         // 뿌리오 API 요청 (성공하면 문자가 감)
         ResponseEntity<String> res = restTemplate.exchange(smsUrl, HttpMethod.POST, entity, String.class);
-        //결과 성공이면 유저에 저장
+        //결과 성공이면 유저에 저장 (메시지 api 연동이 안되서 디비에 반영 안됨)
         if(res.getBody().substring(0,2).equals("ok")) {
             userRepository.save(user);
         }
-        //바뀐 비밀번호 리턴 (메시지가 아직 연동이 안됨)
+        //바뀐 비밀번호 리턴
         return newPw;
     }
 
