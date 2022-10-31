@@ -156,22 +156,26 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void blockUser(UserRequestDto.Block block) {
-        User user=userRepository.findByPhoneNumber(block.getPNum()).orElse(null);
-        User Buser=userRepository.findByPhoneNumber(block.getBNum()).orElse(null);
+        try{
+            User user=userRepository.findByPhoneNumber(block.getPNum()).get();
+            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
 
-        Block newBlock= Block.builder()
-                .user1(user)
-                .user2(Buser)
-                .build();
-        blockRepository.save(newBlock);
+            Block newBlock= Block.builder()
+                    .user1(user)
+                    .user2(Buser)
+                    .build();
+            blockRepository.save(newBlock);
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
     }
 
     @Override
     @Transactional
     public void blockDelete(UserRequestDto.Block block) {
-        User Puser=userRepository.findByPhoneNumber(block.getPNum()).orElse(null);
-        User Buser=userRepository.findByPhoneNumber(block.getBNum()).orElse(null);
         try{
+            User Puser=userRepository.findByPhoneNumber(block.getPNum()).get();
+            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
             Block dBlock=blockRepository.findDelete(Puser.getId(),Buser.getId());
             blockRepository.deleteById(dBlock.getId());
         }catch (NullPointerException n){
