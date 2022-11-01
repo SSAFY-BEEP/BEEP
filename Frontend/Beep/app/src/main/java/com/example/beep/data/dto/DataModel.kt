@@ -1,4 +1,4 @@
-package com.example.beep.data
+package com.example.beep.data.dto
 
 data class DataModel(
     var name: String,
