@@ -36,5 +36,19 @@ public class S3Controller {
         return ResponseEntity.ok().body(voiceUrl);
     }
 
+    @PostMapping("/persist/voice")
+    @ApiOperation(value = "영구 보관함 음성녹음 1개 등록")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공"),
+            @ApiResponse(code = 401, message = "권한 에러"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> uploadPersistVoice(@RequestPart MultipartFile voice) {
+        System.out.println(voice+"확인하기");
+        String voiceUrl = s3Service.persistFile(voice);
+        System.out.println(voiceUrl+"url 주소");
+        return ResponseEntity.ok().body(voiceUrl);
+    }
+
 }
 

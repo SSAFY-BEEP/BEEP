@@ -3,7 +3,11 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
+import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.security.TokenProvider;
@@ -22,6 +26,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,13 +34,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final BlockRepository blockRepository;
+
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
     @Value("${sms.url}")
     private String smsUrl;
-
 
     @Override
     @Transactional
@@ -75,6 +81,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPhoneNumber(phone).get();
     }
 
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
+
     @Transactional
     @Override
     public Optional<User> getMyUserWithAuth() {
@@ -91,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void withdrawal(String phone) {
-        User user = userRepository.findByPhoneNumber(phone).get();
+        User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
         user.update("0","0","0",Authority.ROLE_LEAVE);
 
         userRepository.save(user);
@@ -142,6 +153,64 @@ public class UserServiceImpl implements UserService {
         user.changePw(passwordEncoder.encode(newPw.getPassword()));
         userRepository.save(user);
         return "Success";
+    }
+
+    @Override
+    @Transactional
+    public void blockUser(UserRequestDto.Block block) {
+        try{
+            User user=userRepository.findByPhoneNumber(block.getPNum()).get();
+            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
+
+            Block newBlock= Block.builder()
+                    .user1(user)
+                    .user2(Buser)
+                    .build();
+            blockRepository.save(newBlock);
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void blockDelete(UserRequestDto.Block block) {
+        try{
+            User Puser=userRepository.findByPhoneNumber(block.getPNum()).get();
+            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
+            Block dBlock=blockRepository.findDelete(Puser.getId(),Buser.getId());
+            blockRepository.deleteById(dBlock.getId());
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
+    }
+
+    @Override
+    public void changeAlarm(Integer number) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        user.changeConfig(user.getEngrave(), user.getTheme(), user.getFont(), number);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changeFont(Integer number) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        user.changeConfig(user.getEngrave(), user.getTheme(), number, user.getAlarm());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changeTheme(Integer number) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        user.changeConfig(user.getEngrave(), number, user.getFont(), user.getAlarm());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changeEngrave(String engrave) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        user.changeConfig(engrave, user.getTheme(), user.getFont(), user.getAlarm());
+        userRepository.save(user);
     }
 
 

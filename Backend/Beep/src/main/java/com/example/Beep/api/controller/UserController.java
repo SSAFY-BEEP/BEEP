@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @Api(value = "회원 관리", tags={"회원 관리"})
 @RestController
 @RequestMapping("/user")
@@ -38,6 +41,14 @@ public class UserController {
         //토큰을 헤더와 바디에 넣어서 리턴해줌
         return new ResponseEntity<>(new UserResponseDto.Token(jwt), httpHeaders, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "회원 전체 조회", notes = "관리자가 전체 회원 정보를 조회")
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> getAllUser() {
+        return new ResponseEntity<List<User>>(userService.getAllUser(), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "관리자의 회원 조회", notes = "회원 전화번호를 통해 정보 조회")
     @GetMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ADMIN')")
@@ -69,14 +80,55 @@ public class UserController {
     @GetMapping("/findPw/{phone}")
     public ResponseEntity<?> findPassword(@PathVariable String phone) {
         String result = userService.findPassword(phone);
-        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "비밀번호 변경", notes = "비밀번호를 원하는대로 변경해줌")
     @PatchMapping("/pw")
     public ResponseEntity<?> changePassword(@RequestBody UserRequestDto.Login newPw) {
         String result = userService.changePassword(newPw);
-        if(result == null) return new ResponseEntity<>("Fail", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저의 차단", notes = "사용자의 전화번호를 통해서 차단 기능")
+    @PostMapping("/block")
+    public ResponseEntity<?> blockUser(@RequestBody UserRequestDto.Block block) {
+        userService.blockUser(block);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저의 차단 해제", notes = "사용자의 전화번호를 통해서 차단 해제 가능")
+    @DeleteMapping("/block")
+    public ResponseEntity<?> blockDelete(@RequestBody UserRequestDto.Block block) {
+        userService.blockDelete(block);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "소리/알림음 설정", notes = "유저가 자신의 삐삐 알림음을 설정")
+    @PatchMapping("/alarm/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeAlarm(@PathVariable Integer number) {
+        userService.changeAlarm(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "폰트 설정", notes = "유저가 자신의 삐삐 UI의 폰트를 설정")
+    @PatchMapping("/font/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeFont(@PathVariable Integer number) {
+        userService.changeFont(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "배경 테마 설정", notes = "유저가 자신의 삐삐 배경 테마를 설정")
+    @PatchMapping("/theme/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeTheme(@PathVariable Integer number) {
+        userService.changeTheme(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "각인 설정", notes = "유저가 자신의 삐삐에 각인을 설정")
+    @PatchMapping("/engrave/{engrave}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeEngrave(@PathVariable String engrave) {
+        userService.changeEngrave(engrave);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

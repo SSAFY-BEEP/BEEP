@@ -49,6 +49,7 @@ cloud:
       secret-key: ${SECRET_KEY}
     s3:
       bucket: beep-a406 # 버킷명
+      bucket2: persistent-beep
     region:
       static: ap-northeast-2 # 리전
     stack:

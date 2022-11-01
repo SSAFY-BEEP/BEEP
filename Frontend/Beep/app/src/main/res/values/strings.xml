@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Beep</string>
+    <string name="btn_description_one">1</string>
+    <string name="btn_description_two">2</string>
+    <string name="btn_description_three">3</string>
+    <string name="btn_description_four">4</string>
+    <string name="btn_description_five">5</string>
+    <string name="btn_description_six">6</string>
+    <string name="btn_description_seven">7</string>
+    <string name="btn_description_eight">8</string>
+    <string name="btn_description_nine">9</string>
+    <string name="btn_description_zero">0</string>
+    <string name="btn_description_to_alphabet">가나다</string>
+    <string name="btn_description_delete">지우기</string>
+</resources>
