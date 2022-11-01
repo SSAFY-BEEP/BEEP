@@ -19,15 +19,20 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    @GetMapping("/find/")
+    public ResponseEntity<?>findMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<?>saveMessage(@RequestBody MessageRequestDto.sendMessage sendMessage){
-        messageService.saveMessage(sendMessage);
+    public ResponseEntity<?>saveMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
+        messageService.saveMessage(persistMessage);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?>deleteMessage(@RequestBody MessageRequestDto.sendMessage sendMessage){
-        messageService.deleteMessage(sendMessage);
+    public ResponseEntity<?>deleteMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
+        messageService.deleteMessage(persistMessage);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

@@ -80,7 +80,6 @@ public class Message24ServiceImpl implements  Message24Service{
                 .sender(sender)
                 .receiver(receiver)
                 .type(1)
-                .distinction(message24.getDistinction())
                 .build();
 
         //해당 메세지 DB 보관하기

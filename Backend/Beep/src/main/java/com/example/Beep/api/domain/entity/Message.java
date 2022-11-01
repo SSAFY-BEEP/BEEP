@@ -42,14 +42,18 @@ public class Message extends BaseEntity{
     @Column
     private Integer type;
 
+    @Column
+    private Long ownerId;
+
 
     @Builder
-    public Message(String content, String audioUri, User sender, User receiver, Integer type) {
-        this.time = LocalDateTime.now();
+    public Message(String content, String audioUri, User sender, User receiver, Integer type,LocalDateTime time,Long ownerId) {
+        this.time = time;
         this.content = content;
         this.audioUri = audioUri;
         this.sender = sender;
         this.receiver = receiver;
+        this.ownerId=ownerId;
         this.type = type == null? 1 : type;
     }
 }
