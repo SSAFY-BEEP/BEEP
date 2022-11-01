@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "레디스 24시간 메세지", tags={"레디스 메세지"})
+@Api(value = "2. 레디스 24시간 메세지", tags={"2. 레디스 메세지"})
 @RestController
 @AllArgsConstructor
 @CrossOrigin("*")
