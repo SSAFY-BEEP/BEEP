@@ -28,26 +28,27 @@ public class Message24{
 
     //보낸 사람
     @Indexed
-    private Long sender;
+    private Long senderId;
 
     //받는 사람
     @Indexed
-    private Long receiver;
+    private Long receiverId;
 
-    //1-보관메세지, 2-차단메세지
+    @Indexed
+    private Long ownerId;
+
+    //0-일반메세지, 1-보관메세지, 2-차단메세지
     private Integer type;
 
-    //익명 내에서 구분
-    private Integer distinction;
 
     @Builder
-    public Message24(String content, String audioUri, Long sender, Long receiver, Integer type, Integer distinction) {
+    public Message24(String content, String audioUri, Long senderId, Long receiverId, Long ownerId, Integer type) {
         this.time = LocalDateTime.now();
         this.content = content;
         this.audioUri = audioUri;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.ownerId = ownerId;
         this.type = type == null? 0 : type;
-        this.distinction = distinction;
     }
 }

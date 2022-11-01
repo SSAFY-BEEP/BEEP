@@ -6,26 +6,23 @@ import java.util.List;
 
 public interface Message24Service {
     //받은 메세지 조회
-    List<Message24> getReceiveMessage(Long receiver);
+    List<Message24> getReceiveMessage(Long receiverId);
 
     //보낸 메세지 조회
-    List<Message24> getSendMessage(Long sender);
+    List<Message24> getSendMessage(Long senderId);
 
     //해당 메세지 조회
 
     //메세지 발송(저장)
     void sendMessage(Message24RequestDto.sendMessage message);
 
-    //메세지 보관
-    void saveMessage(String id);
-
-    //메세지 차단
-
+    //메세지 보관or차단 등 타입 바꾸고 DB에 저장
+    void changeMessageType(String id, Long ownerId, Integer type);
 
    //모든 메세지 조회
     List<Message24> getAllMessage();
 
     Message24 getMessage(String id);
 
-    void deleteMessageById(String id);
+    void deleteMessageById(String id, Long ownerId);
 }

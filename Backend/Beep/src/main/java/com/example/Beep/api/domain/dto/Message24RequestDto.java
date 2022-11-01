@@ -12,4 +12,11 @@ public class Message24RequestDto {
         private Long receiver;
         private Long sender;
     }
+
+    @Getter
+    @Builder
+    public static class changeMessage {
+        private String id;
+        private Long ownerId;
+    }
 }

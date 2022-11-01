@@ -58,19 +58,19 @@ public class Message24Controller {
         return new ResponseEntity<Message24>(service.getMessage(id), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "id로 메세지 삭제", notes = "idx로 메세지 삭제")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMessageById(@PathVariable String id){
-        service.deleteMessageById(id);
+    @ApiOperation(value = "id로 메세지 삭제", notes = "메세지id와 해당 데이터ownerId(요청자)로 메세지 삭제")
+    @DeleteMapping
+    public ResponseEntity<?> deleteMessageById(@RequestParam String id,@RequestParam Long ownerId){
+        service.deleteMessageById(id, ownerId);
         return ResponseEntity.ok().build();
     }
 
     //메세지 보관
-    @ApiOperation(value = "메세지 보관하기", notes = "message24 id로 메세지 보관하기")
+    @ApiOperation(value = "메세지 보관하기", notes = "message24 id로 해당 요청을 보낸 userid에 해당하는 메세지 데이터 보관(타입 1로 수정)하기")
     @PostMapping("/save/{id}")
-    public ResponseEntity<?> saveMessageById(@PathVariable String id){
-        //해당 메세지를 메세지(보관)DB에 INSERT
-        service.saveMessage(id);
+    public ResponseEntity<?> saveMessageById(@RequestBody Message24RequestDto.changeMessage message){
+        //해당 메세지를 메세지(보관)DB에 INSERT & redis type변경
+        service.changeMessageType(message.getId(), message.getOwnerId(),1);
 
         return ResponseEntity.ok().build();
     }
@@ -79,17 +79,18 @@ public class Message24Controller {
 
 
     //메세지 차단
-    @ApiOperation(value = "메세지 차단하기", notes = "message24 id로 메세지 차단하기")
+    @ApiOperation(value = "메세지 차단하기", notes = "message24 id와 요청한 사람id로 메세지 차단하기")
     @PatchMapping("/block")
-    public ResponseEntity<?> blockMessageById(@RequestBody String id){
+    public ResponseEntity<?> blockMessageById(@RequestParam String id, @RequestParam Long ownerId){
         //해당 메세지를 메세지(차단)DB에 INSERT
 
         //해당 sender, receiver 대화관계(차단) 설정
+        service.changeMessageType(id, ownerId,2);
 
         return ResponseEntity.ok().build();
     }
 
     //차단 메세지 목록
 
-    //차단 풀기기
+    //차단 풀기
 }
