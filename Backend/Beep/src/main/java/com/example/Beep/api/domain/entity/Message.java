@@ -1,9 +1,9 @@
 package com.example.Beep.api.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -42,7 +42,14 @@ public class Message extends BaseEntity{
     @Column
     private Integer type;
 
-    //익명 내에서 구분
-    @Column
-    private Integer distinction;
+
+    @Builder
+    public Message(String content, String audioUri, User sender, User receiver, Integer type) {
+        this.time = LocalDateTime.now();
+        this.content = content;
+        this.audioUri = audioUri;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.type = type == null? 1 : type;
+    }
 }

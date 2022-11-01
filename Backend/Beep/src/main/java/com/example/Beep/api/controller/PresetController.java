@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "프리셋 설정",tags={"프리셋 설정 API"})
+@Api(value = "5. 프리셋 설정",tags={"5. 프리셋 설정 API"})
 @RestController
 @RequestMapping("/preset")
 public class PresetController {

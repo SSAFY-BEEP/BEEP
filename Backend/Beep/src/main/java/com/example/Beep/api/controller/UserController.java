@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "회원 관리", tags={"회원 관리"})
+@Api(value = "1. 회원 관리", tags={"1. 회원 관리"})
 @RestController
 @RequestMapping("/user")
 public class UserController {
