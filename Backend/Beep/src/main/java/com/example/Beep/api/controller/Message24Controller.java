@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @CrossOrigin("*")
-@RequestMapping("/redis24")
+@RequestMapping("/message24")
 public class Message24Controller {
     private final Message24ServiceImpl service;
     private final Relation24ServiceImpl relation24Service;
@@ -41,7 +41,7 @@ public class Message24Controller {
         service.sendMessage(message);
 
         //대화관계 시간 갱신or저장
-        relation24Service.insertRelation(message.getSender(), message.getReceiver());
+        relation24Service.insertRelation(message);
 
         return ResponseEntity.ok().build();
     }

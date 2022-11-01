@@ -1,15 +1,11 @@
 package com.example.Beep.api.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,16 +15,21 @@ public class Relation24{
     @Id
     private String id;
 
+    @Indexed
     private Long senderId;
 
+    @Indexed
     private Long receiverId;
 
     private LocalDateTime time;
 
     @Builder
-    public Relation24(Long senderId, Long receiverId, LocalDateTime time) {
+    public Relation24(String id,Long senderId, Long receiverId) {
+        this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.time = LocalDateTime.now();
     }
 }
+
+

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class Relation24Dto {
+public class Relation24RequestDto {
     private Long receiverId;
     private Long senderId;
 }
