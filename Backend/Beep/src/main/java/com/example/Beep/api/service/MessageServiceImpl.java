@@ -66,7 +66,6 @@ public class MessageServiceImpl implements MessageService{
                     .ownerId(receiveUser.getId())
                     .tag(persistMessage.getTag())
                     .build();
-
             messageRepository.save(sendMessage);
         }catch (Exception e){
             e.printStackTrace();
