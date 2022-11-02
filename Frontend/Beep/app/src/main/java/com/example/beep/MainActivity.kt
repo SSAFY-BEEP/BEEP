@@ -1,5 +1,6 @@
 package com.example.beep
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.beep.ui.BeepApp
 import com.example.beep.ui.theme.BeepTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class MainApplication: Application(){
+    override fun onCreate() {
+        super.onCreate()
+    }
+}
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

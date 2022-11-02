@@ -26,10 +26,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MessageScreen() {
-    var show by remember {mutableStateOf(true)}
+fun MessageScreen(viewModel: MessageViewModel = viewModel()) {
+    var show by remember { mutableStateOf(true) }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -44,7 +45,11 @@ fun MessageScreen() {
 
 
 @Composable
-fun postData(show: Boolean, onClick: () -> Unit) {
+fun postData(
+    show: Boolean,
+    onClick: () -> Unit,
+    viewModel: MessageViewModel = viewModel()
+) {
     val ctx = LocalContext.current
 
     val userName = remember {
@@ -141,13 +146,12 @@ fun postData(show: Boolean, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(10.dp))
             // on below line we are creating a button
             Button(
-                onClick = {
-
-                    // on below line we are calling make payment method to update data.
-                    postDataUsingRetrofit(
-                        ctx, userName, job, response
-                    )
-                },
+                onClick = { viewModel.postTest(DataModel(userName.value.text, job.value.text)) }
+                // on below line we are calling make payment method to update data.
+//                    postDataUsingRetrofit(
+//                        ctx, userName, job, response
+//                    )
+                ,
                 // on below line we are adding modifier to our button.
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,7 +1,9 @@
 package com.example.beep.di
 
+import com.example.beep.data.api.RetrofitApi
 import com.example.beep.util.BASE_URL
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +20,23 @@ object RemoteDataModule {
     @Provides
     @Singleton
     @Named("retrofit")
-    fun provideRetrofitInstance(gson: Gson, client: OkHttpClient): Retrofit {
+    fun provideRetrofitInstance(gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(client)
             .build()
+    }
+
+    // Gson DI
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder().setLenient().create()
+    }
+
+    // RetrofitApi DI
+    @Provides
+    @Singleton
+    fun provideRetrofitApi(@Named("retrofit") retrofit: Retrofit): RetrofitApi {
+        return retrofit.create(RetrofitApi::class.java)
     }
 }

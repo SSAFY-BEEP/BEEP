@@ -12,5 +12,5 @@ interface RetrofitApi {
     fun postDataOriginal(@Body dataModel: DataModel?): Call<DataModel?>?
 
     @POST("users")
-    fun postData(@Body dataModel: DataModel?): RetrofitTestResponse
+    suspend fun postData(@Body dataModel: DataModel?): RetrofitTestResponse
 }

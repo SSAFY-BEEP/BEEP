@@ -1,5 +1,6 @@
 package com.example.beep.ui.message
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MessageViewModel @Inject constructor(private val retrofitUseCase: RetrofitUseCase) :
     ViewModel() {
-    val inputName = MutableLiveData<String>()
-    val inputJob = MutableLiveData<String>()
+    val inputName = MutableLiveData<String>("defaultName")
+    val inputJob = MutableLiveData<String>("defaultJob")
 
     val receivedName = MutableLiveData<String>()
     val receivedJob = MutableLiveData<String>()
@@ -31,7 +32,13 @@ class MessageViewModel @Inject constructor(private val retrofitUseCase: Retrofit
             retrofitUseCase.execute(dataModel).collectLatest {
                 receivedName.postValue(it.name)
                 receivedJob.postValue(it.job)
+                Log.d("ViewModel", "${receivedName.value} ${receivedJob.value}")
+
             }
         }
+    }
+
+    fun viewModelTest() {
+        Log.d("ViewModel", "${inputName.value} ${inputJob.value}")
     }
 }
