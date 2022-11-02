@@ -2,8 +2,8 @@ package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
+import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.Message24ServiceImpl;
-import com.example.Beep.api.service.Relation24ServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -20,30 +20,36 @@ import java.util.List;
 @RequestMapping("/message24")
 public class Message24Controller {
     private final Message24ServiceImpl service;
-    private final Relation24ServiceImpl relation24Service;
+//    private final Relation24ServiceImpl relation24Service;
+    private final BlockService blockService;
 
     @ApiOperation(value = "받은 메세지 목록 조회", notes = "해당 회원의 수신메세지 목록 조회 + 차단 거르기")
     @GetMapping("/receive/{receiver}")
-    public ResponseEntity<?> getReceiveMessage(@PathVariable Long receiver){
+    public ResponseEntity<?> getReceiveMessage(@PathVariable String receiverNum){
 //        return new ResponseEntity<String>("22",HttpStatus.OK);
-        return new ResponseEntity<List<Message24>>(service.getReceiveMessage(receiver), HttpStatus.OK);
+        return new ResponseEntity<List<Message24>>(service.getReceiveMessage(receiverNum), HttpStatus.OK);
     }
 
     @ApiOperation(value = "보낸 메세지 목록 조회", notes = "해당 회원의 발신메세지 목록 조회")
     @GetMapping("/send/{sender}")
-    public ResponseEntity<?> getSendMessage(@PathVariable Long sender){
-        return new ResponseEntity<List<Message24>>(service.getSendMessage(sender), HttpStatus.OK);
+    public ResponseEntity<?> getSendMessage(@PathVariable String senderNum){
+        return new ResponseEntity<List<Message24>>(service.getSendMessage(senderNum), HttpStatus.OK);
     }
 
     @ApiOperation(value = "메세지 발송/저장", notes = "메세지 발송 시, 레디스에 메세지 저장")
     @PostMapping
     public ResponseEntity<?> sendMessage(@RequestBody Message24RequestDto.sendMessage message){
-        service.sendMessage(message);
-
-        //대화관계 시간 갱신or저장
-        relation24Service.insertRelation(message);
-
-        return ResponseEntity.ok().build();
+        //receiver가 차단했는지 체크
+        String answer = "";
+        if(!blockService.isBlocked(message.getReceiverNum(), message.getSenderNum())){    //차단 안됐으면
+            service.sendMessage(message);
+            //대화관계 시간 갱신or저장 -> 사라진 기능
+//          relation24Service.insertRelation(message);
+            answer = "메세지 전송 완료";
+        } else{
+            answer = "차단된 메세지";
+        }
+        return new ResponseEntity<String>(answer, HttpStatus.OK);
     }
 
     @ApiOperation(value = "모든 메세지 목록 조회(테스트용)", notes = "모든 회원의 메세지 조회")
@@ -60,8 +66,8 @@ public class Message24Controller {
 
     @ApiOperation(value = "id로 메세지 삭제", notes = "메세지id와 해당 데이터ownerId(요청자)로 메세지 삭제")
     @DeleteMapping
-    public ResponseEntity<?> deleteMessageById(@RequestParam String id,@RequestParam Long ownerId){
-        service.deleteMessageById(id, ownerId);
+    public ResponseEntity<?> deleteMessageById(@RequestParam String id,@RequestParam String ownerNum){
+        service.deleteMessageById(id, ownerNum);
         return ResponseEntity.ok().build();
     }
 
@@ -70,7 +76,7 @@ public class Message24Controller {
     @PostMapping("/save/{id}")
     public ResponseEntity<?> saveMessageById(@RequestBody Message24RequestDto.changeMessage message){
         //해당 메세지를 메세지(보관)DB에 INSERT & redis type변경
-        service.changeMessageType(message.getId(), message.getOwnerId(),1);
+        service.changeMessageType(message.getId(), message.getOwnerNum(),1);
 
         return ResponseEntity.ok().build();
     }
@@ -81,16 +87,15 @@ public class Message24Controller {
     //메세지 차단
     @ApiOperation(value = "메세지 차단하기", notes = "message24 id와 요청한 사람id로 메세지 차단하기")
     @PatchMapping("/block")
-    public ResponseEntity<?> blockMessageById(@RequestParam String id, @RequestParam Long ownerId){
+    public ResponseEntity<?> blockMessageById(@RequestParam String id, @RequestParam String ownerNum){
         //해당 메세지를 메세지(차단)DB에 INSERT
 
         //해당 sender, receiver 대화관계(차단) 설정
-        service.changeMessageType(id, ownerId,2);
+        service.changeMessageType(id, ownerNum,2);
 
         return ResponseEntity.ok().build();
     }
 
     //차단 메세지 목록
 
-    //차단 풀기
 }

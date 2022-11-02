@@ -9,14 +9,14 @@ public class Message24RequestDto {
     public static class sendMessage {
         private String audioUri;
         private String content;
-        private Long receiver;
-        private Long sender;
+        private String receiverNum;
+        private String senderNum;
     }
 
     @Getter
     @Builder
     public static class changeMessage {
-        private String id;
-        private Long ownerId;
+        private String id;      //메세지 아이디
+        private String ownerNum;   //
     }
 }

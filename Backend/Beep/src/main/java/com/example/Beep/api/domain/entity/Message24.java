@@ -26,29 +26,30 @@ public class Message24{
     //음성메세지
     private String audioUri;
 
-    //보낸 사람
+    //보낸 사람 전화번호
     @Indexed
-    private Long senderId;
+    private String senderNum;
 
-    //받는 사람
+    //받는 사람 전화번호
     @Indexed
-    private Long receiverId;
+    private String receiverNum;
 
+    //해당데이터 소유자 전화번호
     @Indexed
-    private Long ownerId;
+    private String ownerNum;
 
     //0-일반메세지, 1-보관메세지, 2-차단메세지
     private Integer type;
 
 
     @Builder
-    public Message24(String content, String audioUri, Long senderId, Long receiverId, Long ownerId, Integer type) {
+    public Message24(String content, String audioUri, String senderNum, String receiverNum, String ownerNum, Integer type) {
         this.time = LocalDateTime.now();
         this.content = content;
         this.audioUri = audioUri;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.ownerId = ownerId;
+        this.senderNum = senderNum;
+        this.receiverNum = receiverNum;
+        this.ownerNum = ownerNum;
         this.type = type == null? 0 : type;
     }
 }
