@@ -26,12 +26,12 @@ public class Message24ServiceImpl implements  Message24Service{
 
 
     @Override
-    public List<Message24> getReceiveMessage(Long receiver) {
-        List<Message24> list = repository.findAllByReceiver(receiver);
+    public List<Message24> getReceiveMessage(Long receiverId) {
+        List<Message24> list = repository.findAllByReceiverAndOwnerId(receiverId, receiverId);
 
         List<Message24> result = new ArrayList<>();
 
-        //차단 type은 2 > 차단이 아닌 메세지 조회
+        //차단 type은 2 -> 차단이 아닌 메세지 조회
         for(Message24 cur: list) {
             if (cur.getType() != 2) {
                 result.add(cur);
@@ -41,56 +41,73 @@ public class Message24ServiceImpl implements  Message24Service{
     }
 
     @Override
-    public List<Message24> getSendMessage(Long sender) {
-        return repository.findAllBySender(sender);
+    public List<Message24> getSendMessage(Long senderId) {
+        return repository.findAllBySenderAndOwnerId(senderId, senderId);
     }
 
     @Transactional
     @Override
     public void sendMessage(Message24RequestDto.sendMessage message) {
-//        System.out.println(message.getId()+","+ message.getReceiver()+","+ message.getDistinction());
-//        Message24 message24 = repository.findById(message.getId()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        
-        //구분자 설정
-
-        
-        Message24 message24 = Message24.builder()
+        //보낸사람, 받은사람 기준으로 데이터 2번 저장
+        Message24 senderMsg = Message24.builder()
+                .ownerId(message.getSender())
                 .audioUri(message.getAudioUri())
                 .content(message.getContent())
-                .sender(message.getSender())
-                .receiver(message.getReceiver())
-                .distinction(1)
+                .senderId(message.getSender())
+                .receiverId(message.getReceiver())
+                .build();
+        repository.save(senderMsg);
+
+        Message24 receiverMsg = Message24.builder()
+                .ownerId(message.getReceiver())
+                .audioUri(message.getAudioUri())
+                .content(message.getContent())
+                .senderId(message.getSender())
+                .receiverId(message.getReceiver())
                 .build();
 
-        repository.save(message24);
+        repository.save(receiverMsg);
     }
 
     //메세지 보관
     @Override
-    public void saveMessage(String id) {
-        Message24 message24 = repository.findById(id).get();
-        User sender = userRepository.findById(message24.getSender()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User receiver = userRepository.findById(message24.getReceiver()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+    public void changeMessageType(String id, Long ownerId, Integer type) {
+        Message24 find = repository.findById(id).get();
+        User sender = userRepository.findById(find.getSenderId()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User receiver = userRepository.findById(find.getReceiverId()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
-        //구분자 설정
+        //레디스 type 1(보관)로 수정
+        Message24 message24 = Message24.builder()
+                .ownerId(find.getOwnerId())
+                .content(find.getContent())
+                .senderId(find.getSenderId())
+                .receiverId(find.getReceiverId())
+                .audioUri(find.getAudioUri())
+                .type(type)
+                .build();
+        repository.save(message24);
 
+       //해당 메세지 DB 보관하기
         Message message = Message.builder()
-                .content(message24.getContent())
-                .audioUri(message24.getAudioUri())
+                .ownerId(find.getOwnerId())
+                .content(find.getContent())
+                .audioUri(find.getAudioUri())
                 .sender(sender)
                 .receiver(receiver)
-                .type(1)
+                .type(type)
                 .build();
 
-        //해당 메세지 DB 보관하기
         messageRepository.save(message);
     }
 
+
+    //모든 메세지
     @Override
     public List<Message24> getAllMessage() {
         return repository.findAll();
     }
 
+    //해당 메세지 id의 메세지 데이터
     @Override
     public Message24 getMessage(String id) {
         return repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
@@ -98,9 +115,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
 
     @Override
-    public void deleteMessageById(String id) {
-        repository.deleteById(id);
+    public void deleteMessageById(String id, Long ownerId) {
+        repository.deleteByIdAndOwnerId(id, ownerId);
     }
-
-
 }
