@@ -7,5 +7,6 @@ import javax.inject.Singleton
 
 @Singleton
 class RetrofitUseCase @Inject constructor(private val retrofitRepository: RetrofitRepository) {
-    fun execute(dataModel: DataModel) = retrofitRepository.postTest(dataModel)
+    fun postData(dataModel: DataModel) = retrofitRepository.postTest(dataModel)
+    fun getData() = retrofitRepository.getTest()
 }

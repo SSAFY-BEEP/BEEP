@@ -146,7 +146,8 @@ fun postData(
             Spacer(modifier = Modifier.height(10.dp))
             // on below line we are creating a button
             Button(
-                onClick = { viewModel.postTest(DataModel(userName.value.text, job.value.text)) }
+//                onClick = { viewModel.postTest(DataModel(userName.value.text, job.value.text)) }
+                onClick = { viewModel.getTest() }
                 // on below line we are calling make payment method to update data.
 //                    postDataUsingRetrofit(
 //                        ctx, userName, job, response

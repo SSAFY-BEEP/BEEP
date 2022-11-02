@@ -29,12 +29,20 @@ class MessageViewModel @Inject constructor(private val retrofitUseCase: Retrofit
 
     fun postTest(dataModel: DataModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            retrofitUseCase.execute(dataModel).collectLatest {
+            retrofitUseCase.postData(dataModel).collectLatest {
                 receivedName.postValue(it.name)
                 receivedJob.postValue(it.job)
                 Log.d("ViewModel", "${receivedName.value} ${receivedJob.value}")
 
             }
+        }
+    }
+
+    fun getTest() {
+        viewModelScope.launch(Dispatchers.IO) {
+            retrofitUseCase.getData().collectLatest {
+                Log.d("ViewModel", it.toString())
+             }
         }
     }
 
