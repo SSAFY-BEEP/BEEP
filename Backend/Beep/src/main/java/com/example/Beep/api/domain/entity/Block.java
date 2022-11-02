@@ -24,13 +24,8 @@ public class Block extends BaseEntity{
     private User target;
 
     @Builder
-    public Block(User user1,User user2){
-        this.user=user1;
-        this.target=user2;
-    }
-
-    public void Update(User Puser, User Buser) {
-        this.user=Puser;
-        this.target=Buser;
+    public Block(User user,User target){
+        this.user=user;
+        this.target=target;
     }
 }
