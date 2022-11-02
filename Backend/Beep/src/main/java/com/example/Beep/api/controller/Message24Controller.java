@@ -2,6 +2,7 @@ package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
+import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.Message24ServiceImpl;
 import io.swagger.annotations.Api;
@@ -36,7 +37,7 @@ public class Message24Controller {
         return new ResponseEntity<List<Message24>>(service.getSendMessage(senderNum), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메세지 발송/저장", notes = "메세지 발송 시, 레디스에 메세지 저장")
+    @ApiOperation(value = "메세지 발송/저장", notes = "메세지 발송 시, 레디스에 메세지 저장(차단시킨 상대일경우 저장안함)")
     @PostMapping
     public ResponseEntity<?> sendMessage(@RequestBody Message24RequestDto.sendMessage message){
         //receiver가 차단했는지 체크
@@ -76,26 +77,21 @@ public class Message24Controller {
     @PostMapping("/save/{id}")
     public ResponseEntity<?> saveMessageById(@RequestBody Message24RequestDto.changeMessage message){
         //해당 메세지를 메세지(보관)DB에 INSERT & redis type변경
-        service.changeMessageType(message.getId(), message.getOwnerNum(),1);
+        service.changeMessageType(message.getId(), 1);
 
         return ResponseEntity.ok().build();
     }
-
-    //보관 메세지 목록
-
 
     //메세지 차단
-    @ApiOperation(value = "메세지 차단하기", notes = "message24 id와 요청한 사람id로 메세지 차단하기")
+    @ApiOperation(value = "메세지 차단하기", notes = "message24 id로 상대방 차단하고 해당 메세지도 차단메세지함에 보관")
     @PatchMapping("/block")
-    public ResponseEntity<?> blockMessageById(@RequestParam String id, @RequestParam String ownerNum){
-        //해당 메세지를 메세지(차단)DB에 INSERT
+    public ResponseEntity<?> blockMessageById(@RequestParam String id){
+        //대화관계 차단
+        blockService.blockByMsgId(id);
 
         //해당 sender, receiver 대화관계(차단) 설정
-        service.changeMessageType(id, ownerNum,2);
+        service.changeMessageType(id, 2);
 
         return ResponseEntity.ok().build();
     }
-
-    //차단 메세지 목록
-
 }
