@@ -28,14 +28,14 @@ public class MessageController {
         return new ResponseEntity<List<MessageResponseDto>>(messageResponseDtoList, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "내가 받은 메시지 찾기", notes = "내가 받은 메시지 찾기")
+    @ApiOperation(value = "내가 받은 메시지 찾기, id는 유저 아이디", notes = "내가 받은 메시지 찾기, id는 유저 아이디")
     @GetMapping("/findrecieve/{id}")
     public ResponseEntity<?>findReceiceMessage(@PathVariable("id") Long id){
         List<MessageResponseDto>messageResponseDtoList=messageService.findReceiveMessage(id);
         return new ResponseEntity<List<MessageResponseDto>>(messageResponseDtoList, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "내가 보낸 메시지 저장", notes = "내가 보낸 메시지 저장")
+    @ApiOperation(value = "내가 보낸 메시지 저장, id는 유저 아이디", notes = "내가 보낸 메시지 저장, id는 유저 아이디")
     @PostMapping("/save/send")
     public ResponseEntity<?>saveSendMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
         messageService.saveSendMessage(persistMessage);
@@ -49,7 +49,7 @@ public class MessageController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "보관함에서 삭제", notes = "보관함에서 삭제")
+    @ApiOperation(value = "보관함에서 삭제,id는 메시지 id입니다", notes = "보관함에서 삭제,id는 메시지 id입니다")
     @DeleteMapping("/{id}")
     public ResponseEntity<?>deleteMessage(@PathVariable("id") Long id){
         messageService.deleteMessage(id);
