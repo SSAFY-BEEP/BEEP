@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "회원 관리", tags={"회원 관리"})
+@Api(value = "1. 회원 관리", tags={"1. 회원 관리"})
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -100,6 +100,35 @@ public class UserController {
     @DeleteMapping("/block")
     public ResponseEntity<?> blockDelete(@RequestBody UserRequestDto.Block block) {
         userService.blockDelete(block);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "소리/알림음 설정", notes = "유저가 자신의 삐삐 알림음을 설정")
+    @PatchMapping("/alarm/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeAlarm(@PathVariable Integer number) {
+        userService.changeAlarm(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "폰트 설정", notes = "유저가 자신의 삐삐 UI의 폰트를 설정")
+    @PatchMapping("/font/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeFont(@PathVariable Integer number) {
+        userService.changeFont(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "배경 테마 설정", notes = "유저가 자신의 삐삐 배경 테마를 설정")
+    @PatchMapping("/theme/{number}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeTheme(@PathVariable Integer number) {
+        userService.changeTheme(number);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+    @ApiOperation(value = "각인 설정", notes = "유저가 자신의 삐삐에 각인을 설정")
+    @PatchMapping("/engrave/{engrave}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> changeEngrave(@PathVariable String engrave) {
+        userService.changeEngrave(engrave);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

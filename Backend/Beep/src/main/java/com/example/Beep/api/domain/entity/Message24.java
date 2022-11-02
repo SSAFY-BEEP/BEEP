@@ -4,10 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -23,7 +21,6 @@ public class Message24{
     private String content;
 
     //보낸시간
-    @CreatedDate
     private LocalDateTime time;
 
     //음성메세지
@@ -50,7 +47,7 @@ public class Message24{
         this.audioUri = audioUri;
         this.sender = sender;
         this.receiver = receiver;
-        this.type = type == null? 1 : type;
+        this.type = type == null? 0 : type;
         this.distinction = distinction;
     }
 }
