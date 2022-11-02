@@ -74,18 +74,18 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public void deleteMessage(Long id) {
+    public void deleteMessage(Long messageId) {
         try{
-            messageRepository.deleteById(id);
+            messageRepository.deleteById(messageId);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<MessageResponseDto> findSendMessage(Long id) {
+    public List<MessageResponseDto> findSendMessage(Long userId) {
         try{
-            User sender=userRepository.findById(id).get();
+            User sender=userRepository.findById(userId).get();
             List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageSend(sender.getId()).stream()
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
@@ -104,9 +104,9 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<MessageResponseDto> findReceiveMessage(Long id) {
+    public List<MessageResponseDto> findReceiveMessage(Long userId) {
         try{
-            User receiver=userRepository.findById(id).get();
+            User receiver=userRepository.findById(userId).get();
             List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageReceive(receiver.getId()).stream()
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
