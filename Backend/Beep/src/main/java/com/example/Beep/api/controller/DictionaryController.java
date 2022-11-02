@@ -3,6 +3,7 @@ package com.example.Beep.api.controller;
 import com.example.Beep.api.domain.dto.DictionaryResponseDto;
 import com.example.Beep.api.domain.entity.Dictionary;
 import com.example.Beep.api.service.DictionaryServiceImpl;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "6. 사전 기능", tags={"6. 사전 기능"})
 @RestController
 @RequestMapping("/dictionary")
 public class DictionaryController {
