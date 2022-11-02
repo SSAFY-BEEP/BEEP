@@ -34,7 +34,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final BlockRepository blockRepository;
+
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
@@ -155,35 +155,7 @@ public class UserServiceImpl implements UserService {
         return "Success";
     }
 
-    @Override
-    @Transactional
-    public void blockUser(UserRequestDto.Block block) {
-        try{
-            User user=userRepository.findByPhoneNumber(block.getPNum()).get();
-            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
 
-            Block newBlock= Block.builder()
-                    .user1(user)
-                    .user2(Buser)
-                    .build();
-            blockRepository.save(newBlock);
-        }catch (NullPointerException n){
-            n.printStackTrace();
-        }
-    }
-
-    @Override
-    @Transactional
-    public void blockDelete(UserRequestDto.Block block) {
-        try{
-            User Puser=userRepository.findByPhoneNumber(block.getPNum()).get();
-            User Buser=userRepository.findByPhoneNumber(block.getBNum()).get();
-            Block dBlock=blockRepository.findDelete(Puser.getId(),Buser.getId());
-            blockRepository.deleteById(dBlock.getId());
-        }catch (NullPointerException n){
-            n.printStackTrace();
-        }
-    }
 
     @Override
     public void changeAlarm(Integer number) {
