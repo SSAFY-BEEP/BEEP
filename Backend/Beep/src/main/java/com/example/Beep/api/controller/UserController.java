@@ -1,10 +1,10 @@
 package com.example.Beep.api.controller;
 
-import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.security.JwtFilter;
+import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Api(value = "1. 회원 관리", tags={"1. 회원 관리"})
@@ -23,6 +22,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    BlockService blockService;
 
     @ApiOperation(value = "회원 가입", notes = "전화번호와 비밀번호, 토큰을 받아서 회원가입")
     @PostMapping("/signup")
@@ -87,20 +89,6 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody UserRequestDto.Login newPw) {
         String result = userService.changePassword(newPw);
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "유저의 차단", notes = "사용자의 전화번호를 통해서 차단 기능")
-    @PostMapping("/block")
-    public ResponseEntity<?> blockUser(@RequestBody UserRequestDto.Block block) {
-        userService.blockUser(block);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "유저의 차단 해제", notes = "사용자의 전화번호를 통해서 차단 해제 가능")
-    @DeleteMapping("/block")
-    public ResponseEntity<?> blockDelete(@RequestBody UserRequestDto.Block block) {
-        userService.blockDelete(block);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "소리/알림음 설정", notes = "유저가 자신의 삐삐 알림음을 설정")
