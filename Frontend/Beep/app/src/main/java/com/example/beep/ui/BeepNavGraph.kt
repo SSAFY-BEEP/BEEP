@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.beep.ui.home.HomeScreen
+import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.mypage.MyPageScreen
 
@@ -19,6 +20,9 @@ fun BeepNavGraph(navController: NavHostController) {
         }
         composable("settings") {
             MyPageScreen()
+        }
+        composable("login_main") {
+            LoginMainScreen()
         }
     }
 }
