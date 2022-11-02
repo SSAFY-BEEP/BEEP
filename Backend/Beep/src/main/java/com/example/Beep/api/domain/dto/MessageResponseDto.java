@@ -15,4 +15,5 @@ public class MessageResponseDto {
     private String receiverPhoneNumber;
     private String senderPhoneNumber;
     private LocalDateTime localDateTime;
+    private String tag;
 }

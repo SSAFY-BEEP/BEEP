@@ -16,7 +16,15 @@ public class MessageRequestDto {
         private String content;
         private String receiverPhoneNumber;
         private String senderPhoneNumber;
-        private String ownerPhoneNumber;
         private LocalDateTime localDateTime;
+        private String tag;
     }
+
+    @Builder
+    @Getter
+    public static class updateTag {
+        private Long id;
+        private String tag;
+    }
+
 }

@@ -45,9 +45,12 @@ public class Message extends BaseEntity{
     @Column
     private Long ownerId;
 
+    @Column(length=5,nullable = true)
+    private String tag;
+
 
     @Builder
-    public Message(String content, String audioUri, User sender, User receiver, Integer type,LocalDateTime time,Long ownerId) {
+    public Message(String content, String audioUri, User sender, User receiver, Integer type,LocalDateTime time,Long ownerId,String tag) {
         this.time = time;
         this.content = content;
         this.audioUri = audioUri;
@@ -55,5 +58,11 @@ public class Message extends BaseEntity{
         this.receiver = receiver;
         this.ownerId=ownerId;
         this.type = type == null? 1 : type;
+        this.tag=tag;
+    }
+
+    public Message Update(String tag){
+        this.tag=tag;
+        return this;
     }
 }

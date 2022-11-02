@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +31,7 @@ public class MessageServiceImpl implements MessageService{
     private final UserRepository userRepository;
 
     @Override
-    public void saveMessage(MessageRequestDto.persistMessage persistMessage) {
+    public void saveSendMessage(MessageRequestDto.persistMessage persistMessage) {
         try{
             User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
             User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
@@ -38,53 +43,58 @@ public class MessageServiceImpl implements MessageService{
                     .sender(sendUser)
                     .time(persistMessage.getLocalDateTime())
                     .ownerId(sendUser.getId())
+                    .tag(persistMessage.getTag())
                     .build();
+            messageRepository.save(sendMessage);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
-            Message receiveMessage=Message.builder()
+    @Override
+    public void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage){
+        try{
+            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
+            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
+
+            Message sendMessage=Message.builder()
                     .audioUri(persistMessage.getAudioUri())
                     .content(persistMessage.getContent())
                     .receiver(receiveUser)
                     .sender(sendUser)
                     .time(persistMessage.getLocalDateTime())
                     .ownerId(receiveUser.getId())
+                    .tag(persistMessage.getTag())
                     .build();
 
             messageRepository.save(sendMessage);
-            messageRepository.save(receiveMessage);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     @Override
-    public void deleteMessage(MessageRequestDto.persistMessage persistMessage) {
+    public void deleteMessage(Long id) {
         try{
-            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
-            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
-            System.out.println(sendUser.getId()+" "+receiveUser.getId()+"번호");
-            if(persistMessage.getSenderPhoneNumber().equals(persistMessage.getOwnerPhoneNumber())){
-                Message message=messageRepository.findMessageSend(sendUser.getId(), receiveUser.getId());
-                messageRepository.deleteById(message.getId());
-            }else {
-                Message message = messageRepository.findMessageReceive(sendUser.getId(), receiveUser.getId());
-                messageRepository.deleteById(message.getId());
-            }
+            messageRepository.deleteById(id);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<MessageResponseDto> findMessage(MessageRequestDto.persistMessage persistMessage) {
+    public List<MessageResponseDto> findSendMessage(Long id) {
         try{
-            User user=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
-            List<MessageResponseDto> messageResponseDtoList=messageRepository.messageList(user.getId()).stream()
+            User sender=userRepository.findById(id).get();
+            List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageSend(sender.getId()).stream()
                     .map(Message->MessageResponseDto.builder()
-                            .content(persistMessage.getContent())
-                            .localDateTime(persistMessage.getLocalDateTime())
-                            .receiverPhoneNumber(persistMessage.getReceiverPhoneNumber())
-                            .senderPhoneNumber(persistMessage.getSenderPhoneNumber())
-                            .audioUri(persistMessage.getAudioUri())
+                            .id(Message.getId())
+                            .content(Message.getContent())
+                            .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
+                            .senderPhoneNumber(Message.getSender().getPhoneNumber())
+                            .audioUri(Message.getAudioUri())
+                            .localDateTime(Message.getTime())
+                            .tag(Message.getTag())
                             .build()).collect(Collectors.toList());
             return messageResponseDtoList;
         }catch (Exception e){
@@ -94,14 +104,29 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<MessageResponseDto> openMessage(MessageRequestDto.persistMessage persistMessage) {
+    public List<MessageResponseDto> findReceiveMessage(Long id) {
         try{
-
+            User receiver=userRepository.findById(id).get();
+            List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageReceive(receiver.getId()).stream()
+                    .map(Message->MessageResponseDto.builder()
+                            .id(Message.getId())
+                            .content(Message.getContent())
+                            .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
+                            .senderPhoneNumber(Message.getSender().getPhoneNumber())
+                            .audioUri(Message.getAudioUri())
+                            .localDateTime(Message.getTime())
+                            .tag(Message.getTag())
+                            .build()).collect(Collectors.toList());
+            return messageResponseDtoList;
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
 
-
+    public void updateTag(MessageRequestDto.updateTag updateTag){
+        Message message=messageRepository.findById(updateTag.getId()).get();
+        message.Update(updateTag.getTag());
+        messageRepository.save(message);
+    }
 }
