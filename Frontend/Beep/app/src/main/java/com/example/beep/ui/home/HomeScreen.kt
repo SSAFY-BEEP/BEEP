@@ -10,13 +10,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,11 +36,13 @@ fun HomeScreen() {
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(android.graphics.Color.parseColor("#F5F8FF")))
-            .wrapContentSize(Center)
+            .wrapContentSize(Center),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
 
         Box {
@@ -51,12 +56,33 @@ fun HomeScreen() {
                 contentScale = ContentScale.FillWidth
             )
             Button(
+                onClick = { /*showMessage*/ },
+                modifier = Modifier
+                    .width(70.dp)
+                    .offset(60.dp, 133.dp)
+                    .height(45.dp),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    disabledElevation = 0.dp
+                ),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.1F)),
+                shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 30.dp)
+            ) {
+
+            }
+            Button(
                 onClick = { sendText = !sendText },
                 modifier = Modifier
-                    .width(87.dp)
-                    .offset(248.dp, 110.dp)
+                    .width(83.dp)
+                    .offset(252.dp, 110.dp)
                     .height(67.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    disabledElevation = 0.dp
+                ),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.0001F)),
                 shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
                 ) {
 
@@ -67,17 +93,11 @@ fun HomeScreen() {
                 ViewMyText()
             }
         }
-        Text(
-            text = "주소록",
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-                .padding(top = 20.dp, bottom = 20.dp),
-            fontSize = 16.sp,
-        )
-        getKeyboard()
+        KeyboardVsAddressChoice()
     }
 }
+
+
 
 
 
