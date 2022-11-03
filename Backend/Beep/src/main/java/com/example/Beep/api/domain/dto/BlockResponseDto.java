@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class BlockResponseDto {
     private Long id;
+    private Long messageId;
     private Long userId;
     private Long targetId;
 }

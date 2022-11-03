@@ -5,15 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Block extends BaseEntity{
+
+    @JoinColumn(name = "message_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Message message;
+
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,7 +26,8 @@ public class Block extends BaseEntity{
     private User target;
 
     @Builder
-    public Block(User user,User target){
+    public Block(Message message,User user,User target){
+        this.message = message;
         this.user=user;
         this.target=target;
     }
