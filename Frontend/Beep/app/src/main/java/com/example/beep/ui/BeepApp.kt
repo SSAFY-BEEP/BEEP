@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,6 +42,11 @@ fun BeepApp() {
                         name = "Settings",
                         route = "settings",
                         icon = Icons.Default.Settings
+                    ),
+                    BottomNavItem(
+                        name = "LoginMain",
+                        route = "login_main",
+                        icon = Icons.Default.Person
                     )
                 ),
                 navController = navController,
