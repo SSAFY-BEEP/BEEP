@@ -13,11 +13,14 @@ import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message,Long> {
 
-    @Query(value = "select * from Message m where m.sender_id = :sid and m.owner_id = :sid",nativeQuery = true)
-    List<Message> findMessageSend(@Param("sid") Long sid);
+    @Query(value = "select * from Message m where m.sender_id = :userId and m.owner_id = :userId",nativeQuery = true)
+    List<Message> findSendMessage(Long userId);
 
-    @Query(value = "select * from Message m where m.receiver_id = :rid and m.owner_id = :rid",nativeQuery = true)
-    List<Message> findMessageReceive(@Param("rid") Long rid);
+    @Query(value = "select * from Message m where m.receiver_id = :userId and m.owner_id = :userId",nativeQuery = true)
+    List<Message> findReceiveMessage(Long userId);
+
+    @Query(value = "select * from Message m where m.receiver_id = :userId and m.owner_id = :userId and type = :type",nativeQuery = true)
+    List<Message> findReceiveMessageByType(Long userId, Integer type);
 
 //    @Query(value = "select * from Message m where m.sender_id = :sid and m.receiver_id = :rid",nativeQuery = true)
 //    List<Message>messageList(@Param("sid") Long sid, @Param("rid") Long rid);
