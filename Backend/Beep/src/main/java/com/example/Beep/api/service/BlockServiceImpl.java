@@ -1,15 +1,17 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.BlockResponseDto;
-import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Block;
+import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.Message24Repository;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
+import com.example.Beep.api.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +22,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BlockServiceImpl implements BlockService {
-    private final BlockRepository repository;
+    private final BlockRepository blockRepository;
     private final UserRepository userRepository;
-
     private final Message24Repository message24Repository;
+
+    private final MessageRepository messageRepository;
+
 
     @Override
     public List<BlockResponseDto> getList() {
-        List<Block> list = repository.findAll();
+        List<Block> list = blockRepository.findAll();
 
         List<BlockResponseDto> result = new ArrayList<>();
 
@@ -44,29 +48,32 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public boolean isBlocked(String userNum, String targetNum) {
-        User findUser = userRepository.findByPhoneNumber(userNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+    public boolean isBlocked(String targetNum) {
+        String ownerNum = SecurityUtil.getCurrentUsername().orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User findUser = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User findTarget = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
-        return repository.existsByUserAndTarget(findUser, findTarget);
+        return blockRepository.existsByUserAndTarget(findUser, findTarget);
     }
 
+    //메세지24로 차단하기
     @Override
     @Transactional
-    public void blockUser(UserRequestDto.Block block) {
+    public void blockUser(String messageId) {
         try{
-            User user=userRepository.findById(block.getUserId()).get();
-            User target=userRepository.findById(block.getTargetId()).get();
+            String ownerNum = SecurityUtil.getCurrentUsername().get();
 
-            if(repository.existsByUserAndTarget(user,target)){
-                throw new CustomException(ErrorCode.BAD_REQUEST);
-            }
+            Message24 message24= message24Repository.findById(messageId).get();
 
+            User sender=userRepository.findByPhoneNumber(message24.getSenderNum()).get();
+            User receiver=userRepository.findByPhoneNumber(message24.getReceiverNum()).get();
+
+            //토큰 유저랑 같은 사람이 user , 다른 사람이 target
             Block newBlock= Block.builder()
-                    .user(user)
-                    .target(target)
+                    .user(ownerNum==sender.getPhoneNumber()? sender : receiver)
+                    .target(ownerNum!=sender.getPhoneNumber()? sender : receiver)
                     .build();
-            repository.save(newBlock);
+            blockRepository.save(newBlock);
         }catch (NullPointerException n){
             n.printStackTrace();
         }
@@ -74,14 +81,14 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     @Transactional
-    public void blockDelete(UserRequestDto.Block block) {
+    public void blockDelete(Long messageId) {
         try{
-            User user=userRepository.findById(block.getUserId()).get();
-            User target=userRepository.findById(block.getTargetId()).get();
+            //해당 메세지 id로 차단id 찾아서 삭제
+            Message message= messageRepository.findById(messageId).get();
 
-            repository.deleteByUserAndTarget(user,target);
+            blockRepository.deleteByMessage(message);
         }catch (NullPointerException n){
-            n.printStackTrace();
+            throw new CustomException(ErrorCode.POSTS_NOT_FOUND);
         }
     }
 
@@ -93,7 +100,7 @@ public class BlockServiceImpl implements BlockService {
         User target = userRepository.findByPhoneNumber(message24.getSenderNum()).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
         //존재하는 차단관계인지 확인
-        if(repository.existsByUserAndTarget(user, target)){ //이미 존재
+        if(blockRepository.existsByUserAndTarget(user, target)){ //이미 존재
             return "이미 차단된 사용자입니다.";
         } else{ //안 존재
             //차단 관계 설정
@@ -102,7 +109,7 @@ public class BlockServiceImpl implements BlockService {
                     .target(target)
                     .build();
 
-            repository.save(block);
+            blockRepository.save(block);
             return "해당 사용자를 차단하였습니다.";
         }
     }

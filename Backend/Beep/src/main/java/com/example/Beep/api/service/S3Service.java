@@ -5,6 +5,11 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.Beep.api.domain.dto.S3RequestDto;
+import com.example.Beep.api.domain.entity.Message24;
+import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.repository.Message24Repository;
+import com.example.Beep.api.repository.MessageRepository;
+import com.example.Beep.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,6 +32,8 @@ public class S3Service {
     private String bucket2;
 
     private final AmazonS3 amazonS3;
+
+    private final UserRepository userRepository;
     //파일 하나 업로드
     public String uploadFile(MultipartFile multipartFile) {
         String fileName = createFileName(multipartFile.getOriginalFilename());
@@ -68,5 +75,10 @@ public class S3Service {
         } catch (StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
+    }
+
+    public String findUserVoice(Long userId){
+        User user=userRepository.findById(userId).get();
+        return user.getIntroduceAudio();
     }
 }

@@ -25,16 +25,16 @@ public class BlockController {
     }
 
     @ApiOperation(value = "유저 차단", notes = "id를 통해서 차단 기능")
-    @PostMapping
-    public ResponseEntity<?> blockUser(@RequestBody UserRequestDto.Block block) {
-        blockService.blockUser(block);
+    @PostMapping("{messageId}")
+    public ResponseEntity<?> blockUser(@PathVariable("messageId") Long messageId) {
+        blockService.blockUser(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저의 차단 해제", notes = "사용자의 전화번호를 통해서 차단 해제 가능")
-    @DeleteMapping
-    public ResponseEntity<?> blockDelete(@RequestBody UserRequestDto.Block block) {
-        blockService.blockDelete(block);
+    @DeleteMapping("{messageId}")
+    public ResponseEntity<?> blockDelete(@PathVariable("messageId") Long messageId) {
+        blockService.blockDelete(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

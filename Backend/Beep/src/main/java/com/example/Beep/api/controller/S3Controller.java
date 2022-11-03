@@ -66,5 +66,19 @@ public class S3Controller {
         return ResponseEntity.ok().body(voiceUrl);
     }
 
+
+    @GetMapping("/findvoice/{userId}")
+    @ApiOperation(value = "인사말 음성녹음 주소 찾기 ")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공"),
+            @ApiResponse(code = 401, message = "권한 에러"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> findUserVoice(@PathVariable("userId") Long userId) {
+        String voiceUrl = s3Service.findUserVoice(userId);
+        return ResponseEntity.ok().body(voiceUrl);
+    }
+
+
 }
 
