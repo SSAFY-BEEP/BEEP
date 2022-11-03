@@ -4,13 +4,18 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.ui.BeepApp
+import com.example.beep.ui.login.UserState
+import com.example.beep.ui.login.UserStateViewModel
+import com.example.beep.ui.login.login_main
 import com.example.beep.ui.navigation.NavGraph
 import com.example.beep.ui.theme.BeepTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +31,7 @@ class MainApplication: Application(){
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val userState by viewModels<UserStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -35,7 +41,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    BeepApp()
+
+                    CompositionLocalProvider(UserState provides userState) {
+                        val vm = UserState.current
+                        if (vm.isLoggedIn) {
+                            BeepApp()
+                        } else {
+                            login_main()
+                        }
+                    }
                 }
             }
         }

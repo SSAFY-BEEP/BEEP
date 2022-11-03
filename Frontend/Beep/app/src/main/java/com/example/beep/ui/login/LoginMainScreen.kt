@@ -5,28 +5,33 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.example.beep.MainActivity
 import com.example.beep.ui.navigation.NavGraph
-import com.example.beep.ui.navigation.Screens
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginMainScreen() {
+    val navController = rememberNavController()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        NavGraph(navController = navController)
         login_main()
     }
 }
 
 @Composable
 fun login_main() {
-    val navController = rememberNavController()
-    NavGraph(navController = navController)
+    val vm = UserState.current
+    val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -42,14 +47,30 @@ fun login_main() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Button(onClick = {
+                coroutineScope.launch {
+                    vm.signIn(email= "1234", password = "1234")
+                }
+            }){
+                Text(text = "로그인")
+            }
+            
+            Button(onClick = {
+                coroutineScope.launch {
+                    vm.signOut()
+                }
+            }) {
+                Text(text = "로그아웃")
+            }
 
             Text(text = "지금 생각나는 사람은?")
 
-            Button(onClick = { navController.navigate(Screens.Login.route)}, modifier = Modifier.fillMaxWidth()) {
+            
+            Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "로그인")
             }
 
-            Button(onClick = { navController.navigate(Screens.Join.route)}, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "회원가입")
             }
 
