@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface UserService {
     User signUp(UserRequestDto.SignUp signUp);
+    User createUser(UserRequestDto.CreateUser createUser);
+    User updateUser(UserRequestDto.CreateUser updateUser, Long id);
     String login(UserRequestDto.Login login);
     User getUser(String phone);
     List<User> getAllUser();

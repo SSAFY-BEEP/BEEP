@@ -34,8 +34,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -57,6 +55,53 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User createUser(UserRequestDto.CreateUser createUser) {
+        if(userRepository.findByPhoneNumber(createUser.getPhoneNumber()).orElse(null) != null) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
+        User user = User.builder()
+                .phoneNumber(createUser.getPhoneNumber())
+                .password(passwordEncoder.encode(createUser.getPassword()))
+                .fcmToken(createUser.getFcmToken())
+                .authority(createUser.getAuthority())
+                .engrave(createUser.getEngrave())
+                .alarm(createUser.getAlarm())
+                .font(createUser.getFont())
+                .introduceAudio(createUser.getIntroduceAudio())
+                .theme(createUser.getTheme())
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(UserRequestDto.CreateUser updateUser, Long id) {
+        User user = userRepository.findById(id).get();
+        if(user == null) {
+            throw new RuntimeException("존재하지 않는 유저입니다.");
+        }
+        if(userRepository.findByPhoneNumber(updateUser.getPhoneNumber()).orElse(null) != null) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
+        User update = User.builder()
+                .id(id)
+                .phoneNumber(updateUser.getPhoneNumber() == null ? user.getPhoneNumber() : updateUser.getPhoneNumber())
+                .password(passwordEncoder.encode(updateUser.getPassword() == null ? user.getPassword() : updateUser.getPassword()))
+                .fcmToken(updateUser.getFcmToken() == null ? user.getFcmToken() : updateUser.getFcmToken())
+                .authority(updateUser.getAuthority() == null ? user.getAuthority() : updateUser.getAuthority())
+                .engrave(updateUser.getEngrave() == null ? user.getEngrave() : updateUser.getEngrave())
+                .alarm(updateUser.getAlarm() == null ? user.getAlarm() : updateUser.getAlarm())
+                .font(updateUser.getFont() == null ? user.getFont() : updateUser.getFont())
+                .introduceAudio(updateUser.getIntroduceAudio() == null ? user.getIntroduceAudio() : updateUser.getIntroduceAudio())
+                .theme(updateUser.getTheme() == null ? user.getTheme() : updateUser.getTheme())
+                .build();
+
+        return userRepository.save(update);
     }
 
     @Override
@@ -184,6 +229,5 @@ public class UserServiceImpl implements UserService {
         user.changeConfig(engrave, user.getTheme(), user.getFont(), user.getAlarm());
         userRepository.save(user);
     }
-
 
 }

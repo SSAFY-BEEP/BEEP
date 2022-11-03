@@ -33,6 +33,23 @@ public class UserController {
 //        if(user == null) return new ResponseEntity<String>("Fail", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "관리자의 회원 생성", notes = "정보를 입력해서 유저를 생성함")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDto.CreateUser createUser) {
+        userService.createUser(createUser);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "관리자의 회원 정보 수정", notes = "정보를 입력해서 유저정보를 수정함")
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> updateUser(@RequestBody UserRequestDto.CreateUser updateUser, @PathVariable Long id) {
+        userService.updateUser(updateUser, id);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     @ApiOperation(value = "로그인", notes = "전화번호와 비밀번호를 받아서 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequestDto.Login login) {
@@ -64,14 +81,14 @@ public class UserController {
         return new ResponseEntity<User>(userService.getMyUserWithAuth().get(), HttpStatus.OK);
     }
     @ApiOperation(value = "유저 회원 탈퇴", notes = "토큰을 통해서 유저 회원 탈퇴")
-    @PatchMapping
+    @DeleteMapping
     @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> withdrawal() {
         userService.withdrawal();
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "관리자의 회원 탈퇴", notes = "사용자의 전화번호를 통해서 관리자가 회원을 탈퇴시킴")
-    @PatchMapping("/{phone}")
+    @DeleteMapping("/{phone}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> withdrawalByAdmin(@PathVariable String phone) {
         userService.withdrawal(phone);

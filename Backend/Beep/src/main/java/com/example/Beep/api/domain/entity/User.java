@@ -60,11 +60,17 @@ public class User extends BaseEntity{
     private List<Block> blockList = new ArrayList<>();
 
     @Builder
-    public User(String phoneNumber, String password, String fcmToken, Authority authority) {
+    public User(Long id, String phoneNumber, String password, String introduceAudio, String engrave, Integer theme, Integer font, Integer alarm, Authority authority, String fcmToken) {
+        super(id);
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.fcmToken = fcmToken;
+        this.introduceAudio = introduceAudio;
+        this.engrave = engrave;
+        this.theme = theme;
+        this.font = font;
+        this.alarm = alarm;
         this.authority = authority;
+        this.fcmToken = fcmToken;
     }
 
     public User update(String phoneNumber, String password, String fcmToken, Authority authority) {
