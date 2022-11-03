@@ -9,6 +9,7 @@ import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
+import com.example.Beep.api.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,15 +72,21 @@ public class Message24ServiceImpl implements  Message24Service{
 
     //메세지 보관
     @Override
-    public void changeMessageType(String id, String ownerNum, Integer type) {
+    public void changeMessageType(String id, Integer type) {
         Message24 find = repository.findById(id).get();
         User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
-        //owner의 핸드폰번호로 id 찾기
-        Long owner = sender.getPhoneNumber() == ownerNum ? sender.getId() : receiver.getId();
+        //차단을 하는 사람
+        String ownerNum = SecurityUtil.getCurrentUsername().get();
+        Long owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND)).getId();
 
-        //레디스 type 1(보관)로 수정
+        //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관o차단이니까)
+        if(find.getType() == type){
+            throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+        }
+
+        //레디스 type 1(보관)/2(차단)로 수정
         Message24 message24 = Message24.builder()
                 .ownerNum(find.getOwnerNum())
                 .content(find.getContent())
@@ -90,7 +97,7 @@ public class Message24ServiceImpl implements  Message24Service{
                 .build();
         repository.save(message24);
 
-       //해당 메세지 DB 보관하기
+        //해당 메세지 DB 보관하기
         Message message = Message.builder()
                 .ownerId(owner)
                 .content(find.getContent())

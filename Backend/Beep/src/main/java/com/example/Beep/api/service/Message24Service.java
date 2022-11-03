@@ -15,7 +15,7 @@ public interface Message24Service {
     void sendMessage(Message24RequestDto.sendMessage message);
 
     //메세지 보관or차단 등 타입 바꾸고 DB에 저장
-    void changeMessageType(String id, String ownerNum, Integer type);
+    void changeMessageType(String id, Integer type);
 
     //모든 메세지 조회
     List<Message24> getAllMessage();

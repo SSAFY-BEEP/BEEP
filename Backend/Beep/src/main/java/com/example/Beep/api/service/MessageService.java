@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface MessageService {
 
-    void saveSendMessage(MessageRequestDto.persistMessage persistMessage);
-    void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage);
+//    void saveSendMessage(MessageRequestDto.persistMessage persistMessage);
+//    void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage);
 
     void deleteMessage(Long id);
 
-    List<MessageResponseDto> findSendMessage(Long id);
-    List<MessageResponseDto> findReceiveMessage(Long id);
+    List<MessageResponseDto> findSendMessage();
+    List<MessageResponseDto> findReceiveMessageByType(Integer type);
 
     void updateTag(MessageRequestDto.updateTag updateTag);
 }
