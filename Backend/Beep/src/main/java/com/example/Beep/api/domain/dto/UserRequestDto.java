@@ -21,7 +21,9 @@ public class UserRequestDto {
     @Getter
     @Builder
     public static class Login {
+        @ApiModelProperty(example = "01074794185")
         String phoneNumber;
+        @ApiModelProperty(example = "ssafy")
         String password;
     }
 

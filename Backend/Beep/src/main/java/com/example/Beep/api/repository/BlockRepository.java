@@ -1,6 +1,7 @@
 package com.example.Beep.api.repository;
 
 import com.example.Beep.api.domain.entity.Block;
+import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,5 +16,8 @@ public interface BlockRepository extends JpaRepository<Block,Long> {
     //차단여부 확인
     boolean existsByUserAndTarget(User user, User target);
 
-    void deleteByUserAndTarget(User user, User target);
+    //메세지id로 차단관계 삭제
+    boolean deleteByMessage(Message message);
+
+//    void deleteByUserAndTarget(User user, User target);
 }

@@ -10,13 +10,6 @@ public class Message24RequestDto {
         private String audioUri;
         private String content;
         private String receiverNum;
-        private String senderNum;
     }
 
-    @Getter
-    @Builder
-    public static class changeMessage {
-        private String id;      //메세지 아이디
-        private String ownerNum;   //
-    }
 }

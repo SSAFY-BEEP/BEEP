@@ -12,10 +12,10 @@ public interface Message24Service {
     List<Message24> getSendMessage(String senderNum);
 
     //메세지 발송(저장)
-    void sendMessage(Message24RequestDto.sendMessage message);
+    void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked);
 
     //메세지 보관or차단 등 타입 바꾸고 DB에 저장
-    void changeMessageType(String id, Integer type);
+    void changeMessageType(String messageId, Integer type);
 
     //모든 메세지 조회
     List<Message24> getAllMessage();
@@ -24,5 +24,5 @@ public interface Message24Service {
     Message24 getMessage(String id);
 
     //해당 메세지 삭제
-    void deleteMessageById(String id, String ownerNum);
+    void deleteMessageById(String id);
 }

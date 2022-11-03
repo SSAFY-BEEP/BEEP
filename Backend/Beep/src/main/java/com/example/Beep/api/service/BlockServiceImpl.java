@@ -38,6 +38,7 @@ public class BlockServiceImpl implements BlockService {
         for(Block b : list){
             result.add(BlockResponseDto.builder()
                     .id(b.getId())
+                    .messageId(b.getMessage().getId())
                     .userId(b.getUser().getId())
                     .targetId(b.getTarget().getId())
                     .build()
@@ -59,7 +60,7 @@ public class BlockServiceImpl implements BlockService {
     //메세지24로 차단하기
     @Override
     @Transactional
-    public void blockUser(String messageId) {
+    public void blockUser24(String messageId) {
         try{
             String ownerNum = SecurityUtil.getCurrentUsername().get();
 
@@ -68,10 +69,30 @@ public class BlockServiceImpl implements BlockService {
             User sender=userRepository.findByPhoneNumber(message24.getSenderNum()).get();
             User receiver=userRepository.findByPhoneNumber(message24.getReceiverNum()).get();
 
+            //차단관계 추가
             //토큰 유저랑 같은 사람이 user , 다른 사람이 target
             Block newBlock= Block.builder()
                     .user(ownerNum==sender.getPhoneNumber()? sender : receiver)
                     .target(ownerNum!=sender.getPhoneNumber()? sender : receiver)
+                    .build();
+            blockRepository.save(newBlock);
+        }catch (NullPointerException n){
+            n.printStackTrace();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void blockUser(Long messageId) {
+        try{
+            String ownerNum = SecurityUtil.getCurrentUsername().get();
+
+            Message message= messageRepository.findById(messageId).get();
+
+            //토큰 유저랑 같은 사람이 user , 다른 사람이 target
+            Block newBlock= Block.builder()
+                    .user(ownerNum==message.getSender().getPhoneNumber()? message.getSender() : message.getReceiver())
+                    .target(ownerNum!=message.getSender().getPhoneNumber()? message.getSender() : message.getReceiver())
                     .build();
             blockRepository.save(newBlock);
         }catch (NullPointerException n){
