@@ -1,6 +1,7 @@
 package com.example.Beep.api.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,11 +17,25 @@ public class PhoneBook extends BaseEntity{
     private User user;
 
     @Column(length = 11,nullable = false)
-    private String targetId;
+    private String targetPhone;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private Integer install;
+
+    @Builder
+    public PhoneBook(User user, String targetPhone, String name, Integer install) {
+        this.user = user;
+        this.targetPhone = targetPhone;
+        this.name = name;
+        this.install = install;
+    }
+
+    public PhoneBook update(String phone, String name) {
+        this.targetPhone = phone == null ? this.targetPhone : phone;
+        this.name = name == null ? this.name : name;
+        return this;
+    }
 }
