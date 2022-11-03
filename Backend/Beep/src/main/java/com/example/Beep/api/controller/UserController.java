@@ -81,14 +81,14 @@ public class UserController {
         return new ResponseEntity<User>(userService.getMyUserWithAuth().get(), HttpStatus.OK);
     }
     @ApiOperation(value = "유저 회원 탈퇴", notes = "토큰을 통해서 유저 회원 탈퇴")
-    @DeleteMapping
+    @PatchMapping("/withdrawal")
     @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> withdrawal() {
         userService.withdrawal();
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "관리자의 회원 탈퇴", notes = "사용자의 전화번호를 통해서 관리자가 회원을 탈퇴시킴")
-    @DeleteMapping("/{phone}")
+    @PatchMapping("/withdrawal/{phone}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> withdrawalByAdmin(@PathVariable String phone) {
         userService.withdrawal(phone);

@@ -24,6 +24,16 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드입니다."),
 
     /*
+     204 NO_CONTENT: 데이터 조회 결과가 없음
+    */
+    METHOD_NO_CONTENT(HttpStatus.NO_CONTENT, "해당하는 데이터가 없습니다."),
+
+    /*
+     208 ALREADY_REPORTED: 이미 등록된 데이터
+     */
+    METHOD_ALREADY_REPORTED(HttpStatus.ALREADY_REPORTED, "이미 등록된 데이터입니다."),
+
+    /*
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
      */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류입니다."),

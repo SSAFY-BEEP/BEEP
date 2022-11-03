@@ -73,7 +73,7 @@ public class User extends BaseEntity{
         this.fcmToken = fcmToken;
     }
 
-    public User update(String phoneNumber, String password, String fcmToken, Authority authority) {
+    public User withdrawal(String phoneNumber, String password, String fcmToken, Authority authority) {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.fcmToken = fcmToken;

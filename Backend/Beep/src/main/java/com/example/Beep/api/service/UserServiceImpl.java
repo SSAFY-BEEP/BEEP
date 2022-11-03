@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User signUp(UserRequestDto.SignUp signUp) {
         if(userRepository.findByPhoneNumber(signUp.getPhoneNumber()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
 
         User user = User.builder()
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserRequestDto.CreateUser createUser) {
         if(userRepository.findByPhoneNumber(createUser.getPhoneNumber()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
 
         User user = User.builder()
@@ -80,12 +80,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UserRequestDto.CreateUser updateUser, Long id) {
-        User user = userRepository.findById(id).get();
-        if(user == null) {
-            throw new RuntimeException("존재하지 않는 유저입니다.");
-        }
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         if(userRepository.findByPhoneNumber(updateUser.getPhoneNumber()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
         }
 
         User update = User.builder()
@@ -140,7 +137,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void withdrawal() {
         User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
-        user.update("0","0","0",Authority.ROLE_LEAVE);
+        user.withdrawal("0","0","0",Authority.ROLE_LEAVE);
 
         userRepository.save(user);
     }
@@ -148,7 +145,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void withdrawal(String phone) {
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
-        user.update("0","0","0",Authority.ROLE_LEAVE);
+        user.withdrawal("0","0","0",Authority.ROLE_LEAVE);
 
         userRepository.save(user);
     }
