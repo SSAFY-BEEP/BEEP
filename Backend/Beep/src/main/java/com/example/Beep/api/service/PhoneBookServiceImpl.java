@@ -30,6 +30,10 @@ public class PhoneBookServiceImpl implements PhoneBookService {
                 .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         for(PhoneBookRequestDto.Register register : registerList) {
+            //연락처 중복 안되게
+            if(phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(register.getPhone(), user.getId()).isPresent()){
+                throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
+            }
             User target = userRepository.findByPhoneNumber(register.getPhone()).orElse(null);
             PhoneBook tmp = PhoneBook.builder()
                     .name(register.getName())
@@ -57,5 +61,30 @@ public class PhoneBookServiceImpl implements PhoneBookService {
             result.add(phone);
         }
         return result;
+    }
+
+    @Override
+    public PhoneBookResponseDto.Phone updatePhone(String phone, PhoneBookRequestDto.Register update) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        PhoneBook target = phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(phone, user.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        target.update(update.getPhone(), update.getName());
+        phoneBookRepository.save(target);
+        PhoneBookResponseDto.Phone result = PhoneBookResponseDto.Phone.builder()
+                .phone(target.getTargetPhone())
+                .name(target.getName())
+                .install(target.getInstall())
+                .build();
+        return result;
+    }
+
+    @Override
+    public void deletePhone(String phone) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get())
+                .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        PhoneBook target = phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(phone, user.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        phoneBookRepository.delete(target);
     }
 }

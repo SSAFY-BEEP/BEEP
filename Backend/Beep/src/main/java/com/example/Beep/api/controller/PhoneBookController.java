@@ -34,4 +34,19 @@ public class PhoneBookController {
     public ResponseEntity<?> getPhoneBookByUser() {
         return new ResponseEntity<>(phoneBookService.getPhoneList(), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "등록된 연락처 수정", notes = "유저가 연동한 연락처 하나를 수정")
+    @PatchMapping("/{phone}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> updatePhoneBookByUser(@PathVariable String phone, @RequestBody PhoneBookRequestDto.Register update) {
+        return new ResponseEntity<>(phoneBookService.updatePhone(phone, update), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "등록된 연락처 삭제", notes = "유저가 연동한 연락처 하나를 삭제")
+    @DeleteMapping("/{phone}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> deletePhoneBookByUser(@PathVariable String phone) {
+        phoneBookService.deletePhone(phone);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 }
