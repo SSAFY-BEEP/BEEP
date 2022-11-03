@@ -10,8 +10,8 @@ public interface BlockService {
 
     boolean isBlocked(String userNum, String targetNum);
 
-    void blockUser(UserRequestDto.Block block);
+    void blockUser(Long id);
 
-    void blockDelete(UserRequestDto.Block block);
+    void blockDelete(Long id);
 }
 

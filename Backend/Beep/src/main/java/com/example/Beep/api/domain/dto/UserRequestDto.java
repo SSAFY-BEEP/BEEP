@@ -24,12 +24,4 @@ public class UserRequestDto {
         String password;
     }
 
-    @Getter
-    @Builder
-    public static class Block{
-        @ApiModelProperty(value = "차단하는 유저")
-        Long userId; //차단하는 유저
-        @ApiModelProperty(value = "차단당하는 유저")
-        Long targetId; //차단 당하는 유저
-    }
 }

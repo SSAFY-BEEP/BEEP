@@ -3,10 +3,12 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.BlockResponseDto;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Block;
+import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BlockServiceImpl implements BlockService {
-    private final BlockRepository repository;
+    private final BlockRepository blockRepository;
     private final UserRepository userRepository;
+
+    private final MessageRepository messageRepository;
 
     @Override
     public List<BlockResponseDto> getList() {
-        List<Block> list = repository.findAll();
+        List<Block> list = blockRepository.findAll();
 
         List<BlockResponseDto> result = new ArrayList<>();
 
@@ -44,25 +48,29 @@ public class BlockServiceImpl implements BlockService {
         User findUser = userRepository.findByPhoneNumber(userNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User findTarget = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
-        return repository.existsByUserAndTarget(findUser, findTarget);
+        return blockRepository.existsByUserAndTarget(findUser, findTarget);
     }
 
     @Override
     @Transactional
-    public void blockUser(UserRequestDto.Block block) {
+    public void blockUser(Long messageId) {
         try{
-            User user=userRepository.findById(block.getUserId()).get();
-            User target=userRepository.findById(block.getTargetId()).get();
-
-            if(repository.existsByUserAndTarget(user,target)){
-                throw new CustomException(ErrorCode.BAD_REQUEST);
+            Message message= messageRepository.findById(messageId).get();
+            User sender=userRepository.findById(message.getSender().getId()).get();
+            User receiver=userRepository.findById(message.getReceiver().getId()).get();
+            if(message.getOwnerId()==sender.getId()){
+                Block newBlock= Block.builder()
+                        .user(message.getSender())
+                        .target(message.getReceiver())
+                        .build();
+                blockRepository.save(newBlock);
+            }else{
+                Block newBlock= Block.builder()
+                        .user(message.getReceiver())
+                        .target(message.getSender())
+                        .build();
+                blockRepository.save(newBlock);
             }
-
-            Block newBlock= Block.builder()
-                    .user(user)
-                    .target(target)
-                    .build();
-            repository.save(newBlock);
         }catch (NullPointerException n){
             n.printStackTrace();
         }
@@ -70,12 +78,16 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     @Transactional
-    public void blockDelete(UserRequestDto.Block block) {
+    public void blockDelete(Long messageId) {
         try{
-            User user=userRepository.findById(block.getUserId()).get();
-            User target=userRepository.findById(block.getTargetId()).get();
-
-            repository.deleteByUserAndTarget(user,target);
+            Message message= messageRepository.findById(messageId).get();
+            User sender=userRepository.findById(message.getSender().getId()).get();
+            User receiver=userRepository.findById(message.getReceiver().getId()).get();
+            if(message.getOwnerId()==sender.getId()){
+                blockRepository.deleteByUserAndTarget(sender,receiver);
+            }else{
+                blockRepository.deleteByUserAndTarget(receiver,sender);
+            }
         }catch (NullPointerException n){
             n.printStackTrace();
         }

@@ -65,4 +65,9 @@ public class Message extends BaseEntity{
         this.tag=tag;
         return this;
     }
+
+    public Message Block(Integer type){
+        this.type=type;
+        return this;
+    }
 }
