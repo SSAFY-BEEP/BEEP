@@ -32,4 +32,10 @@ public class PhoneBook extends BaseEntity{
         this.name = name;
         this.install = install;
     }
+
+    public PhoneBook update(String phone, String name) {
+        this.targetPhone = phone == null ? this.targetPhone : phone;
+        this.name = name == null ? this.name : name;
+        return this;
+    }
 }
