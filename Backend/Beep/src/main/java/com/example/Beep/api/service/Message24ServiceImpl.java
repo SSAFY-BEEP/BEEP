@@ -46,34 +46,41 @@ public class Message24ServiceImpl implements  Message24Service{
         return repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
     }
 
+    //메세지 24에 메세지 저장
     @Transactional
     @Override
-    public void sendMessage(Message24RequestDto.sendMessage message) {
+    public void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked) {
+        String userNum = SecurityUtil.getCurrentUsername().get();
+
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
+        //보낸사람에게 저장
         Message24 senderMsg = Message24.builder()
-                .ownerNum(message.getSenderNum())
+                .ownerNum(userNum)
                 .audioUri(message.getAudioUri())
                 .content(message.getContent())
-                .senderNum(message.getSenderNum())
+                .senderNum(userNum)
                 .receiverNum(message.getReceiverNum())
                 .build();
         repository.save(senderMsg);
 
-        Message24 receiverMsg = Message24.builder()
-                .ownerNum(message.getReceiverNum())
-                .audioUri(message.getAudioUri())
-                .content(message.getContent())
-                .senderNum(message.getSenderNum())
-                .receiverNum(message.getReceiverNum())
-                .build();
+        if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
+            Message24 receiverMsg = Message24.builder()
+                    .ownerNum(message.getReceiverNum())
+                    .audioUri(message.getAudioUri())
+                    .content(message.getContent())
+                    .senderNum(userNum)
+                    .receiverNum(message.getReceiverNum())
+                    .build();
 
-        repository.save(receiverMsg);
+            repository.save(receiverMsg);
+        }
     }
 
     //메세지 보관
     @Override
-    public void changeMessageType(String id, Integer type) {
-        Message24 find = repository.findById(id).get();
+    public void changeMessageType(String messageId, Integer type) {
+        //메세지 존재시
+        Message24 find = repository.findById(messageId).get();
         User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
@@ -100,6 +107,7 @@ public class Message24ServiceImpl implements  Message24Service{
         //해당 메세지 DB 보관하기
         Message message = Message.builder()
                 .ownerId(owner)
+                .time(find.getTime())
                 .content(find.getContent())
                 .audioUri(find.getAudioUri())
                 .sender(sender)
@@ -125,7 +133,8 @@ public class Message24ServiceImpl implements  Message24Service{
 
 
     @Override
-    public void deleteMessageById(String id, String ownerNum) {
-        repository.deleteByIdAndOwnerNum(id, ownerNum);
+    public void deleteMessageById(String id) {
+        String userNum = SecurityUtil.getCurrentUsername().get();
+        repository.deleteByIdAndOwnerNum(id, userNum);
     }
 }
