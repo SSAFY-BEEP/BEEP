@@ -2,7 +2,7 @@ package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
-import com.example.Beep.api.security.SecurityUtil;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.Message24ServiceImpl;
 import io.swagger.annotations.Api;
@@ -72,7 +72,7 @@ public class Message24Controller {
     @PostMapping("/save/{messageId}")
     public ResponseEntity<?> saveMessageById(@PathVariable String messageId){
         //해당 메세지를 메세지(보관)DB에 INSERT & redis type변경
-        service.changeMessageType(messageId, 1);
+        service.changeMessageType(messageId, MessageType.SAVE.getNum());
 
         return ResponseEntity.ok().build();
     }
