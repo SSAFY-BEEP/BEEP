@@ -1,14 +1,13 @@
 package com.example.Beep.api.controller;
 
-import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.enums.MessageType;
+import com.example.Beep.api.repository.SMSCode24Repository;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.Message24Service;
-import com.example.Beep.api.service.MessageService;
+import com.example.Beep.api.service.SMSCode24Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/block")
 public class BlockController {
-
     private final BlockService blockService;
     private final Message24Service message24Service;
 
@@ -53,4 +51,5 @@ public class BlockController {
         blockService.blockDelete(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
 }

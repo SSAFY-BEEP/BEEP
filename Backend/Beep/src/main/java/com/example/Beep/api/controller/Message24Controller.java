@@ -21,13 +21,11 @@ import java.util.List;
 @RequestMapping("/message24")
 public class Message24Controller {
     private final Message24ServiceImpl service;
-//    private final Relation24ServiceImpl relation24Service;
     private final BlockService blockService;
 
     @ApiOperation(value = "받은 메세지 목록 조회", notes = "해당 회원의 수신메세지 목록 조회 + 차단 거르기")
     @GetMapping("/receive/{receiver}")
     public ResponseEntity<?> getReceiveMessage(@PathVariable String receiverNum){
-//        return new ResponseEntity<String>("22",HttpStatus.OK);
         return new ResponseEntity<List<Message24>>(service.getReceiveMessage(receiverNum), HttpStatus.OK);
     }
 
@@ -45,7 +43,7 @@ public class Message24Controller {
 
         service.sendMessage(message, isBlocked);
 
-        return new ResponseEntity<Boolean>(isBlocked, HttpStatus.OK);
+        return new ResponseEntity<String>(isBlocked? "차단된 메세지" : "메세지 정상 발송", HttpStatus.OK);
     }
 
     @ApiOperation(value = "모든 메세지 목록 조회(테스트용)", notes = "모든 회원의 메세지 조회")
