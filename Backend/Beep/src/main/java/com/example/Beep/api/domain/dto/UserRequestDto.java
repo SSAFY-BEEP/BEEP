@@ -1,6 +1,6 @@
 package com.example.Beep.api.domain.dto;
 
-import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.enums.Authority;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;

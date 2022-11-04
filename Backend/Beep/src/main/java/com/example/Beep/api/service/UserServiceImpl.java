@@ -2,7 +2,7 @@ package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
-import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.domain.enums.MessageType;
