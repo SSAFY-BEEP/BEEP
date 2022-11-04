@@ -23,7 +23,7 @@ public class UserRequestDto {
     public static class Login {
         @ApiModelProperty(example = "01074794185")
         String phoneNumber;
-        @ApiModelProperty(example = "ssafy")
+        @ApiModelProperty(example = "12345asdf")
         String password;
     }
 

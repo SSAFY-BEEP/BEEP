@@ -3,16 +3,16 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Authority;
-import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +35,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BlockRepository blockRepository;
+    private final MessageRepository messageRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
@@ -135,18 +137,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void withdrawal() {
         User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
-        user.withdrawal("0","0","0",Authority.ROLE_LEAVE);
-
-        userRepository.save(user);
+        deleteData(user);
     }
 
     @Override
     public void withdrawal(String phone) {
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
-        user.withdrawal("0","0","0",Authority.ROLE_LEAVE);
+        deleteData(user);
+    }
 
+    //유저 회원 탈퇴 및 데이터 지우기
+    public void deleteData(User user) {
+        user.withdrawal(user.getId().toString(),"0","0",Authority.ROLE_LEAVE);
+        messageRepository.deleteMessageByOwnerId(user.getId());
+        blockRepository.deleteBlockByUserIdOrTargetId(user.getId(), user.getId());
+        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), MessageType.BLOCK.getNum());
         userRepository.save(user);
     }
 
