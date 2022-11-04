@@ -55,14 +55,14 @@ public class SMSServiceImpl implements SMSService{
     }
 
     @Override
-    public String sendExternalMessage(SMSRequestDto.Send send) {
+    public String sendInviteSMS(SMSRequestDto.Send send) {
         //초대 메시지 작성 필요!
         return sendSMS(send.getTargetPhone(), send.getMsg());
 //        return "Success";
     }
 
     @Override
-    public String sendCertMessage(String targetPhone) {
+    public String sendCertSMS(String targetPhone) {
         //6자리 난수
         int certNum = new Random(System.currentTimeMillis()).nextInt(999999);
         String msg = "인증번호 : " + Integer.toString(certNum);
@@ -73,7 +73,7 @@ public class SMSServiceImpl implements SMSService{
     }
 
     @Override
-    public String findPw(String targetPhone) {
+    public String sendTempPwSMS(String targetPhone) {
         //난수로 12자리 임시 비밀번호 생성
         String newPw = getRamdomPassword(12);
         //유저가 없으면 오류
