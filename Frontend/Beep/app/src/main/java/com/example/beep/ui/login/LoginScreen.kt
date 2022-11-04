@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.example.beep.R
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -142,7 +142,7 @@ fun LoginFields(
         DemoField(
             value = password,
             label = "Password",
-            placeholder = "비밀번호를 입력하세요",
+            placeholder = "비밀번호를 입력",
             onValueChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
             leadingIcon = {

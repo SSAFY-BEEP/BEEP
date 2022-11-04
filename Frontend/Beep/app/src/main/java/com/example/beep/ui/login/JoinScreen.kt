@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 
 @Composable
-fun JoinScreen(navController: NavController) {
+fun JoinScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

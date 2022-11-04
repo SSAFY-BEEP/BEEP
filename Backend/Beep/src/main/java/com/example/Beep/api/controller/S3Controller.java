@@ -10,22 +10,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import java.io.IOException;
 import java.util.List;
 
-@Api(value = "4. S3 업로드", tags={"4. S3 업로드"})
+@Api(value = "5. S3(음성메세지/인사말)", tags={"5. S3(음성메세지/인사말)"})
 @RequiredArgsConstructor
-@RequestMapping("/s3")
 @RestController
+@CrossOrigin("*")
+@RequestMapping("/s3")
 public class S3Controller {
-    @Autowired
-    S3Service s3Service;
+    private final S3Service s3Service;
 
     @PostMapping("/voice")
-    @ApiOperation(value = "음성녹음 1개 등록")
+    @ApiOperation(value = "음성메세지 1개 등록")
+    @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
@@ -40,6 +42,7 @@ public class S3Controller {
 
     @PostMapping("/introduce")
     @ApiOperation(value = "인사말 1개 등록")
+    @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
@@ -53,7 +56,8 @@ public class S3Controller {
     }
 
     @PostMapping("/persist/voice")
-    @ApiOperation(value = "영구 보관함 음성녹음 1개 등록")
+    @ApiOperation(value = "영구 보관함 음성메세지 1개 등록")
+    @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
@@ -67,8 +71,9 @@ public class S3Controller {
     }
 
 
-    @GetMapping("/findvoice/{userId}")
-    @ApiOperation(value = "인사말 음성녹음 주소 찾기 ")
+    @GetMapping("/voice{userId}")
+    @ApiOperation(value = "인사말 파일 주소 찾기")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),

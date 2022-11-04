@@ -29,17 +29,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MessageScreen(viewModel: MessageViewModel = viewModel()) {
+fun MessageScreen(viewModel: MessageViewModel = viewModel(), toNext: () -> Unit) {
     var show by remember { mutableStateOf(true) }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Message screen")
-        postData(show, onClick = {
-            show = !show
-            Log.d("show", show.toString())
-        })
+        Column() {
+            Button(onClick = toNext ) {
+                Text(text = "Record Voice")
+            }
+            Text(text = "Message screen")
+            postData(show, onClick = {
+                show = !show
+                Log.d("show", show.toString())
+            })
+        }
+
     }
 }
 

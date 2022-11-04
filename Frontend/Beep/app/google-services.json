@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "686709683085",
+    "project_id": "beep-98cf0",
+    "storage_bucket": "beep-98cf0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686709683085:android:602d970de8ac269947c3c4",
+        "android_client_info": {
+          "package_name": "com.example.beep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "686709683085-qhadfd8nj9plati1b6mojcok8t4dmglr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5H5_UyA2fUd2zWSsR2Ld3w7pvey1z63M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "686709683085-qhadfd8nj9plati1b6mojcok8t4dmglr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
