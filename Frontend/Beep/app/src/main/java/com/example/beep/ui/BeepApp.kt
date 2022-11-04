@@ -1,5 +1,7 @@
 package com.example.beep.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
@@ -20,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.data.BottomNavItem
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
     val navController = rememberNavController()

@@ -88,5 +88,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
+
+    // audio visualization
+    implementation 'com.github.lincollincol:compose-audiowaveform:1.0.1'
 }
 

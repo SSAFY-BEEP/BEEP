@@ -18,7 +18,7 @@ class VoiceRecorder {
                     instance = it
                 }
             }
-
-
     }
+
+
 }
