@@ -44,7 +44,6 @@ fun HomeScreen() {
             .wrapContentSize(Center),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-
         Box {
             Image(
                 painter = image,

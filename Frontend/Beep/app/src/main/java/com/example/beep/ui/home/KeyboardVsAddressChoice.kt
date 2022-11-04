@@ -24,46 +24,47 @@ fun KeyboardVsAddressChoice() {
 
 
     var keyboardBtnBgColor = if (showKeyboard) {
-        Color(android.graphics.Color.parseColor("#FF8C8C"))
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
     } else {
         Color(android.graphics.Color.parseColor("#FFFFFF"))
     }
     var keyboardBtnTxtColor = if (showKeyboard) {
         Color(android.graphics.Color.parseColor("#FFFFFF"))
     } else {
-        Color(android.graphics.Color.parseColor("#FF8C8C"))
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
     }
     var addressBtnBgColor = if (showKeyboard) {
         Color(android.graphics.Color.parseColor("#FFFFFF"))
     } else {
-        Color(android.graphics.Color.parseColor("#FF8C8C"))
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
     }
     var addressBtnTxtColor = if (showKeyboard) {
-        Color(android.graphics.Color.parseColor("#FF8C8C"))
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
     } else {
         Color(android.graphics.Color.parseColor("#FFFFFF"))
     }
 
     Box(
         modifier = Modifier
-            .clip(shape = RoundedCornerShape(size = 15.dp))
+            .clip(shape = RoundedCornerShape(15.dp))
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .width(200.dp)
             .height(30.dp)
-
-            .background(color = androidx.compose.ui.graphics.Color.White)
-            .border(width = 1.dp, color = Color(android.graphics.Color.parseColor("#FF8C8C")))
+            .background(color = androidx.compose.ui.graphics.Color.White, shape = RoundedCornerShape(15.dp))
+            .border(width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")), shape = RoundedCornerShape(15.dp)),
     ) {
         Row(
             modifier = Modifier
-                .fillMaxHeight()
+                .fillMaxSize()
                 .wrapContentSize(Alignment.Center)
+                .wrapContentWidth(Alignment.CenterHorizontally)
+
         ) {
             Button(
                 onClick = { showKeyboard = true },
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(97.dp)
                     .height(24.dp),
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 0.dp,
@@ -71,7 +72,8 @@ fun KeyboardVsAddressChoice() {
                     disabledElevation = 0.dp
                 ),
                 colors = ButtonDefaults.buttonColors(backgroundColor = keyboardBtnBgColor),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(0.dp),
 
             ) {
                 Text(
@@ -84,7 +86,7 @@ fun KeyboardVsAddressChoice() {
             Button(
                 onClick = { showKeyboard = false },
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(97.dp)
                     .height(24.dp),
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 0.dp,
@@ -92,8 +94,8 @@ fun KeyboardVsAddressChoice() {
                     disabledElevation = 0.dp
                 ),
                 colors = ButtonDefaults.buttonColors(backgroundColor = addressBtnBgColor),
-                shape = RoundedCornerShape(12.dp)
-
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(0.dp),
             ) {
                 Text(
                     text = "주소록",
