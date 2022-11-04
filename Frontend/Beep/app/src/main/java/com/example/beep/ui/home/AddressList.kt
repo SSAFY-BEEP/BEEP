@@ -34,6 +34,7 @@ fun ShowAddressList() {
             modifier = Modifier
                 .width(320.dp)
                 .fillMaxWidth()
+                .wrapContentHeight(Alignment.CenterVertically)
                 .padding(0.dp, 0.dp, 0.dp, 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -41,7 +42,8 @@ fun ShowAddressList() {
                 text = addressListTitle,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                fontFamily = galmurinineFont
             )
             Button(
                 onClick = { goAddAddress = !goAddAddress },
@@ -54,7 +56,7 @@ fun ShowAddressList() {
                     pressedElevation = 0.dp,
                     disabledElevation = 0.dp
                 ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0F)),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.3F)),
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(0.dp),
 
@@ -62,6 +64,7 @@ fun ShowAddressList() {
                 Text(
                     text = "+",
                     fontSize = 25.sp,
+                    fontFamily = galmurinineFont
                 )
             }
         }

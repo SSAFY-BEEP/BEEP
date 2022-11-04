@@ -79,8 +79,8 @@ fun KeyboardVsAddressChoice() {
                 Text(
                     text = "키보드",
                     Modifier.padding(0.dp),
-                    color = keyboardBtnTxtColor
-
+                    color = keyboardBtnTxtColor,
+                    fontFamily = galmurinineFont
                 )
             }
             Button(
@@ -101,7 +101,8 @@ fun KeyboardVsAddressChoice() {
                     text = "주소록",
                     modifier = Modifier
                         .padding(top = 0.dp),
-                    color = addressBtnTxtColor
+                    color = addressBtnTxtColor,
+                    fontFamily = galmurinineFont
                 )
             }
 

@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +31,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
 import com.example.beep.ui.theme.BeepTheme
 
+val galmurinineFont = FontFamily(
+    Font(R.font.galmurinine)
+)
 
 @ExperimentalComposeUiApi
 @Composable
@@ -108,10 +114,12 @@ fun ViewMyText() {
     Text(
         text = state.number1,
         modifier = Modifier
+
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(top = 45.dp),
-        fontSize = 20.sp,
+        fontSize = 19.sp,
+        fontFamily = galmurinineFont
     )
 }
 
