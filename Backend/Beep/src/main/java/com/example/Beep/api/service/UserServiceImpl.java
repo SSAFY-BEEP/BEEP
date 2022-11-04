@@ -5,6 +5,7 @@ import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.MessageRepository;
@@ -139,22 +140,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void withdrawal() {
         User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
-        user.withdrawal(user.getId().toString(),"0","0",Authority.ROLE_LEAVE);
-        messageRepository.deleteMessageByOwnerId(user.getId());
-        blockRepository.deleteBlockByUserIdOrTargetId(user.getId(), user.getId());
-        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), 2);
-
-        userRepository.save(user);
+        deleteData(user);
     }
 
     @Override
     public void withdrawal(String phone) {
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+        deleteData(user);
+    }
+
+    //유저 회원 탈퇴 및 데이터 지우기
+    public void deleteData(User user) {
         user.withdrawal(user.getId().toString(),"0","0",Authority.ROLE_LEAVE);
         messageRepository.deleteMessageByOwnerId(user.getId());
         blockRepository.deleteBlockByUserIdOrTargetId(user.getId(), user.getId());
-        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), 2);
-
+        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), MessageType.BLOCK.getNum());
         userRepository.save(user);
     }
 
