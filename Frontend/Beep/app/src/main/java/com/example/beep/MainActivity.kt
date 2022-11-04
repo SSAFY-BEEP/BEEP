@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MainApplication: Application(){
+class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
     }
@@ -31,7 +31,6 @@ class MainApplication: Application(){
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val userState by viewModels<UserStateViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,18 +41,14 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 
-                    CompositionLocalProvider(UserState provides userState) {
-                        val vm = UserState.current
-                        if (vm.isLoggedIn) {
-                            BeepApp()
-                        } else {
-                            login_main()
-                        }
-                    }
+
+                    BeepApp()
+
                 }
             }
         }
     }
+}
 }
 
 

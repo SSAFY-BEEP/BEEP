@@ -17,10 +17,6 @@ import com.example.beep.ui.navigation.NavGraph
 import kotlinx.coroutines.launch
 import com.example.beep.R
 
-val pressFont = FontFamily(
-    Font(R.font.pressstart_regular),
-)
-
 val dunggeunmoFont = FontFamily(
     Font(R.font.dunggeunmo)
 )
