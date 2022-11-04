@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "8. 연락처 연동", tags = {"8. 연락처"})
-@RestController
+@Api(value = "6. 연락처", tags = {"6. 연락처"})
 @RequiredArgsConstructor
+@RestController
+@CrossOrigin("*")
 @RequestMapping("/phonebook")
 public class PhoneBookController {
 

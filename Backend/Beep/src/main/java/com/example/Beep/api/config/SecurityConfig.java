@@ -67,11 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/user/logout")
-
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));   //filter 적용
-
-
     }
-
 }
