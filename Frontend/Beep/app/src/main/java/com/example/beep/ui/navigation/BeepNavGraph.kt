@@ -1,5 +1,7 @@
 package com.example.beep.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,7 +13,9 @@ import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.mypage.MyPageScreen
+import com.example.beep.ui.navigation.messageGraph
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BeepNavGraph(navController: NavHostController) {
@@ -19,10 +23,7 @@ fun BeepNavGraph(navController: NavHostController) {
         composable("home") {
             HomeScreen()
         }
-        composable("chat") {
-            val model: MessageViewModel = hiltViewModel(it)
-            MessageScreen(model)
-        }
+        messageGraph(navController)
         composable("settings") {
             MyPageScreen()
         }
