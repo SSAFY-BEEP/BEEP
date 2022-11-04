@@ -33,6 +33,23 @@ public class UserController {
 //        if(user == null) return new ResponseEntity<String>("Fail", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "관리자의 회원 생성", notes = "정보를 입력해서 유저를 생성함")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDto.CreateUser createUser) {
+        userService.createUser(createUser);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "관리자의 회원 정보 수정", notes = "정보를 입력해서 유저정보를 수정함")
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> updateUser(@RequestBody UserRequestDto.CreateUser updateUser, @PathVariable Long id) {
+        userService.updateUser(updateUser, id);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
     @ApiOperation(value = "로그인", notes = "전화번호와 비밀번호를 받아서 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequestDto.Login login) {
@@ -46,32 +63,32 @@ public class UserController {
 
     @ApiOperation(value = "회원 전체 조회", notes = "관리자가 전체 회원 정보를 조회")
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> getAllUser() {
         return new ResponseEntity<List<User>>(userService.getAllUser(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "관리자의 회원 조회", notes = "회원 전화번호를 통해 정보 조회")
     @GetMapping("/{phone}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> getDetail(@PathVariable String phone) {
         return new ResponseEntity<User>(userService.getUser(phone), HttpStatus.OK);
     }
     @ApiOperation(value = "유저의 정보 조회", notes = "토큰을 통해서 자신의 정보 조회")
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> getMyInfo() {
         return new ResponseEntity<User>(userService.getMyUserWithAuth().get(), HttpStatus.OK);
     }
     @ApiOperation(value = "유저 회원 탈퇴", notes = "토큰을 통해서 유저 회원 탈퇴")
-    @PatchMapping
+    @PatchMapping("/withdrawal")
     @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> withdrawal() {
         userService.withdrawal();
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "관리자의 회원 탈퇴", notes = "사용자의 전화번호를 통해서 관리자가 회원을 탈퇴시킴")
-    @PatchMapping("/{phone}")
+    @PatchMapping("/withdrawal/{phone}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> withdrawalByAdmin(@PathVariable String phone) {
         userService.withdrawal(phone);
@@ -93,28 +110,28 @@ public class UserController {
 
     @ApiOperation(value = "소리/알림음 설정", notes = "유저가 자신의 삐삐 알림음을 설정")
     @PatchMapping("/alarm/{number}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> changeAlarm(@PathVariable Integer number) {
         userService.changeAlarm(number);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "폰트 설정", notes = "유저가 자신의 삐삐 UI의 폰트를 설정")
     @PatchMapping("/font/{number}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> changeFont(@PathVariable Integer number) {
         userService.changeFont(number);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "배경 테마 설정", notes = "유저가 자신의 삐삐 배경 테마를 설정")
     @PatchMapping("/theme/{number}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> changeTheme(@PathVariable Integer number) {
         userService.changeTheme(number);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @ApiOperation(value = "각인 설정", notes = "유저가 자신의 삐삐에 각인을 설정")
     @PatchMapping("/engrave/{engrave}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> changeEngrave(@PathVariable String engrave) {
         userService.changeEngrave(engrave);
         return new ResponseEntity<>("Success", HttpStatus.OK);

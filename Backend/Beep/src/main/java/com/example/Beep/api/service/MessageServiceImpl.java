@@ -8,6 +8,7 @@ import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
+import com.example.Beep.api.security.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,47 +31,47 @@ public class MessageServiceImpl implements MessageService{
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    @Override
-    public void saveSendMessage(MessageRequestDto.persistMessage persistMessage) {
-        try{
-            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
-            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
+//    @Override
+//    public void saveSendMessage(MessageRequestDto.persistMessage persistMessage) {
+//        try{
+//            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
+//            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
+//
+//            Message sendMessage=Message.builder()
+//                    .audioUri(persistMessage.getAudioUri())
+//                    .content(persistMessage.getContent())
+//                    .receiver(receiveUser)
+//                    .sender(sendUser)
+//                    .time(persistMessage.getLocalDateTime())
+//                    .ownerId(sendUser.getId())
+//                    .tag(persistMessage.getTag())
+//                    .build();
+//            messageRepository.save(sendMessage);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
-            Message sendMessage=Message.builder()
-                    .audioUri(persistMessage.getAudioUri())
-                    .content(persistMessage.getContent())
-                    .receiver(receiveUser)
-                    .sender(sendUser)
-                    .time(persistMessage.getLocalDateTime())
-                    .ownerId(sendUser.getId())
-                    .tag(persistMessage.getTag())
-                    .build();
-            messageRepository.save(sendMessage);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage){
-        try{
-            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
-            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
-
-            Message sendMessage=Message.builder()
-                    .audioUri(persistMessage.getAudioUri())
-                    .content(persistMessage.getContent())
-                    .receiver(receiveUser)
-                    .sender(sendUser)
-                    .time(persistMessage.getLocalDateTime())
-                    .ownerId(receiveUser.getId())
-                    .tag(persistMessage.getTag())
-                    .build();
-            messageRepository.save(sendMessage);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage){
+//        try{
+//            User sendUser=userRepository.findByPhoneNumber(persistMessage.getSenderPhoneNumber()).get();
+//            User receiveUser=userRepository.findByPhoneNumber(persistMessage.getReceiverPhoneNumber()).get();
+//
+//            Message sendMessage=Message.builder()
+//                    .audioUri(persistMessage.getAudioUri())
+//                    .content(persistMessage.getContent())
+//                    .receiver(receiveUser)
+//                    .sender(sendUser)
+//                    .time(persistMessage.getLocalDateTime())
+//                    .ownerId(receiveUser.getId())
+//                    .tag(persistMessage.getTag())
+//                    .build();
+//            messageRepository.save(sendMessage);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void deleteMessage(Long messageId) {
@@ -82,10 +83,12 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<MessageResponseDto> findSendMessage(Long userId) {
+    public List<MessageResponseDto> findSendMessage() {
         try{
-            User sender=userRepository.findById(userId).get();
-            List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageSend(sender.getId()).stream()
+            String userId = SecurityUtil.getCurrentUsername().get();
+
+            User user=userRepository.findByPhoneNumber(userId).get();
+            List<MessageResponseDto>messageResponseDtoList=messageRepository.findSendMessage(user.getId()).stream()
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
                             .content(Message.getContent())
@@ -103,10 +106,12 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<MessageResponseDto> findReceiveMessage(Long userId) {
+    public List<MessageResponseDto> findReceiveMessageByType(Integer type) {
         try{
-            User receiver=userRepository.findById(userId).get();
-            List<MessageResponseDto>messageResponseDtoList=messageRepository.findMessageReceive(receiver.getId()).stream()
+            String userId = SecurityUtil.getCurrentUsername().get();
+
+            User user=userRepository.findByPhoneNumber(userId).get();
+            List<MessageResponseDto>messageResponseDtoList=messageRepository.findReceiveMessageByType(user.getId(), type).stream()
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
                             .content(Message.getContent())

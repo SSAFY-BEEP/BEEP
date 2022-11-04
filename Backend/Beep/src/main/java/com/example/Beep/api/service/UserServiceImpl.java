@@ -3,16 +3,16 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.SMSRequest;
 import com.example.Beep.api.domain.dto.UserRequestDto;
 import com.example.Beep.api.domain.entity.Authority;
-import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,9 +34,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-
     private final UserRepository userRepository;
+    private final BlockRepository blockRepository;
+    private final MessageRepository messageRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User signUp(UserRequestDto.SignUp signUp) {
         if(userRepository.findByPhoneNumber(signUp.getPhoneNumber()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
 
         User user = User.builder()
@@ -57,6 +57,50 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User createUser(UserRequestDto.CreateUser createUser) {
+        if(userRepository.findByPhoneNumber(createUser.getPhoneNumber()).orElse(null) != null) {
+            throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
+        }
+
+        User user = User.builder()
+                .phoneNumber(createUser.getPhoneNumber())
+                .password(passwordEncoder.encode(createUser.getPassword()))
+                .fcmToken(createUser.getFcmToken())
+                .authority(createUser.getAuthority())
+                .engrave(createUser.getEngrave())
+                .alarm(createUser.getAlarm())
+                .font(createUser.getFont())
+                .introduceAudio(createUser.getIntroduceAudio())
+                .theme(createUser.getTheme())
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(UserRequestDto.CreateUser updateUser, Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        if(userRepository.findByPhoneNumber(updateUser.getPhoneNumber()).orElse(null) != null) {
+            throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
+        }
+
+        User update = User.builder()
+                .id(id)
+                .phoneNumber(updateUser.getPhoneNumber() == null ? user.getPhoneNumber() : updateUser.getPhoneNumber())
+                .password(passwordEncoder.encode(updateUser.getPassword() == null ? user.getPassword() : updateUser.getPassword()))
+                .fcmToken(updateUser.getFcmToken() == null ? user.getFcmToken() : updateUser.getFcmToken())
+                .authority(updateUser.getAuthority() == null ? user.getAuthority() : updateUser.getAuthority())
+                .engrave(updateUser.getEngrave() == null ? user.getEngrave() : updateUser.getEngrave())
+                .alarm(updateUser.getAlarm() == null ? user.getAlarm() : updateUser.getAlarm())
+                .font(updateUser.getFont() == null ? user.getFont() : updateUser.getFont())
+                .introduceAudio(updateUser.getIntroduceAudio() == null ? user.getIntroduceAudio() : updateUser.getIntroduceAudio())
+                .theme(updateUser.getTheme() == null ? user.getTheme() : updateUser.getTheme())
+                .build();
+
+        return userRepository.save(update);
     }
 
     @Override
@@ -93,18 +137,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void withdrawal() {
         User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
-        user.update("0","0","0",Authority.ROLE_LEAVE);
-
-        userRepository.save(user);
+        deleteData(user);
     }
 
     @Override
     public void withdrawal(String phone) {
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
-        user.update("0","0","0",Authority.ROLE_LEAVE);
+        deleteData(user);
+    }
 
+    //유저 회원 탈퇴 및 데이터 지우기
+    public void deleteData(User user) {
+        user.withdrawal(user.getId().toString(),"0","0",Authority.ROLE_LEAVE);
+        messageRepository.deleteMessageByOwnerId(user.getId());
+        blockRepository.deleteBlockByUserIdOrTargetId(user.getId(), user.getId());
+        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), MessageType.BLOCK.getNum());
         userRepository.save(user);
     }
 
@@ -184,6 +234,5 @@ public class UserServiceImpl implements UserService {
         user.changeConfig(engrave, user.getTheme(), user.getFont(), user.getAlarm());
         userRepository.save(user);
     }
-
 
 }

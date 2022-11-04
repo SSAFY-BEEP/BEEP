@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "3. 메시지 영구 보관", tags={"3. 메시지 영구 보관"})
+@Api(value = "3. 보관/차단 메시지", tags={"3. 보관/차단 메시지"})
 @RequiredArgsConstructor
 @RequestMapping("/message")
 @RestController
@@ -21,35 +21,34 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @ApiOperation(value = "내가 보낸 메시지 찾기, id는 유저 아이디", notes = "내가 보낸 메시지 찾기, id는 유저 아이디")
-    @GetMapping("/findsend/{userId}")
-    public ResponseEntity<?>findSendMessage(@PathVariable("userId") Long userId){
-        List<MessageResponseDto>messageResponseDtoList=messageService.findSendMessage(userId);
-        return new ResponseEntity<List<MessageResponseDto>>(messageResponseDtoList, HttpStatus.OK);
+    //토큰으로 조회
+    @ApiOperation(value = "토큰으로 보낸 메시지 찾기", notes = "해당 유저 토큰으로 보낸 메세지 조회(보관)")
+    @GetMapping("/send")
+    public ResponseEntity<?>findSendMessageByToken(){
+        return new ResponseEntity<List<MessageResponseDto>>(messageService.findSendMessage(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "내가 받은 메시지 찾기, id는 유저 아이디", notes = "내가 받은 메시지 찾기, id는 유저 아이디")
-    @GetMapping("/findrecieve/{userId}")
-    public ResponseEntity<?>findReceiceMessage(@PathVariable("userId") Long userId){
-        List<MessageResponseDto>messageResponseDtoList=messageService.findReceiveMessage(userId);
-        return new ResponseEntity<List<MessageResponseDto>>(messageResponseDtoList, HttpStatus.OK);
+    @ApiOperation(value = "토큰으로 받은 메시지 찾기", notes = "해당 유저 토큰으로 받은 메세지 조회(1=보관, 2=차단)")
+    @GetMapping("/recieve/{type}")
+    public ResponseEntity<?>findReceiceMessageByToken(@PathVariable Integer type){
+        return new ResponseEntity<List<MessageResponseDto>>(messageService.findReceiveMessageByType(type), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "내가 보낸 메시지 저장, id는 유저 아이디", notes = "내가 보낸 메시지 저장, id는 유저 아이디")
-    @PostMapping("/send")
-    public ResponseEntity<?>saveSendMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
-        messageService.saveSendMessage(persistMessage);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
+//    @ApiOperation(value = "내가 보낸 메시지 저장", notes = "id는 유저 아이디")
+//    @PostMapping("/send")
+//    public ResponseEntity<?>saveSendMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
+//        messageService.saveSendMessage(persistMessage);
+//        return new ResponseEntity<>("Success", HttpStatus.OK);
+//    }
+//
+//    @ApiOperation(value = "내가 받은 메시지 저장", notes = "id는 유저 아이디")
+//    @PostMapping("/receive")
+//    public ResponseEntity<?>saveReceiveMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
+//        messageService.saveReceiveMessage(persistMessage);
+//        return new ResponseEntity<>("Success", HttpStatus.OK);
+//    }
 
-    @ApiOperation(value = "내가 받은 메시지 저장", notes = "내가 받은 메시지 저장")
-    @PostMapping("/receive")
-    public ResponseEntity<?>saveReceiveMessage(@RequestBody MessageRequestDto.persistMessage persistMessage){
-        messageService.saveReceiveMessage(persistMessage);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "보관함에서 삭제,id는 메시지 id입니다", notes = "보관함에서 삭제,id는 메시지 id입니다")
+    @ApiOperation(value = "보관함에서 삭제", notes = "id는 메시지 id")
     @DeleteMapping("/{messageId}")
     public ResponseEntity<?>deleteMessage(@PathVariable("messageId") Long messageId){
         messageService.deleteMessage(messageId);

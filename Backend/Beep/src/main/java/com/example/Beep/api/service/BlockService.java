@@ -8,10 +8,15 @@ import java.util.List;
 public interface BlockService {
     List<BlockResponseDto> getList();
 
-    boolean isBlocked(String userNum, String targetNum);
+    boolean isBlocked(String targetNum);
 
-    void blockUser(Long id);
+    void blockUser24(String messageId);
+    void blockUser(Long messageId);
+
+    //메세지24에서 해당 메세지로 차단관계 생성
+    String blockByMsgId(String message24Id);
 
     void blockDelete(Long id);
+
 }
 
