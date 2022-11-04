@@ -70,10 +70,12 @@ public class BlockServiceImpl implements BlockService {
             User receiver=userRepository.findByPhoneNumber(message24.getReceiverNum()).get();
 
             //차단관계 추가
-            //토큰 유저랑 같은 사람이 user , 다른 사람이 target
+            //토큰 유저랑 receiver가 같지 않으면 에러(받은 메세지만 차단가능)
+            if(ownerNum.equals(receiver.getPhoneNumber())) throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+
             Block newBlock= Block.builder()
-                    .user(ownerNum==sender.getPhoneNumber()? sender : receiver)
-                    .target(ownerNum!=sender.getPhoneNumber()? sender : receiver)
+                    .user(receiver)
+                    .target(sender)
                     .build();
             blockRepository.save(newBlock);
         }catch (NullPointerException n){
@@ -85,14 +87,16 @@ public class BlockServiceImpl implements BlockService {
     @Transactional
     public void blockUser(Long messageId) {
         try{
-            String ownerNum = SecurityUtil.getCurrentUsername().get();
-
             Message message= messageRepository.findById(messageId).get();
 
-            //토큰 유저랑 같은 사람이 user , 다른 사람이 target
+            String ownerNum = SecurityUtil.getCurrentUsername().get();  //토근의 유저핸드폰번호
+            //토큰의 유저 핸드폰번호와 receiver의 핸드폰번호가 같지 않으면 에러
+            if(ownerNum.equals(message.getReceiver().getPhoneNumber())) throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+
+            //메세지 받은 사람이 user , 메세지 보낸 사람이 sender
             Block newBlock= Block.builder()
-                    .user(ownerNum==message.getSender().getPhoneNumber()? message.getSender() : message.getReceiver())
-                    .target(ownerNum!=message.getSender().getPhoneNumber()? message.getSender() : message.getReceiver())
+                    .user(message.getReceiver())
+                    .target( message.getSender())
                     .build();
             blockRepository.save(newBlock);
         }catch (NullPointerException n){
@@ -109,16 +113,16 @@ public class BlockServiceImpl implements BlockService {
 
             blockRepository.deleteByMessage(message);
         }catch (NullPointerException n){
-            throw new CustomException(ErrorCode.POSTS_NOT_FOUND);
+            throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
         }
     }
 
     @Override
     public String blockByMsgId(String message24Id) {
-        Message24 message24 = message24Repository.findById(message24Id).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        Message24 message24 = message24Repository.findById(message24Id).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
 
-        User user = userRepository.findByPhoneNumber(message24.getOwnerNum()).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User target = userRepository.findByPhoneNumber(message24.getSenderNum()).orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User user = userRepository.findByPhoneNumber(message24.getOwnerNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
+        User target = userRepository.findByPhoneNumber(message24.getSenderNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
 
         //존재하는 차단관계인지 확인
         if(blockRepository.existsByUserAndTarget(user, target)){ //이미 존재
