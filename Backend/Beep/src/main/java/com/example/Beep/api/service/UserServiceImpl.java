@@ -12,7 +12,6 @@ import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import com.example.Beep.api.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -34,8 +33,6 @@ public class UserServiceImpl implements UserService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
-    @Value("${sms.url}")
-    private String smsUrl;
 
     @Override
     @Transactional
