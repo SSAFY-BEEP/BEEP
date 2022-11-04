@@ -66,10 +66,10 @@ public class SMSServiceImpl implements SMSService{
         //6자리 난수
         int certNum = new Random(System.currentTimeMillis()).nextInt(999999);
         String msg = "인증번호 : " + Integer.toString(certNum);
-        sendSMS(targetPhone, msg);
+        String result = sendSMS(targetPhone, msg);
 
         //인증 번호를 리턴
-        return Integer.toString(certNum);
+        return result.equals("Success") ? Integer.toString(certNum) : result;
     }
 
     @Override
@@ -81,12 +81,12 @@ public class SMSServiceImpl implements SMSService{
         user.changePw(passwordEncoder.encode(newPw));
         //메시지 내용
         String msg = "새로운 비밀번호 : " + newPw;
-//        String result = sendSMS(targetPhone, msg);
-        String result = "Success";
+        String result = sendSMS(targetPhone, msg);
         //메시지가 정상적으로 가야 비밀번호를 바꿔줌
-        if(result.equals("Success")) userRepository.save(user);
-
-        return msg;
+        if(result.equals("Success")) {
+            userRepository.save(user);
+            return msg;
+        } else return result;
     }
 
     public String getRamdomPassword(int size) {
