@@ -10,6 +10,9 @@ import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,28 +54,54 @@ public class Message24ServiceImpl implements  Message24Service{
     @Override
     public void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked) {
         String userNum = SecurityUtil.getCurrentUsername().get();
+        User receiver = userRepository.findByPhoneNumber(message.getReceiverNum())
+                .orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
 
-        //보낸사람, 받은사람 기준으로 데이터 2번 저장
-        //보낸사람에게 저장
-        Message24 senderMsg = Message24.builder()
-                .ownerNum(userNum)
-                .audioUri(message.getAudioUri())
-                .content(message.getContent())
-                .senderNum(userNum)
-                .receiverNum(message.getReceiverNum())
+        // 받을 상대의 fcm 토큰
+        String registrationToken = receiver.getFcmToken();
+        // See documentation on defining a message payload.
+        com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("[BEEP] 테스트 메시지")
+                        .setBody("테스트 입니다.")
+                        .build())
+//                .putData("title", "테스트 메시지")
+//                .putData("content", "안녕하세요")
+                .setToken(registrationToken)
                 .build();
-        repository.save(senderMsg);
 
-        if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
-            Message24 receiverMsg = Message24.builder()
-                    .ownerNum(message.getReceiverNum())
+        // Send a message to the device corresponding to the provided
+        // registration token.
+        try{
+            String response = FirebaseMessaging.getInstance().send(fcmMessage);
+            // 성공하면 메시지 아이디를 반환함
+            System.out.println("Successfully sent message: " + response);
+
+            //보낸사람, 받은사람 기준으로 데이터 2번 저장
+            //보낸사람에게 저장
+            Message24 senderMsg = Message24.builder()
+                    .ownerNum(userNum)
                     .audioUri(message.getAudioUri())
                     .content(message.getContent())
                     .senderNum(userNum)
                     .receiverNum(message.getReceiverNum())
                     .build();
+            repository.save(senderMsg);
 
-            repository.save(receiverMsg);
+            if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
+                Message24 receiverMsg = Message24.builder()
+                        .ownerNum(message.getReceiverNum())
+                        .audioUri(message.getAudioUri())
+                        .content(message.getContent())
+                        .senderNum(userNum)
+                        .receiverNum(message.getReceiverNum())
+                        .build();
+
+                repository.save(receiverMsg);
+            }
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+            return;
         }
     }
 
