@@ -1,8 +1,8 @@
-package com.example.beep.data.api
+package com.example.beep.network.api
 
-import com.example.beep.data.dto.DataModel
-import com.example.beep.data.dto.RetrofitTestGetResponse
-import com.example.beep.data.dto.RetrofitTestResponse
+import com.example.beep.data.dto.sample.DataModel
+import com.example.beep.data.dto.sample.RetrofitTestGetResponse
+import com.example.beep.data.dto.sample.RetrofitTestResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

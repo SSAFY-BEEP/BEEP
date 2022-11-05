@@ -1,4 +1,4 @@
-package com.example.beep.data.dto
+package com.example.beep.data.dto.sample
 
 import com.google.gson.annotations.SerializedName
 

@@ -89,7 +89,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
-    // audio visualization
-    implementation 'com.github.lincollincol:compose-audiowaveform:1.0.1'
+    // icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
+
 }
 

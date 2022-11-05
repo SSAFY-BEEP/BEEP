@@ -1,9 +1,9 @@
 package com.example.beep.data.datasource
 
-import com.example.beep.data.api.RetrofitApi
-import com.example.beep.data.dto.DataModel
-import com.example.beep.data.dto.RetrofitTestGetResponse
-import com.example.beep.data.dto.RetrofitTestResponse
+import com.example.beep.network.api.RetrofitApi
+import com.example.beep.data.dto.sample.DataModel
+import com.example.beep.data.dto.sample.RetrofitTestGetResponse
+import com.example.beep.data.dto.sample.RetrofitTestResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
