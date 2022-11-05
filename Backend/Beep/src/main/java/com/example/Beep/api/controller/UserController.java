@@ -92,12 +92,6 @@ public class UserController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호를 찾고 바꾼 메시지를 리턴해줌")
-    @GetMapping("/findPw/{phone}")
-    public ResponseEntity<?> findPassword(@PathVariable String phone) {
-        String result = userService.findPassword(phone);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
     @ApiOperation(value = "비밀번호 변경", notes = "비밀번호를 원하는대로 변경해줌")
     @PatchMapping("/pw")
     @PreAuthorize("hasRole('USER')")

@@ -2,7 +2,7 @@ package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.PresetRequestDto;
 import com.example.Beep.api.domain.dto.PresetResponseDto;
-import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.Preset;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.repository.PresetRepository;
@@ -11,11 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
