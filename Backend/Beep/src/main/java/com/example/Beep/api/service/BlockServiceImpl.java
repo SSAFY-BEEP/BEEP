@@ -57,14 +57,18 @@ public class BlockServiceImpl implements BlockService {
         return blockRepository.existsByUserAndTarget(findUser, findTarget);
     }
 
-    //메세지24로 차단하기
+    //메세지24 차단
     @Override
     @Transactional
     public void blockUser24(String messageId) {
         try{
             String ownerNum = SecurityUtil.getCurrentUsername().get();
 
+            //차단할 레디스 메세지 조회
             Message24 message24= message24Repository.findById(messageId).get();
+
+            //해당 레디스 메세지를 영구메세지로 저장(type2)
+
 
             User sender=userRepository.findByPhoneNumber(message24.getSenderNum()).get();
             User receiver=userRepository.findByPhoneNumber(message24.getReceiverNum()).get();
@@ -83,6 +87,7 @@ public class BlockServiceImpl implements BlockService {
         }
     }
 
+    //영구 메세지 차단
     @Override
     @Transactional
     public void blockUser(Long messageId) {
@@ -95,6 +100,7 @@ public class BlockServiceImpl implements BlockService {
 
             //메세지 받은 사람이 user , 메세지 보낸 사람이 sender
             Block newBlock= Block.builder()
+                    .message(message)
                     .user(message.getReceiver())
                     .target( message.getSender())
                     .build();
