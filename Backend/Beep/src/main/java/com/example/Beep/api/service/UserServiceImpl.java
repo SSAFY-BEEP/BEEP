@@ -1,6 +1,7 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.UserRequestDto;
+import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User signUp(UserRequestDto.SignUp signUp) {
+    public UserResponseDto.UserDto signUp(UserRequestDto.SignUp signUp) {
         if(userRepository.findByPhoneNumber(signUp.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
@@ -47,11 +49,13 @@ public class UserServiceImpl implements UserService {
                 .fcmToken(signUp.getFcmToken())
                 .build();
 
-        return userRepository.save(user);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
-    public User createUser(UserRequestDto.CreateUser createUser) {
+    public UserResponseDto.UserDto createUser(UserRequestDto.CreateUser createUser) {
         if(userRepository.findByPhoneNumber(createUser.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
@@ -68,11 +72,13 @@ public class UserServiceImpl implements UserService {
                 .theme(createUser.getTheme())
                 .build();
 
-        return userRepository.save(user);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
-    public User updateUser(UserRequestDto.CreateUser updateUser, Long id) {
+    public UserResponseDto.UserDto updateUser(UserRequestDto.CreateUser updateUser, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         if(userRepository.findByPhoneNumber(updateUser.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
@@ -91,7 +97,9 @@ public class UserServiceImpl implements UserService {
                 .theme(updateUser.getTheme() == null ? user.getTheme() : updateUser.getTheme())
                 .build();
 
-        return userRepository.save(update);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
@@ -112,19 +120,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String phone) {
-        return userRepository.findByPhoneNumber(phone).get();
+    public UserResponseDto.UserDto getUser(String phone) {
+        UserResponseDto.UserDto user = new UserResponseDto.UserDto();
+        user.of(userRepository.findByPhoneNumber(phone).get());
+        return user;
     }
 
     @Override
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public List<UserResponseDto.UserDto> getAllUser() {
+
+        List<User> list = userRepository.findAll();
+        List<UserResponseDto.UserDto> result = new ArrayList<>();
+        for(User tmp : list) {
+            UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+            res.of(tmp);
+            result.add(res);
+        }
+        return result;
     }
 
     @Transactional
     @Override
-    public Optional<User> getMyUserWithAuth() {
-        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findByPhoneNumber);
+    public UserResponseDto.UserDto getMyUserWithAuth() {
+        UserResponseDto.UserDto user = new UserResponseDto.UserDto();
+        user.of(SecurityUtil.getCurrentUsername().flatMap(userRepository::findByPhoneNumber).get());
+        return user;
     }
 
     @Override
