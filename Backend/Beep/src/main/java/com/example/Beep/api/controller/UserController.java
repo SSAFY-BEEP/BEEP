@@ -62,7 +62,7 @@ public class UserController {
     @GetMapping("/all")
 //    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUser() {
-        return new ResponseEntity<List<User>>(userService.getAllUser(), HttpStatus.OK);
+        return new ResponseEntity<List<UserResponseDto.UserDto>>(userService.getAllUser(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "관리자의 회원 조회", notes = "회원 전화번호를 통해 정보 조회")

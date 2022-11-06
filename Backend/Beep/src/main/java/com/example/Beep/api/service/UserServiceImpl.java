@@ -1,6 +1,7 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.UserRequestDto;
+import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,8 +119,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public List<UserResponseDto.UserDto> getAllUser() {
+
+        List<User> list = userRepository.findAll();
+        List<UserResponseDto.UserDto> result = new ArrayList<>();
+        for(User tmp : list) {
+            UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+            res.of(tmp);
+            result.add(res);
+        }
+        return result;
     }
 
     @Transactional
