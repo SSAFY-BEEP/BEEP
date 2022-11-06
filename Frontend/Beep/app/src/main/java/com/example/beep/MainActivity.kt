@@ -12,15 +12,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.ui.BeepApp
+import com.example.beep.ui.login.UserState
+import com.example.beep.ui.login.UserStateViewModel
+import com.example.beep.ui.login.login_main
 import com.example.beep.ui.navigation.NavGraph
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
@@ -32,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MainApplication: Application(){
+class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
     }
@@ -54,7 +59,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+
+
                     BeepApp()
+
                 }
             }
         }
@@ -108,6 +116,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 
 

@@ -1,6 +1,6 @@
 package com.example.Beep.api.domain.dto;
 
-import com.example.Beep.api.domain.entity.Authority;
+import com.example.Beep.api.domain.enums.Authority;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class UserRequestDto {
     public static class Login {
         @ApiModelProperty(example = "01074794185")
         String phoneNumber;
-        @ApiModelProperty(example = "ssafy")
+        @ApiModelProperty(example = "12345asdf")
         String password;
     }
 

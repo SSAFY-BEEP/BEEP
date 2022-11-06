@@ -49,6 +49,10 @@ dependencies {
 	//JUNIT
 	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 
+	// CoolSMS
+	implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+
+
 }
 
 tasks.named('test') {
