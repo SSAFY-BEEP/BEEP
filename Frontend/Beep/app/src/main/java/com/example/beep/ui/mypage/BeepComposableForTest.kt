@@ -14,8 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beep.R
-import com.example.beep.ui.home.askGoingToRecord
-import com.example.beep.ui.home.viewMyText
 
 @Composable
 fun BeepForTest(modifier: Modifier = Modifier, text: String = "") {
