@@ -35,6 +35,7 @@ val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
 )
 
+@Preview
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen() {
@@ -107,6 +108,7 @@ fun HomeScreen() {
 
 
 
+@Preview
 @Composable
 fun ViewMyText() {
     val viewModel = viewModel<KeyboardViewModel>()
