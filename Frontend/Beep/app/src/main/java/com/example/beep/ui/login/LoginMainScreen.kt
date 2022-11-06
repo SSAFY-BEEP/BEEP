@@ -78,8 +78,7 @@ fun login_main() {
                 Text(text = "로그아웃")
             }
 
-            Text("지금 생각나는 사람은?", fontFamily = pressFont)
-            Text("Text", fontFamily = pressFont)
+
             Text("Text 텍스트 01234", fontFamily = dunggeunmoFont)
             Text("Text 텍스트 01234", fontFamily = labdigitalFont)
             Text("Text 텍스트 01234", fontFamily = lanapixelFont)
