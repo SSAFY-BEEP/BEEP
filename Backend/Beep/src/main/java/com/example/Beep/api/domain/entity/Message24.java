@@ -43,7 +43,8 @@ public class Message24{
 
 
     @Builder
-    public Message24(String content, String audioUri, String senderNum, String receiverNum, String ownerNum, Integer type) {
+    public Message24(String id ,String content, String audioUri, String senderNum, String receiverNum, String ownerNum, Integer type) {
+        this.id = id;
         this.time = LocalDateTime.now();
         this.content = content;
         this.audioUri = audioUri;
