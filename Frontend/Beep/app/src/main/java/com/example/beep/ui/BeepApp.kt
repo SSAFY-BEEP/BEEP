@@ -1,5 +1,7 @@
 package com.example.beep.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
@@ -19,7 +21,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.data.BottomNavItem
+import com.example.beep.ui.navigation.BeepNavGraph
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
     val navController = rememberNavController()
@@ -33,8 +37,8 @@ fun BeepApp() {
                         icon = Icons.Default.Home
                     ),
                     BottomNavItem(
-                        name = "Chat",
-                        route = "chat",
+                        name = "Message",
+                        route = "message",
                         icon = Icons.Default.Notifications,
                         badgeCount = 24
                     ),

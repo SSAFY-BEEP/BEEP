@@ -1,0 +1,10 @@
+package com.example.beep.data.dto.mypage
+
+import com.google.gson.annotations.SerializedName
+
+data class PresetRequest(
+    @SerializedName("uid") val uid: Long,
+    @SerializedName("number") val number: Int,
+    @SerializedName("part") val part: Int,
+    @SerializedName("content") val content: String,
+)

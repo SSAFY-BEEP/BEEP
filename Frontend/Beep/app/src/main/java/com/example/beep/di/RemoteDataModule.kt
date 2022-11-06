@@ -1,6 +1,6 @@
 package com.example.beep.di
 
-import com.example.beep.data.api.RetrofitApi
+import com.example.beep.network.api.RetrofitApi
 import com.example.beep.util.BASE_URL
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
