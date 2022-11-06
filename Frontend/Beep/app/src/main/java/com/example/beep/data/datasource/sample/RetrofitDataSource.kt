@@ -1,4 +1,4 @@
-package com.example.beep.data.datasource
+package com.example.beep.data.datasource.sample
 
 import com.example.beep.network.api.RetrofitApi
 import com.example.beep.data.dto.sample.DataModel

@@ -8,24 +8,31 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.beep.data.sample.messagePresetList
 
-@Preview
 @Composable
-fun MessagePresetScreen(modifier: Modifier = Modifier) {
+fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier
         .fillMaxSize()
         ) {
-        Column(modifier = modifier.height(400.dp).verticalScroll(scrollState)) {
-            for (num in 0L..9L) {
+        Column(modifier = modifier
+            .height(400.dp)
+            .verticalScroll(scrollState)) {
+            for (preset in viewModel.userMessagePresetList) {
                 TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "$num : ${messagePresetList[num]?.content ?: ""}")
+                    Text(text = "${preset.number} : ${preset.content ?: ""}")
                 }
             }
+//            for (num in 0L..9L) {
+//                TextButton(onClick = { /*TODO*/ }) {
+//                    Text(text = "$num : ${messagePresetList[num]?.content ?: ""}")
+//                }
+//            }
         }
         Column(modifier = modifier.height(200.dp)) {
             BeepForTest()

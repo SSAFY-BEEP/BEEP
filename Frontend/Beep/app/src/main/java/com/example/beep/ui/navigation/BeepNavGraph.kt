@@ -45,23 +45,25 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
             RecordVoiceScreen()
         }
     }
-
 }
 
-// 프리셋 그냥 다 카드형식으로 만들기로 함;;
 fun NavGraphBuilder.myPageGraph(navController: NavController) {
     navigation(startDestination = "myPage", route = "settings") {
+
         composable("myPage") {
-            MyPageScreen { route: String -> navController.navigate(route) }
+            MyPageScreen() { route: String -> navController.navigate(route) }
         }
         composable("contactPreset") {
-            ContactPresetScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            ContactPresetScreen(viewModel = model)
         }
         composable("messagePreset") {
-            MessagePresetScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            MessagePresetScreen(viewModel = model)
         }
         composable("greetingPreset") {
-            GreetingSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            GreetingSettingScreen(viewModel = model)
         }
         composable("colorSetting") {
             ColorSettingScreen()
@@ -73,7 +75,8 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             FontSettingScreen()
         }
         composable("passwordChange") {
-            PasswordChangeScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            PasswordChangeScreen(viewModel = model)
         }
     }
 }

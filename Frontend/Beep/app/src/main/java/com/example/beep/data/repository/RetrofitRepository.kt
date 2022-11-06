@@ -1,6 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.datasource.RetrofitDataSource
+import com.example.beep.data.datasource.sample.RetrofitDataSource
 import com.example.beep.data.dto.sample.DataModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
