@@ -25,5 +25,5 @@ public interface Message24Repository extends CrudRepository<Message24, String> {
     Optional<Message24> findById(String id);
 
     //메세지 삭제
-//    void deleteByIdAndOwnerNum(String id, String ownerNum);
+    void deleteByIdAndOwnerNum(String id, String ownerNum);
 }

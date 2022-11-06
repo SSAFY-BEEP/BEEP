@@ -24,17 +24,17 @@ public class Message24Controller {
     private final BlockService blockService;
 
     @ApiOperation(value = "받은 메세지 목록 조회", notes = "해당 회원의 수신메세지 목록 조회 + 차단 거르기")
-    @GetMapping("/receive")
+    @GetMapping("/receive/{receiver}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getReceiveMessage(){
-        return new ResponseEntity<List<Message24>>(service.getReceiveMessage(), HttpStatus.OK);
+    public ResponseEntity<?> getReceiveMessage(@PathVariable String receiverNum){
+        return new ResponseEntity<List<Message24>>(service.getReceiveMessage(receiverNum), HttpStatus.OK);
     }
 
     @ApiOperation(value = "보낸 메세지 목록 조회", notes = "해당 회원의 발신메세지 목록 조회")
-    @GetMapping("/send")
+    @GetMapping("/send/{sender}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getSendMessage(){
-        return new ResponseEntity<List<Message24>>(service.getSendMessage(), HttpStatus.OK);
+    public ResponseEntity<?> getSendMessage(@PathVariable String senderNum){
+        return new ResponseEntity<List<Message24>>(service.getSendMessage(senderNum), HttpStatus.OK);
     }
 
     @ApiOperation(value = "메세지 발송/저장", notes = "메세지24 저장(차단시킨 상대일경우 수신에는 저장안함)/차단됐으면 true, 안됐으면 false 리턴")

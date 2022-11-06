@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -41,22 +42,21 @@ public class Message extends BaseEntity{
     @Column
     private Integer type;
 
-    @JoinColumn(name="owner_id")
-    @ManyToOne
-    private User owner;
+    @Column
+    private Long ownerId;
 
     @Column(length=5,nullable = true)
     private String tag;
 
 
     @Builder
-    public Message(String content, String audioUri, User sender, User receiver, Integer type,LocalDateTime time,User owner,String tag) {
+    public Message(String content, String audioUri, User sender, User receiver, Integer type,LocalDateTime time,Long ownerId,String tag) {
         this.time = time;
         this.content = content;
         this.audioUri = audioUri;
         this.sender = sender;
         this.receiver = receiver;
-        this.owner=owner;
+        this.ownerId=ownerId;
         this.type = type == null? 1 : type;
         this.tag=tag;
     }
@@ -66,7 +66,7 @@ public class Message extends BaseEntity{
         return this;
     }
 
-    public Message changeType(Integer type){
+    public Message Block(Integer type){
         this.type=type;
         return this;
     }

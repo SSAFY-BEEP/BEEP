@@ -5,7 +5,6 @@ import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
-import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
@@ -27,28 +26,23 @@ public class Message24ServiceImpl implements  Message24Service{
     private final UserRepository userRepository;
 
 
-    //받은 메세지 조회(보관, 차단)
-    //보관만
     @Override
-    public List<Message24> getReceiveMessage() {
-        String receiverNum = SecurityUtil.getCurrentUsername().get();
+    public List<Message24> getReceiveMessage(String receiverNum) {
         List<Message24> list = repository.findAllByReceiverNumAndOwnerNum(receiverNum, receiverNum);
 
         List<Message24> result = new ArrayList<>();
 
-        //차단이 아닌 메세지 조회(일반, 보관)
+        //차단 type은 2 -> 차단이 아닌 메세지 조회
         for(Message24 cur: list) {
-            if (cur.getType() != MessageType.BLOCK.getNum()) {
+            if (cur.getType() != 2) {
                 result.add(cur);
             }
         }
         return result;
     }
 
-    //보낸 메세지 조회
     @Override
-    public List<Message24> getSendMessage() {
-        String senderNum = SecurityUtil.getCurrentUsername().get();
+    public List<Message24> getSendMessage(String senderNum) {
         return repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
     }
 
@@ -84,23 +78,23 @@ public class Message24ServiceImpl implements  Message24Service{
 
     //메세지 보관
     @Override
-    public Long changeMessageType(String messageId, Integer type) {
+    public void changeMessageType(String messageId, Integer type) {
+        //메세지 존재시
         Message24 find = repository.findById(messageId).get();
         User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
         //차단을 하는 사람
         String ownerNum = SecurityUtil.getCurrentUsername().get();
-        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        Long owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND)).getId();
 
-        //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관/차단이니까)
+        //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관o차단이니까)
         if(find.getType() == type){
             throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
         }
 
         //레디스 type 1(보관)/2(차단)로 수정
         Message24 message24 = Message24.builder()
-                .id(messageId)
                 .ownerNum(find.getOwnerNum())
                 .content(find.getContent())
                 .senderNum(find.getSenderNum())
@@ -112,7 +106,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
         //해당 메세지 DB 보관하기
         Message message = Message.builder()
-                .owner(owner)
+                .ownerId(owner)
                 .time(find.getTime())
                 .content(find.getContent())
                 .audioUri(find.getAudioUri())
@@ -121,8 +115,7 @@ public class Message24ServiceImpl implements  Message24Service{
                 .type(type)
                 .build();
 
-        Message result = messageRepository.save(message);
-        return result.getId();
+        messageRepository.save(message);
     }
 
 
@@ -141,6 +134,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
     @Override
     public void deleteMessageById(String id) {
-        repository.deleteById(id);
+        String userNum = SecurityUtil.getCurrentUsername().get();
+        repository.deleteByIdAndOwnerNum(id, userNum);
     }
 }
