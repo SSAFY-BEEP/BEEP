@@ -3,6 +3,7 @@ package com.example.Beep.api.controller;
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
 import com.example.Beep.api.domain.entity.Message24;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.service.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,12 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
+
+    @ApiOperation(value = "전체 메세지 조회(테스트)", notes = "전체 메세지 조회")
+    @GetMapping
+    public ResponseEntity<?>findAll(){
+        return new ResponseEntity<>(messageService.getAll(), HttpStatus.OK);
+    }
 
     //토큰으로 조회
     @ApiOperation(value = "토큰으로 보낸 메시지 찾기", notes = "해당 유저 토큰으로 보낸 메세지 조회(보관)")
