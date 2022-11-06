@@ -101,7 +101,7 @@ fun joinFields(
                 Icon(Icons.Default.Person, contentDescription = "Email")
             },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
+                keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             )
         )
