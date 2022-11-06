@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User signUp(UserRequestDto.SignUp signUp) {
+    public UserResponseDto.UserDto signUp(UserRequestDto.SignUp signUp) {
         if(userRepository.findByPhoneNumber(signUp.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
@@ -49,11 +49,13 @@ public class UserServiceImpl implements UserService {
                 .fcmToken(signUp.getFcmToken())
                 .build();
 
-        return userRepository.save(user);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
-    public User createUser(UserRequestDto.CreateUser createUser) {
+    public UserResponseDto.UserDto createUser(UserRequestDto.CreateUser createUser) {
         if(userRepository.findByPhoneNumber(createUser.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
         }
@@ -70,11 +72,13 @@ public class UserServiceImpl implements UserService {
                 .theme(createUser.getTheme())
                 .build();
 
-        return userRepository.save(user);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
-    public User updateUser(UserRequestDto.CreateUser updateUser, Long id) {
+    public UserResponseDto.UserDto updateUser(UserRequestDto.CreateUser updateUser, Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         if(userRepository.findByPhoneNumber(updateUser.getPhoneNumber()).orElse(null) != null) {
             throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
@@ -93,7 +97,9 @@ public class UserServiceImpl implements UserService {
                 .theme(updateUser.getTheme() == null ? user.getTheme() : updateUser.getTheme())
                 .build();
 
-        return userRepository.save(update);
+        UserResponseDto.UserDto res = new UserResponseDto.UserDto();
+        res.of(userRepository.save(user));
+        return res;
     }
 
     @Override
@@ -114,8 +120,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String phone) {
-        return userRepository.findByPhoneNumber(phone).get();
+    public UserResponseDto.UserDto getUser(String phone) {
+        UserResponseDto.UserDto user = new UserResponseDto.UserDto();
+        user.of(userRepository.findByPhoneNumber(phone).get());
+        return user;
     }
 
     @Override
@@ -133,8 +141,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<User> getMyUserWithAuth() {
-        return SecurityUtil.getCurrentUsername().flatMap(userRepository::findByPhoneNumber);
+    public UserResponseDto.UserDto getMyUserWithAuth() {
+        UserResponseDto.UserDto user = new UserResponseDto.UserDto();
+        user.of(SecurityUtil.getCurrentUsername().flatMap(userRepository::findByPhoneNumber).get());
+        return user;
     }
 
     @Override

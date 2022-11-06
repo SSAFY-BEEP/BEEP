@@ -26,9 +26,9 @@ public class UserController {
     @ApiOperation(value = "회원 가입", notes = "전화번호와 비밀번호, 토큰을 받아서 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserRequestDto.SignUp signUp) {
-        User user = userService.signUp(signUp);
+        UserResponseDto.UserDto user = userService.signUp(signUp);
 //        if(user == null) return new ResponseEntity<String>("Fail", HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @ApiOperation(value = "관리자의 회원 생성", notes = "정보를 입력해서 유저를 생성함")
@@ -69,13 +69,13 @@ public class UserController {
     @GetMapping("/{phone}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getDetail(@PathVariable String phone) {
-        return new ResponseEntity<User>(userService.getUser(phone), HttpStatus.OK);
+        return new ResponseEntity<UserResponseDto.UserDto>(userService.getUser(phone), HttpStatus.OK);
     }
     @ApiOperation(value = "유저의 정보 조회", notes = "토큰을 통해서 자신의 정보 조회")
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> getMyInfo() {
-        return new ResponseEntity<User>(userService.getMyUserWithAuth().get(), HttpStatus.OK);
+        return new ResponseEntity<UserResponseDto.UserDto>(userService.getMyUserWithAuth(), HttpStatus.OK);
     }
     @ApiOperation(value = "유저 회원 탈퇴", notes = "토큰을 통해서 유저 회원 탈퇴")
     @PatchMapping("/withdrawal")
