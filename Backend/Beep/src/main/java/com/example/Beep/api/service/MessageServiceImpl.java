@@ -74,6 +74,23 @@ public class MessageServiceImpl implements MessageService{
 //    }
 
     @Override
+    public List<MessageResponseDto> getAll() {
+
+        List<MessageResponseDto> result = messageRepository.findAll().stream()
+                .map(Message ->MessageResponseDto.builder()
+                .id(Message.getId())
+                .content(Message.getContent())
+                .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
+                .senderPhoneNumber(Message.getSender().getPhoneNumber())
+                .audioUri(Message.getAudioUri())
+                .localDateTime(Message.getTime())
+                .tag(Message.getTag())
+                .build()).collect(Collectors.toList());
+
+        return result;
+    }
+
+    @Override
     public void deleteMessage(Long messageId) {
         try{
             messageRepository.deleteById(messageId);

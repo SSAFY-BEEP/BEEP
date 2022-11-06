@@ -11,6 +11,8 @@ public interface MessageService {
 //    void saveSendMessage(MessageRequestDto.persistMessage persistMessage);
 //    void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage);
 
+    List<MessageResponseDto> getAll();
+
     void deleteMessage(Long id);
 
     List<MessageResponseDto> findSendMessage();
