@@ -12,21 +12,16 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.ui.BeepApp
-import com.example.beep.ui.login.UserState
-import com.example.beep.ui.login.UserStateViewModel
-import com.example.beep.ui.login.login_main
-import com.example.beep.ui.navigation.NavGraph
+import com.example.beep.ui.navigation.RootNavigationGraph
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
 import com.google.android.gms.tasks.OnCompleteListener
@@ -34,14 +29,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-
-@HiltAndroidApp
-class MainApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-    }
-}
 
 
 @AndroidEntryPoint
@@ -59,10 +46,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-
                     BeepApp()
-
                 }
             }
         }
@@ -96,7 +80,8 @@ class MainActivity : ComponentActivity() {
             mChannel.description = descriptionText
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager =
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
     }
@@ -116,8 +101,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
 
 
 @Preview(showBackground = true)

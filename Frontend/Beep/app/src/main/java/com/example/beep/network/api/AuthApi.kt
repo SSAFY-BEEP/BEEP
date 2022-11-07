@@ -9,11 +9,11 @@ interface AuthApi {
     @POST("signup")
     suspend fun signUp(
             @Body request: SignUpRequest
-    )
+    ): SignUpResponse
 
     @POST("login")
     suspend fun login(
             @Body request: LoginRequest
-    ): TokenResponse
+    ): LoginResponse
 
 }
