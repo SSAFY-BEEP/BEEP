@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "3. 메시지(보관/차단)", tags={"3.메시지(보관/차단)"})
+@Api(value = "3. 영구메시지(보관함/차단함)", tags={"3.영구메시지(보관함/차단함)"})
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
