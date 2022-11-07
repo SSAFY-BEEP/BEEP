@@ -18,8 +18,4 @@ public interface BlockRepository extends JpaRepository<Block,Long> {
 
     //메세지id로 차단관계 삭제
     boolean deleteByMessage(Message message);
-
-    void deleteBlockByUserIdOrTargetId(Long userId, Long targetId);
-
-//    void deleteByUserAndTarget(User user, User target);
 }

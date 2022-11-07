@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "4. 메세지 차단", tags={"4. 메세지 차단"})
+@Api(value = "4. 메세지 차단(테스트용)", tags={"4. 메세지 차단(테스트용)"})
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin("*")
