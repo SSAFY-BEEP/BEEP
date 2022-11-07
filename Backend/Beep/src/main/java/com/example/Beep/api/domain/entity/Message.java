@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Message extends BaseEntity{
+public class  Message extends BaseEntity{
     //메세지 내용
     @Column(length = 11, nullable = false)
     private String content;

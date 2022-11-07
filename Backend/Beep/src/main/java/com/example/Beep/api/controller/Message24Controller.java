@@ -5,6 +5,7 @@ import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.Message24ServiceImpl;
+import com.example.Beep.api.service.S3Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 public class Message24Controller {
     private final Message24ServiceImpl service;
     private final BlockService blockService;
+    private final S3Service s3Service;
 
     @ApiOperation(value = "받은 메세지 목록 조회", notes = "해당 회원의 수신메세지 목록 조회 + 차단 거르기")
     @GetMapping("/receive/{receiver}")
@@ -66,7 +68,9 @@ public class Message24Controller {
     @DeleteMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteMessageById(@RequestParam String messageId){
+        //DB에서 메세지 삭제
         service.deleteMessageById(messageId);
+
         return ResponseEntity.ok().build();
     }
 
@@ -77,6 +81,9 @@ public class Message24Controller {
     public ResponseEntity<?> saveMessageById(@PathVariable String messageId){
         //해당 메세지를 메세지(보관)DB에 INSERT & redis type변경
         service.changeMessageType(messageId, MessageType.SAVE.getNum());
+
+        //S3 저장
+        s3Service.copyFile(messageId);
 
         return ResponseEntity.ok().build();
     }
@@ -91,7 +98,7 @@ public class Message24Controller {
 
         if(result.equals("해당 사용자를 차단하였습니다.")){
             //해당 sender, receiver 대화관계(차단) 설정
-            service.changeMessageType(messageId, 2);
+            service.changeMessageType(messageId, MessageType.BLOCK.getNum());
         }
 
         return new ResponseEntity<String>(result, HttpStatus.OK);

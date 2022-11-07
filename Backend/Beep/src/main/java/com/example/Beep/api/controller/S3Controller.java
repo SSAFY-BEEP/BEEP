@@ -1,6 +1,9 @@
 package com.example.Beep.api.controller;
 
+import com.example.Beep.api.domain.dto.S3RequestDto;
+import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.service.S3Service;
+import com.example.Beep.api.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,9 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/s3")
 public class S3Controller {
     private final S3Service s3Service;
+    private final UserService userService;
 
     @PostMapping("/voice")
-    @ApiOperation(value = "음성메세지 1개 등록")
+    @ApiOperation(value = "음성메세지 등록")
     @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
@@ -29,14 +33,12 @@ public class S3Controller {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> uploadVoice(@RequestPart MultipartFile voice) {
-        System.out.println(voice+"확인하기");
         String voiceUrl = s3Service.uploadFile(voice);
-        System.out.println(voiceUrl+"url 주소");
         return ResponseEntity.ok().body(voiceUrl);
     }
 
     @PostMapping("/introduce")
-    @ApiOperation(value = "인사말 1개 등록")
+    @ApiOperation(value = "인사말 등록")
     @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
@@ -44,31 +46,36 @@ public class S3Controller {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> uploadIntroduce(@RequestPart MultipartFile voice) {
-        System.out.println(voice+"확인하기");
+        //S3에 파일 등록
         String voiceUrl = s3Service.persistFile(voice);
-        System.out.println(voiceUrl+"url 주소");
+        //DB 유저 introduce 수정
+        userService.changeIntroduceAudio(voiceUrl);
+
         return ResponseEntity.ok().body(voiceUrl);
     }
 
-    @PostMapping("/persist/voice")
-    @ApiOperation(value = "영구 보관함 음성메세지 1개 등록")
+    @PatchMapping("/introduce")
+    @ApiOperation(value = "인사말 삭제")
     @PreAuthorize("hasRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> uploadPersistVoice(@RequestPart MultipartFile voice) {
-        System.out.println(voice+"확인하기");
-        String voiceUrl = s3Service.persistFile(voice);
-        System.out.println(voiceUrl+"url 주소");
-        return ResponseEntity.ok().body(voiceUrl);
+
+    public ResponseEntity<?> deleteIntroduce(@RequestBody S3RequestDto.introduceAudio introduceAudio) {
+        //S3에서 introduceAudio 파일 찾아서 삭제
+        s3Service.deleteFile(introduceAudio.getIntroduceAudio(), S3Type.PERMANENT.getNum());
+
+        //DB 유저 introduce 수정
+        userService.changeIntroduceAudio(null);
+
+        return ResponseEntity.ok().body(introduceAudio+"삭제 완료");
     }
 
-
     @GetMapping("/voice")
-    @ApiOperation(value = "인사말 파일 주소 찾기")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @ApiOperation(value = "유저토큰으로 인사말 파일명 찾기")
+    @PreAuthorize("hasAnyRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
             @ApiResponse(code = 401, message = "권한 에러"),
@@ -78,7 +85,5 @@ public class S3Controller {
         String voiceUrl = s3Service.findUserVoice();
         return ResponseEntity.ok().body(voiceUrl);
     }
-
-
 }
 

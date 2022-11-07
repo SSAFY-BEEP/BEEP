@@ -4,11 +4,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.Message24Repository;
-import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +25,18 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-
+    //24시간 보관함
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-
+    
+    //영구 보관함
     @Value("${cloud.aws.s3.bucket2}")
     private String bucket2;
 
     private final AmazonS3 amazonS3;
 
     private final UserRepository userRepository;
+    private final Message24Repository message24Repository;
     //파일 하나 업로드
     public String uploadFile(MultipartFile multipartFile) {
         String fileName = createFileName(multipartFile.getOriginalFilename());
@@ -65,6 +67,22 @@ public class S3Service {
         }
         return fileName;
     }
+    
+    //1이면 24시간버킷, 2이면 영구버킷
+    public void deleteFile(String fileName, Integer type) {
+        if(type==1){
+            amazonS3.deleteObject(bucket,fileName);
+        } else{
+            amazonS3.deleteObject(bucket2,fileName);
+        }
+    }
+
+    //메세지24 -> 영구메세지로 S3파일 복사
+    public void copyFile(String messageId){
+        Message24 message24 = message24Repository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+
+        amazonS3.copyObject(bucket,message24.getAudioUri(),bucket2,message24.getAudioUri());
+    }
 
     public String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
@@ -81,7 +99,8 @@ public class S3Service {
     public String findUserVoice(){
         String userNum = SecurityUtil.getCurrentUsername().get();
 
-        User user=userRepository.findByPhoneNumber(userNum).get();
+        User user=userRepository.findByPhoneNumber(userNum).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+        System.out.println("service"+ user.getIntroduceAudio()+","+userNum);
         return user.getIntroduceAudio();
     }
 }

@@ -39,7 +39,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "토큰으로 받은 메시지 찾기", notes = "해당 유저 토큰으로 받은 메세지 조회(1=보관, 2=차단)")
-    @GetMapping("/recieve/{type}")
+    @GetMapping("/receive/{type}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>findReceiceMessageByToken(@PathVariable Integer type){
         return new ResponseEntity<List<MessageResponseDto>>(messageService.findReceiveMessageByType(type), HttpStatus.OK);

@@ -5,6 +5,7 @@ import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
@@ -24,6 +25,7 @@ public class Message24ServiceImpl implements  Message24Service{
     private final Message24Repository repository;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
 
     @Override
@@ -93,7 +95,7 @@ public class Message24ServiceImpl implements  Message24Service{
             throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
         }
 
-        //레디스 type 1(보관)/2(차단)로 수정
+        //레디스 type을 1(보관)/2(차단)로 수정
         Message24 message24 = Message24.builder()
                 .ownerNum(find.getOwnerNum())
                 .content(find.getContent())
@@ -132,9 +134,22 @@ public class Message24ServiceImpl implements  Message24Service{
     }
 
 
+    //24시간 메세지 삭제
     @Override
     public void deleteMessageById(String id) {
         String userNum = SecurityUtil.getCurrentUsername().get();
-        repository.deleteByIdAndOwnerNum(id, userNum);
+        //해당 메세지id로 메세지 삭제
+        Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+        
+        //삭제하는 유저가 해당 메세지 데이터 소유자가 아니면 에러
+        if(message24.getOwnerNum() != userNum) throw new CustomException(ErrorCode.BAD_REQUEST);
+
+        //음성파일 존재하면 S3파일 삭제
+        if(message24.getAudioUri()!=null){
+            s3Service.deleteFile(message24.getAudioUri(), S3Type.TEMP.getNum());
+        }
+
+        //DB에서 삭제
+        repository.deleteById(id);
     }
 }

@@ -17,6 +17,7 @@ public interface UserService {
     void withdrawal();
     void withdrawal(String phone);
     String changePassword(UserRequestDto.Login newPw);
+    void changeIntroduceAudio(String introduceAudio);
     void changeAlarm(Integer number);
     void changeFont(Integer number);
     void changeTheme(Integer number);

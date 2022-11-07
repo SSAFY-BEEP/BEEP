@@ -1,25 +1,19 @@
 package com.example.Beep.api.service;
 
-import com.amazonaws.services.s3.model.Owner;
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
-import com.example.Beep.api.domain.dto.PresetResponseDto;
 import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.domain.enums.S3Type;
+import com.example.Beep.api.exception.CustomException;
+import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +24,9 @@ public class MessageServiceImpl implements MessageService{
 
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
+    private final BlockRepository blockRepository;
+
 
 //    @Override
 //    public void saveSendMessage(MessageRequestDto.persistMessage persistMessage) {
@@ -93,6 +90,16 @@ public class MessageServiceImpl implements MessageService{
     @Override
     public void deleteMessage(Long messageId) {
         try{
+            //음성파일 있으면 S3 삭제
+            Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+            if(message.getAudioUri()!=null){
+                s3Service.deleteFile(message.getAudioUri(), S3Type.PERMANENT.getNum());
+            }
+
+            //차단관계 삭제
+            blockRepository.deleteByMessage(message);
+
+            //DB에서 삭제
             messageRepository.deleteById(messageId);
         }catch (Exception e){
             e.printStackTrace();
