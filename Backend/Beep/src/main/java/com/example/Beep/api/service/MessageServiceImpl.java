@@ -1,25 +1,18 @@
 package com.example.Beep.api.service;
 
-import com.amazonaws.services.s3.model.Owner;
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
-import com.example.Beep.api.domain.dto.PresetResponseDto;
 import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
+import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +23,7 @@ public class MessageServiceImpl implements MessageService{
 
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final BlockRepository blockRepository;
 
 //    @Override
 //    public void saveSendMessage(MessageRequestDto.persistMessage persistMessage) {
@@ -82,9 +76,11 @@ public class MessageServiceImpl implements MessageService{
                 .content(Message.getContent())
                 .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
                 .senderPhoneNumber(Message.getSender().getPhoneNumber())
+                .ownerPhoneNumber(Message.getOwner().getPhoneNumber())
                 .audioUri(Message.getAudioUri())
                 .localDateTime(Message.getTime())
                 .tag(Message.getTag())
+                .type(Message.getType())
                 .build()).collect(Collectors.toList());
 
         return result;
@@ -114,6 +110,7 @@ public class MessageServiceImpl implements MessageService{
                             .audioUri(Message.getAudioUri())
                             .localDateTime(Message.getTime())
                             .tag(Message.getTag())
+                            .type(Message.getType())
                             .build()).collect(Collectors.toList());
             return messageResponseDtoList;
         }catch (Exception e){
@@ -132,17 +129,39 @@ public class MessageServiceImpl implements MessageService{
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
                             .content(Message.getContent())
+                            .ownerPhoneNumber(Message.getOwner().getPhoneNumber())
                             .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
                             .senderPhoneNumber(Message.getSender().getPhoneNumber())
                             .audioUri(Message.getAudioUri())
                             .localDateTime(Message.getTime())
                             .tag(Message.getTag())
+                            .type(Message.getType())
                             .build()).collect(Collectors.toList());
             return messageResponseDtoList;
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    //보관/차단 메세지 타입 변경
+    @Override
+    public String changeMessageType(Long messageId,Integer type) {
+        Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+
+        //바꾸려는 타입이랑 현재타입이 같으면 에러!
+        if(type == message.getType()) throw new CustomException(ErrorCode.BAD_REQUEST);
+
+        //차단->보관 이면 차단관계 삭제
+        else if(message.getType()==2 && type==1){
+            //차단관계 삭제
+            blockRepository.deleteByMessage(message);
+        }
+
+        message.changeType(type);
+        messageRepository.save(message);
+
+        return type==1?"보관":"차단"+"메세지로 변경 완료";
     }
 
     public void updateTag(MessageRequestDto.updateTag updateTag){
