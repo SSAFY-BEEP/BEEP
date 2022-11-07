@@ -15,8 +15,10 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(private val getUserMessagePresetUseCase: GetUserMessagePresetUseCase) :
     ViewModel() {
     private val uid = 5
-
-
+    val testValue = "Test Value"
+    fun printTestValue() {
+        println(testValue)
+    }
 
     val exampleEntities: Flow<List<PresetResponse>> = getUserMessagePresetUseCase.execute(uid)
 
