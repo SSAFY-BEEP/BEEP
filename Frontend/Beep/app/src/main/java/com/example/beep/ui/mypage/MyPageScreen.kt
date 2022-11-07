@@ -9,7 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import kotlin.reflect.KProperty
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 enum class MyPageState {
     Main, Preset, Style, Member

@@ -17,9 +17,8 @@ enum class PasswordChangeState {
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview
 @Composable
-fun PasswordChangeScreen(modifier: Modifier = Modifier) {
+fun PasswordChangeScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel) {
     var currentUiState by remember { mutableStateOf(PasswordChangeState.Previous) }
     var previousPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }

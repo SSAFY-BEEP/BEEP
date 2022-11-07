@@ -1,6 +1,8 @@
 package com.example.beep.di
 
+import com.example.beep.network.api.PresetApi
 import com.example.beep.network.api.RetrofitApi
+import com.example.beep.util.AuthInterceptor
 import com.example.beep.util.BASE_URL
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -20,9 +22,9 @@ object RemoteDataModule {
     @Provides
     @Singleton
     @Named("retrofit")
-    fun provideRetrofitInstance(gson: Gson): Retrofit {
+    fun provideRetrofitInstance(gson: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(GsonConverterFactory.create(gson)).client(client)
             .build()
     }
 
@@ -38,5 +40,20 @@ object RemoteDataModule {
     @Singleton
     fun provideRetrofitApi(@Named("retrofit") retrofit: Retrofit): RetrofitApi {
         return retrofit.create(RetrofitApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePresetApi(@Named("retrofit") retrofit: Retrofit): PresetApi {
+        return retrofit.create(PresetApi::class.java)
+    }
+
+    // OkHttpClient DI
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
     }
 }
