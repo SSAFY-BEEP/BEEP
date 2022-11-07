@@ -10,6 +10,7 @@ import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
+import com.example.Beep.api.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class S3Service {
         } catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
         }
-        System.out.println(fileName+"url 주소인가여?");
+//        System.out.println(fileName+"url 주소인가여?");
         String[]url=fileName.split("url");
         return fileName;
     }
@@ -77,8 +78,10 @@ public class S3Service {
         }
     }
 
-    public String findUserVoice(Long userId){
-        User user=userRepository.findById(userId).get();
+    public String findUserVoice(){
+        String userNum = SecurityUtil.getCurrentUsername().get();
+
+        User user=userRepository.findByPhoneNumber(userNum).get();
         return user.getIntroduceAudio();
     }
 }
