@@ -4,6 +4,7 @@ import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.repository.MessageRepository;
+import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +24,7 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
+    private final BlockService blockService;
 
     @ApiOperation(value = "전체 메세지 조회(테스트)", notes = "전체 메세지 조회")
     @GetMapping
@@ -64,6 +66,14 @@ public class MessageController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>deleteMessage(@PathVariable("messageId") Long messageId){
         messageService.deleteMessage(messageId);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "차단메세지 차단 해제", notes = "메세지아이디로 차단 해제 가능")
+    @DeleteMapping("/block/{messageId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> blockDelete(@PathVariable("messageId") Long messageId) {
+        blockService.blockDelete(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

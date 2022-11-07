@@ -1,6 +1,7 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
+import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
@@ -48,17 +49,47 @@ public class Message24ServiceImpl implements  Message24Service{
         return repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
     }
 
-    //메세지 24에 메세지 저장
+//    //메세지 24에 메세지 저장
+//    @Transactional
+//    @Override
+//    public void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked) {
+//        String userNum = SecurityUtil.getCurrentUsername().get();
+//
+//        //보낸사람, 받은사람 기준으로 데이터 2번 저장
+//        //보낸사람에게 저장
+//        Message24 senderMsg = Message24.builder()
+//                .ownerNum(userNum)
+//                .audioUri(message.getAudioUri())
+//                .content(message.getContent())
+//                .senderNum(userNum)
+//                .receiverNum(message.getReceiverNum())
+//                .build();
+//        repository.save(senderMsg);
+//
+//        if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
+//            Message24 receiverMsg = Message24.builder()
+//                    .ownerNum(message.getReceiverNum())
+//                    .audioUri(message.getAudioUri())
+//                    .content(message.getContent())
+//                    .senderNum(userNum)
+//                    .receiverNum(message.getReceiverNum())
+//                    .build();
+//
+//            repository.save(receiverMsg);
+//        }
+//    }
     @Transactional
     @Override
-    public void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked) {
+    public void sendMessageWithFile(S3RequestDto.sendMessage24 message, boolean isBlocked) {
         String userNum = SecurityUtil.getCurrentUsername().get();
+        //S3파일 저장
+        String audioFileForSender = s3Service.uploadFile(message.getFile());
 
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
         //보낸사람에게 저장
         Message24 senderMsg = Message24.builder()
                 .ownerNum(userNum)
-                .audioUri(message.getAudioUri())
+                .audioUri(audioFileForSender)
                 .content(message.getContent())
                 .senderNum(userNum)
                 .receiverNum(message.getReceiverNum())
@@ -66,9 +97,12 @@ public class Message24ServiceImpl implements  Message24Service{
         repository.save(senderMsg);
 
         if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
+            //S3파일 저장
+            String audioFileForReceiver = s3Service.uploadFile(message.getFile());
+
             Message24 receiverMsg = Message24.builder()
                     .ownerNum(message.getReceiverNum())
-                    .audioUri(message.getAudioUri())
+                    .audioUri(audioFileForReceiver)
                     .content(message.getContent())
                     .senderNum(userNum)
                     .receiverNum(message.getReceiverNum())
@@ -80,6 +114,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
     //메세지 보관
     @Override
+    @Transactional
     public void changeMessageType(String messageId, Integer type) {
         //메세지 존재시
         Message24 find = repository.findById(messageId).get();
@@ -96,15 +131,11 @@ public class Message24ServiceImpl implements  Message24Service{
         }
 
         //레디스 type을 1(보관)/2(차단)로 수정
-        Message24 message24 = Message24.builder()
-                .ownerNum(find.getOwnerNum())
-                .content(find.getContent())
-                .senderNum(find.getSenderNum())
-                .receiverNum(find.getReceiverNum())
-                .audioUri(find.getAudioUri())
-                .type(type)
-                .build();
-        repository.save(message24);
+        find.updateType(type);
+        repository.save(find);
+
+        //S3에 보관
+        s3Service.copyFile(messageId);
 
         //해당 메세지 DB 보관하기
         Message message = Message.builder()
@@ -136,6 +167,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
     //24시간 메세지 삭제
     @Override
+    @Transactional
     public void deleteMessageById(String id) {
         String userNum = SecurityUtil.getCurrentUsername().get();
         //해당 메세지id로 메세지 삭제

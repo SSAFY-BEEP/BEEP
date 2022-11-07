@@ -1,6 +1,7 @@
 package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
+import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
@@ -8,11 +9,15 @@ import com.example.Beep.api.service.Message24ServiceImpl;
 import com.example.Beep.api.service.S3Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Api(value = "2. 24시간메세지(레디스)", tags={"2. 24시간메세지(레디스)"})
@@ -39,16 +44,29 @@ public class Message24Controller {
         return new ResponseEntity<List<Message24>>(service.getSendMessage(senderNum), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메세지 발송/저장", notes = "메세지24 저장(차단시킨 상대일경우 수신에는 저장안함)/차단됐으면 true, 안됐으면 false 리턴")
-    @PostMapping
+//    @ApiOperation(value = "메세지 발송/저장", notes = "메세지24 저장(차단시킨 상대일경우 수신에는 저장안함)/차단됐으면 true, 안됐으면 false 리턴")
+//    @PostMapping
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<?> sendMessage(@RequestBody Message24RequestDto.sendMessage message){
+//        //receiver가 차단했는지 체크
+//        boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
+//
+//        service.sendMessage(message, isBlocked);
+//
+//        return new ResponseEntity<String>(isBlocked? "차단된 메세지" : "메세지 정상 발송", HttpStatus.OK);
+//    }
+
+    //메세지 파일 들고와서 S3에 저장하면서 DB에도 등록
+    @PostMapping("/sendFile")
+    @ApiOperation(value = "음성메세지와 함께 메세지 전송", notes = "음성메세지와 함께 메세지 전송")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> sendMessage(@RequestBody Message24RequestDto.sendMessage message){
-        //receiver가 차단했는지 체크
-        boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
+    public ResponseEntity<?> sendMessageWithFile(@ModelAttribute S3RequestDto.sendMessage24 message24) {
+        //S3에 파일 등록
+        boolean isBlocked = blockService.isBlocked(message24.getReceiverNum());
 
-        service.sendMessage(message, isBlocked);
+        service.sendMessageWithFile(message24, isBlocked);
 
-        return new ResponseEntity<String>(isBlocked? "차단된 메세지" : "메세지 정상 발송", HttpStatus.OK);
+        return ResponseEntity.ok().body(message24.getContent());
     }
 
     @ApiOperation(value = "모든 메세지 목록 조회(테스트용)", notes = "모든 회원의 메세지 조회")

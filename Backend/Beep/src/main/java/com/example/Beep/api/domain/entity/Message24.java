@@ -52,4 +52,9 @@ public class Message24{
         this.ownerNum = ownerNum;
         this.type = type == null? 0 : type;
     }
+
+
+    public void updateType(Integer type){
+        this.type = type;
+    }
 }

@@ -77,7 +77,7 @@ public class S3Service {
         }
     }
 
-    //메세지24 -> 영구메세지로 S3파일 복사
+    //메세지24 보관/차단 -> 영구메세지로 S3파일 복사
     public void copyFile(String messageId){
         Message24 message24 = message24Repository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
 
