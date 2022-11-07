@@ -15,32 +15,5 @@ import javax.inject.Inject
 @HiltViewModel
 class MessageViewModel @Inject constructor(private val retrofitUseCase: RetrofitUseCase) :
     ViewModel() {
-    val inputName = MutableLiveData<String>("defaultName")
-    val inputJob = MutableLiveData<String>("defaultJob")
 
-    val receivedName = MutableLiveData<String>()
-    val receivedJob = MutableLiveData<String>()
-
-    fun postTest(dataModel: DataModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            retrofitUseCase.postData(dataModel).collectLatest {
-                receivedName.postValue(it.name)
-                receivedJob.postValue(it.job)
-                Log.d("ViewModel", "${receivedName.value} ${receivedJob.value}")
-
-            }
-        }
-    }
-
-    fun getTest() {
-        viewModelScope.launch(Dispatchers.IO) {
-            retrofitUseCase.getData().collectLatest {
-                Log.d("ViewModel", it.toString())
-             }
-        }
-    }
-
-    fun viewModelTest() {
-        Log.d("ViewModel", "${inputName.value} ${inputJob.value}")
-    }
 }
