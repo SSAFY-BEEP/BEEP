@@ -14,24 +14,7 @@ import com.example.beep.ui.mypage.BeepForTest
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.util.collectAsStateLifecycleAware
 
-//@Composable
-//fun ViewAddressList() {
-//    Column(
-//        modifier = Modifier
-//            .padding(20.dp, 10.dp, 20.dp, 10.dp)
-//    ) {
-//        Row() {
-//            Text(text = "ssssssssssss")
-//        }
-//        Row() {
-//            Text(text = "ssssssssssss")
-//        }
-//        Row() {
-//            Text(text = "ssssssssssss")
-//        }
-//
-//    }
-//}
+
 
 @Composable
 fun ViewAddressList(
@@ -39,7 +22,7 @@ fun ViewAddressList(
     viewModel: AddressViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
-    val userMessagePresetList: List<AddressResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
+    val userAddressList: List<AddressResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
         initial = emptyList()
     )
     Column(
@@ -52,22 +35,14 @@ fun ViewAddressList(
                 .height(400.dp)
                 .verticalScroll(scrollState)
         ) {
-            for (preset in userMessagePresetList) {
+            for (address in userAddressList) {
                 TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "${preset.name} : ${preset.phone ?: ""}")
+                    Text(text = "${address.name} : ${address.phone ?: ""}")
                 }
             }
-//            for (num in 0L..9L) {
-//                TextButton(onClick = { /*TODO*/ }) {
-//                    Text(text = "$num : ${messagePresetList[num]?.content ?: ""}")
-//                }
-//            }
         }
         Column(modifier = modifier.height(200.dp)) {
             BeepForTest()
         }
     }
-
-
-
 }

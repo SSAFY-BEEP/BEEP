@@ -9,11 +9,11 @@ interface AddressApi {
     suspend fun getUserAddress(): List<AddressResponse>
 
     @POST("/api/phonebook")
-    suspend fun updateAddress(@Body addressInfo: AddressRequest)
+    suspend fun postUserAddress(@Body addressInfo: AddressRequest)
 
     @DELETE("/api/phonebook/{phone}")
-    suspend fun deleteAddress(@Path("phone") phone: String)
+    suspend fun deleteUserAddress(@Path("phone") phone: String)
 
     @PATCH("/api/phonebook/{phone}")
-    suspend fun patchAddress(@Path("phone") phone: String, @Body addressInfo: AddressRequest)
+    suspend fun patchUserAddress(@Path("phone") phone: String, @Body addressInfo: AddressRequest)
 }
