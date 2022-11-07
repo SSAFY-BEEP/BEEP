@@ -79,9 +79,11 @@ public class MessageServiceImpl implements MessageService{
                 .content(Message.getContent())
                 .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
                 .senderPhoneNumber(Message.getSender().getPhoneNumber())
+                .ownerPhoneNumber(Message.getOwner().getPhoneNumber())
                 .audioUri(Message.getAudioUri())
                 .localDateTime(Message.getTime())
                 .tag(Message.getTag())
+                .type(Message.getType())
                 .build()).collect(Collectors.toList());
 
         return result;
@@ -121,6 +123,7 @@ public class MessageServiceImpl implements MessageService{
                             .audioUri(Message.getAudioUri())
                             .localDateTime(Message.getTime())
                             .tag(Message.getTag())
+                            .type(Message.getType())
                             .build()).collect(Collectors.toList());
             return messageResponseDtoList;
         }catch (Exception e){
@@ -139,17 +142,39 @@ public class MessageServiceImpl implements MessageService{
                     .map(Message->MessageResponseDto.builder()
                             .id(Message.getId())
                             .content(Message.getContent())
+                            .ownerPhoneNumber(Message.getOwner().getPhoneNumber())
                             .receiverPhoneNumber(Message.getReceiver().getPhoneNumber())
                             .senderPhoneNumber(Message.getSender().getPhoneNumber())
                             .audioUri(Message.getAudioUri())
                             .localDateTime(Message.getTime())
                             .tag(Message.getTag())
+                            .type(Message.getType())
                             .build()).collect(Collectors.toList());
             return messageResponseDtoList;
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    //보관/차단 메세지 타입 변경
+    @Override
+    public String changeMessageType(Long messageId,Integer type) {
+        Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+
+        //바꾸려는 타입이랑 현재타입이 같으면 에러!
+        if(type == message.getType()) throw new CustomException(ErrorCode.BAD_REQUEST);
+
+        //차단->보관 이면 차단관계 삭제
+        else if(message.getType()==2 && type==1){
+            //차단관계 삭제
+            blockRepository.deleteByMessage(message);
+        }
+
+        message.changeType(type);
+        messageRepository.save(message);
+
+        return type==1?"보관":"차단"+"메세지로 변경 완료";
     }
 
     public void updateTag(MessageRequestDto.updateTag updateTag){

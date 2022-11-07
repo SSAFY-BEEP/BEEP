@@ -10,8 +10,7 @@ public interface BlockService {
 
     boolean isBlocked(String targetNum);
 
-    void blockUser24(String messageId);
-    void blockUser(Long messageId);
+    String blockUser(Long messageId);
 
     //메세지24에서 해당 메세지로 차단관계 생성
     String blockByMsgId(String message24Id);

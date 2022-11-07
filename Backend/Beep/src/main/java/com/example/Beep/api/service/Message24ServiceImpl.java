@@ -7,11 +7,15 @@ import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.domain.enums.S3Type;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,23 +33,28 @@ public class Message24ServiceImpl implements  Message24Service{
     private final S3Service s3Service;
 
 
+    //받은 메세지 조회(보관, 차단)
+    //보관만
     @Override
-    public List<Message24> getReceiveMessage(String receiverNum) {
+    public List<Message24> getReceiveMessage() {
+        String receiverNum = SecurityUtil.getCurrentUsername().get();
         List<Message24> list = repository.findAllByReceiverNumAndOwnerNum(receiverNum, receiverNum);
 
         List<Message24> result = new ArrayList<>();
 
-        //차단 type은 2 -> 차단이 아닌 메세지 조회
+        //차단이 아닌 메세지 조회(일반, 보관)
         for(Message24 cur: list) {
-            if (cur.getType() != 2) {
+            if (cur.getType() != MessageType.BLOCK.getNum()) {
                 result.add(cur);
             }
         }
         return result;
     }
 
+    //보낸 메세지 조회
     @Override
-    public List<Message24> getSendMessage(String senderNum) {
+    public List<Message24> getSendMessage() {
+        String senderNum = SecurityUtil.getCurrentUsername().get();
         return repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
     }
 
@@ -82,6 +91,7 @@ public class Message24ServiceImpl implements  Message24Service{
     @Override
     public void sendMessageWithFile(S3RequestDto.sendMessage24 message, boolean isBlocked) {
         String userNum = SecurityUtil.getCurrentUsername().get();
+
         //S3파일 저장
         String audioFileForSender = s3Service.uploadFile(message.getFile());
 
@@ -93,39 +103,66 @@ public class Message24ServiceImpl implements  Message24Service{
                 .content(message.getContent())
                 .senderNum(userNum)
                 .receiverNum(message.getReceiverNum())
+
+        //초대메세지를 보내야하지 않을까?
+        User receiver = userRepository.findByPhoneNumber(message.getReceiverNum())
+                .orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+
+        // 받을 상대의 fcm 토큰
+        String registrationToken = receiver.getFcmToken();
+        // See documentation on defining a message payload.
+        com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("[BEEP] 테스트 메시지")
+                        .setBody("테스트 입니다.")
+                        .build())
+//                .putData("title", "테스트 메시지")
+//                .putData("content", "안녕하세요")
+                .setToken(registrationToken)
                 .build();
-        repository.save(senderMsg);
 
-        if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
-            //S3파일 저장
-            String audioFileForReceiver = s3Service.uploadFile(message.getFile());
 
-            Message24 receiverMsg = Message24.builder()
-                    .ownerNum(message.getReceiverNum())
-                    .audioUri(audioFileForReceiver)
-                    .content(message.getContent())
-                    .senderNum(userNum)
-                    .receiverNum(message.getReceiverNum())
-                    .build();
+        // Send a message to the device corresponding to the provided
+        // registration token.
+        try{
+            String response = FirebaseMessaging.getInstance().send(fcmMessage);
+            // 성공하면 메시지 아이디를 반환함
+            System.out.println("Successfully sent message: " + response);
 
-            repository.save(receiverMsg);
+            if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
+                //S3파일 저장
+                String audioFileForReceiver = s3Service.uploadFile(message.getFile());
+
+                Message24 receiverMsg = Message24.builder()
+                        .ownerNum(message.getReceiverNum())
+                        .audioUri(audioFileForReceiver)
+                        .content(message.getContent())
+                        .senderNum(userNum)
+                        .receiverNum(message.getReceiverNum())
+                        .build();
+
+                repository.save(receiverMsg);
+            }
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+            return;
         }
     }
 
     //메세지 보관
     @Override
     @Transactional
-    public void changeMessageType(String messageId, Integer type) {
-        //메세지 존재시
+    public Long changeMessageType(String messageId, Integer type) {
+
         Message24 find = repository.findById(messageId).get();
         User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
         User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
         //차단을 하는 사람
         String ownerNum = SecurityUtil.getCurrentUsername().get();
-        Long owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND)).getId();
+        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
 
-        //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관o차단이니까)
+        //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관/차단이니까)
         if(find.getType() == type){
             throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
         }
@@ -139,7 +176,7 @@ public class Message24ServiceImpl implements  Message24Service{
 
         //해당 메세지 DB 보관하기
         Message message = Message.builder()
-                .ownerId(owner)
+                .owner(owner)
                 .time(find.getTime())
                 .content(find.getContent())
                 .audioUri(find.getAudioUri())
@@ -148,7 +185,8 @@ public class Message24ServiceImpl implements  Message24Service{
                 .type(type)
                 .build();
 
-        messageRepository.save(message);
+        Message result = messageRepository.save(message);
+        return result.getId();
     }
 
 

@@ -4,6 +4,7 @@ import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.repository.MessageRepository;
+import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.MessageService;
 import io.swagger.annotations.Api;
@@ -61,10 +62,25 @@ public class MessageController {
 //        return new ResponseEntity<>("Success", HttpStatus.OK);
 //    }
 
+    @ApiOperation(value = "메세지 보관", notes = "메세지의 id를 통해서 보관 기능")
+    @PostMapping("/save/{messageId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> saveMessage(@PathVariable("messageId") Long messageId) {
+        String result = messageService.changeMessageType(messageId, MessageType.SAVE.getNum());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @ApiOperation(value = "메세지 차단", notes = "메세지의 id를 통해서 차단 기능")
+    @PostMapping("/block/{messageId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> blockUser(@PathVariable("messageId") Long messageId) {
+        String result = blockService.blockUser(messageId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "보관함에서 삭제", notes = "message id로 삭제")
     @DeleteMapping("/{messageId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?>deleteMessage(@PathVariable("messageId") Long messageId){
+    public ResponseEntity<?>deleteMessage(@PathVariable Long messageId){
         messageService.deleteMessage(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }

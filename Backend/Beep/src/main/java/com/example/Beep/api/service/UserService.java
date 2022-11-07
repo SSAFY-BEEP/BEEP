@@ -1,19 +1,20 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.UserRequestDto;
+import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User signUp(UserRequestDto.SignUp signUp);
-    User createUser(UserRequestDto.CreateUser createUser);
-    User updateUser(UserRequestDto.CreateUser updateUser, Long id);
+    UserResponseDto.UserDto signUp(UserRequestDto.SignUp signUp);
+    UserResponseDto.UserDto createUser(UserRequestDto.CreateUser createUser);
+    UserResponseDto.UserDto updateUser(UserRequestDto.CreateUser updateUser, Long id);
     String login(UserRequestDto.Login login);
-    User getUser(String phone);
-    List<User> getAllUser();
-    Optional<User> getMyUserWithAuth();
+    UserResponseDto.UserDto getUser(String phone);
+    List<UserResponseDto.UserDto> getAllUser();
+    UserResponseDto.UserDto getMyUserWithAuth();
     void withdrawal();
     void withdrawal(String phone);
     String changePassword(UserRequestDto.Login newPw);

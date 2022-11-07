@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface Message24Service {
     //받은 메세지 조회
-    List<Message24> getReceiveMessage(String receiverNum);
+    List<Message24> getReceiveMessage();
 
     //보낸 메세지 조회
-    List<Message24> getSendMessage(String senderNum);
+    List<Message24> getSendMessage();
 
 //   void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked);
 
@@ -18,7 +18,7 @@ public interface Message24Service {
     void sendMessageWithFile(S3RequestDto.sendMessage24 message, boolean isBlocked);
 
     //메세지 보관or차단 등 타입 바꾸고 DB에 저장
-    void changeMessageType(String messageId, Integer type);
+    Long changeMessageType(String messageId, Integer type);
 
     //모든 메세지 조회
     List<Message24> getAllMessage();
