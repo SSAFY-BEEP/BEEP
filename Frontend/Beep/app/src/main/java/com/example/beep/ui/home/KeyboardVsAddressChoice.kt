@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.beep.ui.message.MessageViewModel
 
 
 @ExperimentalComposeUiApi
 @Composable
-fun KeyboardVsAddressChoice() {
+fun KeyboardVsAddressChoice(viewModel: AddressViewModel) {
 
     var showKeyboard by remember { mutableStateOf(true) }
 
@@ -112,7 +113,7 @@ fun KeyboardVsAddressChoice() {
         getKeyboard()
 
     } else {
-        ShowAddressList()
+        ShowAddressList(viewModel)
     }
 
 }

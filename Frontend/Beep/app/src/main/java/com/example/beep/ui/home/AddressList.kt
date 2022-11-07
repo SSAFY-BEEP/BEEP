@@ -13,9 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.beep.ui.message.MessageViewModel
 
 @Composable
-fun ShowAddressList() {
+fun ShowAddressList(viewModel: AddressViewModel) {
     var goAddAddress by remember { mutableStateOf(false) }
 
     var addressListTitle = if (goAddAddress) {
@@ -86,7 +87,7 @@ fun ShowAddressList() {
             if(goAddAddress) {
                 AddAddressSelf()
             } else{
-                ViewAddressList()
+                ViewAddressList(viewModel = viewModel)
             }
 
 
