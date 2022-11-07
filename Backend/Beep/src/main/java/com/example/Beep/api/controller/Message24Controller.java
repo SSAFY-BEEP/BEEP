@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Api(value = "2. 메세지(레디스)", tags={"2. 메세지(레디스)"})
+@Api(value = "2. 24시간메세지(레디스)", tags={"2. 24시간메세지(레디스)"})
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
