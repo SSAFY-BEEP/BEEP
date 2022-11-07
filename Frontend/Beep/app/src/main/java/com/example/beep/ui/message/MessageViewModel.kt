@@ -4,43 +4,37 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beep.data.dto.sample.DataModel
-import com.example.beep.domain.retrofit.RetrofitUseCase
+import com.example.beep.data.dto.message.MessageRequest
+import com.example.beep.data.dto.message.MessageResponse
+import com.example.beep.domain.MessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MessageViewModel @Inject constructor(private val retrofitUseCase: RetrofitUseCase) :
+class MessageViewModel @Inject constructor(private val messageUseCase: MessageUseCase) :
     ViewModel() {
-    val inputName = MutableLiveData<String>("defaultName")
-    val inputJob = MutableLiveData<String>("defaultJob")
 
-    val receivedName = MutableLiveData<String>()
-    val receivedJob = MutableLiveData<String>()
+    private val type = 1
 
-    fun postTest(dataModel: DataModel) {
+    val receiveMessages: Flow<List<MessageResponse>> = messageUseCase.getReceive(type)
+    val sendMessages: Flow<List<MessageResponse>> = messageUseCase.getSend()
+
+    private fun changeTag(messageRequest: MessageRequest) {
+        val result = messageUseCase.changeTag(messageRequest)
+        Log.d("changeTag","result: $result")
+    }
+
+    fun deleteMessage(messageId : Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            retrofitUseCase.postData(dataModel).collectLatest {
-                receivedName.postValue(it.name)
-                receivedJob.postValue(it.job)
-                Log.d("ViewModel", "${receivedName.value} ${receivedJob.value}")
-
+            messageUseCase.deleteMessage(messageId).collectLatest {
+                if (it == "Success"){
+                    Log.d("delete", "Success")
+                }
             }
         }
-    }
-
-    fun getTest() {
-        viewModelScope.launch(Dispatchers.IO) {
-            retrofitUseCase.getData().collectLatest {
-                Log.d("ViewModel", it.toString())
-             }
-        }
-    }
-
-    fun viewModelTest() {
-        Log.d("ViewModel", "${inputName.value} ${inputJob.value}")
     }
 }
