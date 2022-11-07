@@ -9,21 +9,30 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.data.sample.messagePresetList
+import com.example.beep.util.collectAsStateLifecycleAware
 
 @Composable
 fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier
-        .fillMaxSize()
+    val userMessagePresetList: List<PresetResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
+        initial = emptyList()
+    )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = modifier
+                .height(400.dp)
+                .verticalScroll(scrollState)
         ) {
-        Column(modifier = modifier
-            .height(400.dp)
-            .verticalScroll(scrollState)) {
-            for (preset in viewModel.userMessagePresetList) {
+            for (preset in userMessagePresetList) {
                 TextButton(onClick = { /*TODO*/ }) {
                     Text(text = "${preset.number} : ${preset.content ?: ""}")
                 }
@@ -38,5 +47,5 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
             BeepForTest()
         }
     }
-    
+
 }
