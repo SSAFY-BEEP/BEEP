@@ -5,7 +5,9 @@ import android.graphics.drawable.shapes.Shape
 import android.media.MediaRecorder
 import android.media.audiofx.Visualizer
 import android.os.Build
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -19,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import java.io.File
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class RecordState {
     BEFORE_RECORDING,
@@ -35,13 +39,22 @@ enum class RecordState {
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RecordVoiceScreen(modifier: Modifier = Modifier) {
+fun RecordVoiceScreen(
+    modifier: Modifier = Modifier,
+    viewModel: RecordVoiceViewModel = viewModel()
+) {
+    val context = LocalContext.current
     val voicePermissionState = rememberPermissionState(
         android.Manifest.permission.RECORD_AUDIO
     )
-    val fileName: String = "temp.3gp"
+    var filepath = context.cacheDir.absolutePath + "/temp.3gp"
     var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
-    val context = LocalContext.current
+    LaunchedEffect(key1 = null) {
+        println("LaunchedEffect Launched!!")
+        viewModel.actionSender.collect {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -58,42 +71,42 @@ fun RecordVoiceScreen(modifier: Modifier = Modifier) {
                         voicePermissionState.launchPermissionRequest()
                     }
                     if (voicePermissionState.hasPermission) {
-                        startRecording(context, fileName)
+                        startRecording(context, filepath)
                         currentState = RecordState.ON_RECORDING
                     }
                 }
                 RecordState.ON_RECORDING -> {
                     stopRecording(context)
-                    var files = context.fileList()
+                    var files = context.cacheDir.listFiles()
                     for (file in files) {
-                        Log.d("Files", file)
+                        Log.d("Files", file.absolutePath)
                     }
                     currentState = RecordState.AFTER_RECORDING
                 }
                 RecordState.AFTER_RECORDING -> {
+                    startPlaying(context, filepath)
                     currentState = RecordState.ON_PLAYING
                 }
                 RecordState.ON_PLAYING -> {
+                    stopPlaying()
                     currentState = RecordState.BEFORE_RECORDING
                 }
             }
+        }
+
+        Button(onClick = {viewModel.postIntroduce(filepath)}) {
+            Text(text = "음성파일 등록")
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-fun startRecording(context: Context, fileName: String) {
+fun startRecording(context: Context, filepath:String) {
     VoiceRecorder.getInstance(context).apply {
         setAudioSource(MediaRecorder.AudioSource.MIC)
         setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
         setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-
-        setOutputFile(
-            File(
-                context.filesDir,
-                fileName
-            )
-        )
+        setOutputFile(filepath)
         prepare()
     }.start()
 }
@@ -106,9 +119,9 @@ fun stopRecording(context: Context) {
     }
 }
 
-fun startPlaying(fileName: String) {
+fun startPlaying(context: Context, filepath: String) {
     VoicePlayer.getInstance().apply {
-        setDataSource(fileName)
+        setDataSource(filepath)
         prepare()
         setOnCompletionListener { stopPlaying() }
     }

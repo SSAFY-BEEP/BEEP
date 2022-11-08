@@ -18,6 +18,7 @@ import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen
+import com.example.beep.ui.message.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -68,6 +69,7 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         }
         composable("greetingPreset") {
             val model: IntroduceViewModel = hiltViewModel(it)
+            val model2: RecordVoiceViewModel = hiltViewModel(it)
             IntroduceScreen(viewModel = model)
         }
         composable("colorSetting") {

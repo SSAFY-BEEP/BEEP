@@ -7,11 +7,9 @@ import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface S3Api {
-    @GET("s3/introduce")
+    @GET("s3/voice")
     suspend fun getIntroduce(): String
 
     @PATCH("s3/introduce")
@@ -19,5 +17,5 @@ interface S3Api {
 
     @Multipart
     @POST("s3/introduce")
-    suspend fun postIntroduce(@Part("voice") voice: MultipartBody.Part): String
+    suspend fun postIntroduce(@Part voice: MultipartBody.Part): String
 }
