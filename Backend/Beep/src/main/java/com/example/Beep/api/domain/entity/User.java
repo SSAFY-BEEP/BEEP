@@ -82,6 +82,11 @@ public class User extends BaseEntity{
         return this;
     }
 
+    public User changeIntroduceAudio(String introduceAudio) {
+        this.introduceAudio = introduceAudio;
+        return this;
+    }
+
     public User changePw(String password) {
         this.password = password;
         return this;

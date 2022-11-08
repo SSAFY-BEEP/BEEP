@@ -15,7 +15,8 @@ public class Preset extends BaseEntity{
 
     @Column(nullable = false)
     private Integer number;
-
+    
+    //1 = 메세지, 2 = 연락처
     @Column(nullable = false)
     private Integer part;
 
