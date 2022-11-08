@@ -211,7 +211,7 @@ public class UserServiceImpl implements UserService {
         
         //기존 인삿말 오디오 존재하면 S3에서 삭제
         if(user.getIntroduceAudio() != null){
-            s3Service.deleteFile(introduceAudio, S3Type.PERMANENT.getNum());
+            s3Service.deleteFile(user.getIntroduceAudio(), S3Type.PERMANENT.getNum());
         }
         
         //인삿말 오디오 컬럼 수정
