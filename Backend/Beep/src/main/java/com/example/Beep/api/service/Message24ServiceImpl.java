@@ -102,7 +102,7 @@ public class Message24ServiceImpl implements  Message24Service{
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
 
         //발신자데이터로 Message24 저장
-        saveMessage24ForOwner(file, message, userNum);
+        saveMessage24ForOwner(file, message, userNum, userNum);
 
         Optional<User> receiver = userRepository.findByPhoneNumber(message.getReceiverNum());
 
@@ -114,7 +114,7 @@ public class Message24ServiceImpl implements  Message24Service{
             //차단 여부
             boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
             if(!isBlocked){ //차단 안됐을 경우에만 수신자에도 메세지 데이터 저장
-                saveMessage24ForOwner(file, message, message.getReceiverNum());
+                saveMessage24ForOwner(file, message,userNum, message.getReceiverNum());
             }
 
             // 추후에fcm토큰 생기면 수정
@@ -143,7 +143,7 @@ public class Message24ServiceImpl implements  Message24Service{
     }
 
     //해당 owner용 데이터 저장
-    public void saveMessage24ForOwner(MultipartFile file,S3RequestDto.sendMessage24 message, String ownerNum){
+    public void saveMessage24ForOwner(MultipartFile file,S3RequestDto.sendMessage24 message,String senderNum , String ownerNum){
         //S3파일 저장
         String audioFileName = null;
         if(!file.isEmpty()){
@@ -152,10 +152,10 @@ public class Message24ServiceImpl implements  Message24Service{
 
         //수신자데이터로 Message24 저장
         Message24 receiverMsg = Message24.builder()
-                .ownerNum(message.getReceiverNum())
+                .ownerNum(ownerNum)
                 .audioUri(audioFileName)
                 .content(message.getContent())
-                .senderNum(ownerNum)
+                .senderNum(senderNum)
                 .receiverNum(message.getReceiverNum())
                 .build();
 
