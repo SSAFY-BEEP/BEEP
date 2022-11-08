@@ -9,7 +9,7 @@ interface AddressApi {
     suspend fun getUserAddress(): List<AddressResponse>
 
     @POST("/api/phonebook")
-    suspend fun postUserAddress(@Body addressInfo: AddressRequest)
+    suspend fun postUserAddress(@Body addressInfo: AddressRequest): String
 
     @DELETE("/api/phonebook/{phone}")
     suspend fun deleteUserAddress(@Path("phone") phone: String)
