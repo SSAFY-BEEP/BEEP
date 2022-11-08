@@ -5,187 +5,227 @@ import com.example.beep.data.dto.mypage.PresetResponse
 
 val receivedMessages = listOf(
     MessageResponse(
-        "0",
+        0,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "1",
+        1,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "2",
+        2,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "3",
+        3,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "4",
+        4,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "5",
+        5,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "6",
+        6,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "7",
+        7,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "8",
+        8,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "9",
+        9,
         "audioUri",
         "receivedcont",
         "01000000000",
         "01011111111",
+        "01000000000",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
 )
 
 val sentMessages = listOf(
     MessageResponse(
-        "0",
+        0,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "1",
+        1,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "2",
+        2,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "3",
+        3,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "4",
+        4,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "5",
+        5,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "6",
+        6,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "7",
+        7,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "8",
+        8,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
     MessageResponse(
-        "9",
+        9,
         "audioUri",
         "sentcontenten",
         "01000000000",
         "01011111111",
+        "01011111111",
         "yyyymmdd",
-        "tag"
+        "tag",
+        1
     ),
 )
 

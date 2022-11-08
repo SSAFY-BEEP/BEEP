@@ -1,5 +1,6 @@
 package com.example.beep.di
 
+import com.example.beep.network.api.MessageApi
 import com.example.beep.network.api.PresetApi
 import com.example.beep.network.api.RetrofitApi
 import com.example.beep.util.AuthInterceptor
@@ -46,6 +47,12 @@ object RemoteDataModule {
     @Singleton
     fun providePresetApi(@Named("retrofit") retrofit: Retrofit): PresetApi {
         return retrofit.create(PresetApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageApi(@Named("retrofit") retrofit: Retrofit): MessageApi {
+        return retrofit.create(MessageApi::class.java)
     }
 
     // OkHttpClient DI
