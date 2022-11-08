@@ -33,11 +33,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getFirebaseToken()
-        createFirebaseChannel()
+        try {
+            getFirebaseToken()
+            createFirebaseChannel()
+        } catch (e: Exception) {
+            Log.d("Firebase", e.toString())
+        }
+
 
         setContent {
             BeepTheme {
