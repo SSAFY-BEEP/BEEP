@@ -1,6 +1,5 @@
 package com.example.beep.ui.mypage
 
-import android.app.Notification.Action
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -15,9 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.beep.ui.message.RecordVoiceScreen
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.util.collectAsStateLifecycleAware
 
@@ -29,7 +25,7 @@ fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
 
     val introduceUrl by viewModel.introduceUri.collectAsStateLifecycleAware(initial = "")
 
-    LaunchedEffect(key1 = null) {
+    LaunchedEffect(key1 = isPopupVisible) {
         println("LaunchedEffect Launched!!")
         viewModel.actionSender.collect {
             Toast.makeText(context, it, Toast.LENGTH_SHORT)
@@ -44,7 +40,9 @@ fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
             Text(text = introduceUrl)
         }
         if (isPopupVisible) {
-            RecordVoiceScreen(modifier = Modifier.offset(50.dp, 100.dp))
+            RecordVoiceScreen(modifier = Modifier.offset(50.dp, 100.dp)) {
+                isPopupVisible = !isPopupVisible
+            }
         }
 
         

@@ -1,11 +1,8 @@
 package com.example.beep.ui.message
 
 import android.content.Context
-import android.graphics.drawable.shapes.Shape
 import android.media.MediaRecorder
-import android.media.audiofx.Visualizer
 import android.os.Build
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -21,12 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import java.io.File
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class RecordState {
@@ -34,6 +29,7 @@ enum class RecordState {
     ON_RECORDING,
     AFTER_RECORDING,
     ON_PLAYING,
+    ASK_POST
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -41,7 +37,8 @@ enum class RecordState {
 @Composable
 fun RecordVoiceScreen(
     modifier: Modifier = Modifier,
-    viewModel: RecordVoiceViewModel = viewModel()
+    viewModel: RecordVoiceViewModel = viewModel(),
+    togglePopup: () -> Unit
 ) {
     val context = LocalContext.current
     val voicePermissionState = rememberPermissionState(
@@ -66,7 +63,7 @@ fun RecordVoiceScreen(
 
         RecordButton(state = currentState) {
             when (currentState) {
-                RecordState.BEFORE_RECORDING -> {
+                RecordState.BEFORE_RECORDING, RecordState.ASK_POST -> {
                     if (!voicePermissionState.hasPermission) {
                         voicePermissionState.launchPermissionRequest()
                     }
@@ -94,14 +91,19 @@ fun RecordVoiceScreen(
             }
         }
 
-        Button(onClick = {viewModel.postIntroduce(filepath)}) {
+        Button(onClick = {
+            viewModel.postIntroduce(
+                filepath = filepath,
+                togglePopup = togglePopup
+            )
+        }) {
             Text(text = "음성파일 등록")
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-fun startRecording(context: Context, filepath:String) {
+fun startRecording(context: Context, filepath: String) {
     VoiceRecorder.getInstance(context).apply {
         setAudioSource(MediaRecorder.AudioSource.MIC)
         setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -134,7 +136,7 @@ fun stopPlaying() {
 @Composable
 fun RecordButton(state: RecordState, action: () -> Unit) {
     val text = when (state) {
-        RecordState.BEFORE_RECORDING -> {
+        RecordState.BEFORE_RECORDING, RecordState.ASK_POST -> {
             "녹음하기"
         }
         RecordState.ON_RECORDING -> {

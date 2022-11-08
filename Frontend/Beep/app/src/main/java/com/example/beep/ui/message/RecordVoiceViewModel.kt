@@ -2,7 +2,6 @@ package com.example.beep.ui.message
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beep.domain.MessageUseCase
 import com.example.beep.domain.S3UseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -26,7 +25,7 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
         _actionSender.send(result)
     }
 
-    fun postIntroduce(filepath : String) {
+    fun postIntroduce(filepath: String, togglePopup: () -> Unit) {
         viewModelScope.launch {
             val file = File(filepath)
             val fis = FileInputStream(file)
@@ -39,7 +38,7 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
             s3UseCase.postIntroduceUseCase(partFile).collectLatest {
                 produceResult(it)
             }
-            file.delete()
+            togglePopup()
         }
     }
 }

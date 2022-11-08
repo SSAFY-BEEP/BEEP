@@ -46,9 +46,6 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
             val model: MessageViewModel = hiltViewModel(it)
             MessageScreen(model) { navController.navigate("recordVoice") }
         }
-        composable("recordVoice") {
-            RecordVoiceScreen()
-        }
     }
 }
 
@@ -84,9 +81,6 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
-        }
-        composable("recordIntroduce") {
-            RecordVoiceScreen()
         }
     }
 }

@@ -9,7 +9,7 @@ class AuthInterceptor : Interceptor {
 
         requestBuilder.addHeader(
             "Authorization",
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMTA3NDc5NDE4NSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Njc4OTQ4NTF9.frK2uebvushNN-yeGhBTHfkIiFx3GnWMlndjr937gHKMmWqo-1gMAJ7hxquHn8ZsqZDIZcQyssiGa5niNbXLMw"
+            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMTA3NDc5NDE4NSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Njc5ODE3NDF9.KXOq_1cYyBg5beLxLOhOiIGKHfme4sSuyGtEIpZJWGX-zFxZud1PYjXN6w9RGR6b3Svxv7shT6ZUx-LYMUqbtA"
         )
 
         return chain.proceed(requestBuilder.build())
