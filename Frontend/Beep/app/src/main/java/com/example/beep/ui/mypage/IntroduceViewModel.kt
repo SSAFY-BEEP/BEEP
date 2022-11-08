@@ -15,9 +15,10 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): ViewModel() {
-    val actionSender = Channel<String>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val _actionSender = Channel<String>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val actionSender = _actionSender.receiveAsFlow()
     suspend fun produceResult(result: String) {
-        actionSender.send(result)
+        _actionSender.send(result)
     }
 
     val currentIntroduceUrl: Flow<String> = s3UseCase.getIntroduceUseCase()

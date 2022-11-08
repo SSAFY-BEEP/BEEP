@@ -14,12 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.beep.ui.message.RecordVoiceScreen
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun IntroduceScreen(viewModel: IntroduceViewModel) {
     var isPopupVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = null) {
+        println("LaunchedEffect Launched!!")
+        viewModel.actionSender.collect()
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier) {
             Text(text = "GreetingSettingScreen")
