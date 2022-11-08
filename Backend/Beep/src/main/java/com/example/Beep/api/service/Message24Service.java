@@ -15,7 +15,7 @@ public interface Message24Service {
 //   void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked);
 
     //메세지 발송(저장)
-    void sendMessageWithFile(S3RequestDto.sendMessage24 message, boolean isBlocked);
+    void sendMessageWithFile(S3RequestDto.sendMessage24 message);
 
     //메세지 보관or차단 등 타입 바꾸고 DB에 저장
     Long changeMessageType(String messageId, Integer type);
