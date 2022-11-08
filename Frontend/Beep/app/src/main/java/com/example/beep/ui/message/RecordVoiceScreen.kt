@@ -1,17 +1,24 @@
 package com.example.beep.ui.message
 
 import android.content.Context
+import android.graphics.drawable.shapes.Shape
 import android.media.MediaRecorder
 import android.media.audiofx.Visualizer
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -36,7 +43,12 @@ fun RecordVoiceScreen(modifier: Modifier = Modifier) {
     var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
     val context = LocalContext.current
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .height(200.dp)
+            .width(150.dp)
+            .border(BorderStroke(2.dp, Color.Black))
+    ) {
         Text(text = "Record voice Screen")
 
         RecordButton(state = currentState) {

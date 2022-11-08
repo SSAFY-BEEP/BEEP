@@ -2,6 +2,7 @@ package com.example.beep.di
 
 import com.example.beep.network.api.PresetApi
 import com.example.beep.network.api.RetrofitApi
+import com.example.beep.network.api.S3Api
 import com.example.beep.util.AuthInterceptor
 import com.example.beep.util.BASE_URL
 import com.google.gson.Gson
@@ -46,6 +47,12 @@ object RemoteDataModule {
     @Singleton
     fun providePresetApi(@Named("retrofit") retrofit: Retrofit): PresetApi {
         return retrofit.create(PresetApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideS3Api(@Named("retrofit") retrofit: Retrofit): S3Api {
+        return retrofit.create(S3Api::class.java)
     }
 
     // OkHttpClient DI

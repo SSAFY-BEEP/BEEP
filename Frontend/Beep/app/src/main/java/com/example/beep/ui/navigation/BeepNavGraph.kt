@@ -47,6 +47,7 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 fun NavGraphBuilder.myPageGraph(navController: NavController) {
     navigation(startDestination = "myPage", route = "settings") {
 
@@ -62,8 +63,8 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             MessagePresetScreen(viewModel = model)
         }
         composable("greetingPreset") {
-            val model: MyPageViewModel = hiltViewModel(it)
-            GreetingSettingScreen(viewModel = model)
+            val model: IntroduceViewModel = hiltViewModel(it)
+            IntroduceScreen(viewModel = model)
         }
         composable("colorSetting") {
             ColorSettingScreen()
@@ -77,6 +78,9 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
+        }
+        composable("recordIntroduce") {
+            RecordVoiceScreen()
         }
     }
 }
