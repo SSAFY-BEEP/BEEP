@@ -27,6 +27,7 @@ class SharedPreferencesUtil(context: Context) {
         editor.remove("token")
         editor.apply()
     }
+
     // fcm 토큰 저장하기
     fun saveFcmToken(fcmToken: String) {
         val editor = preferences.edit()

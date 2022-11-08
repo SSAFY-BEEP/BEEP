@@ -22,6 +22,7 @@ fun NavGraph (navController: NavHostController){
             LoginMainScreen()
         }
         composable(route = Screens.Login.route){
+            val model: UserViewModel = hiltViewModel(it)
             LoginScreen()
         }
         composable(route = Screens.Join.route){

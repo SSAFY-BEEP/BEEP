@@ -10,7 +10,7 @@ import com.example.beep.domain.LoginUseCase
 import com.example.beep.domain.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,9 +35,12 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             signUpUseCase.execute(request).collectLatest {
+                if (it.phoneNumber.isNotBlank()) {
+                    login(it.phoneNumber, it.password)
+                }
+
             }
         }
-        login(phoneNumber, password1)
     }
 
     fun validatePassword(password: String, passwordCheck: String): Boolean {
@@ -65,6 +68,9 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             loginUseCase.execute(request).collectLatest {
+                if (it.token.isNotBlank()) {
+                    MainApplication.sharedPreferencesUtil.saveToken(it.token)
+                }
             }
         }
     }

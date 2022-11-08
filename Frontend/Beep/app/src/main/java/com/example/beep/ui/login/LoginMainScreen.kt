@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.data.LoginNavItem
+import com.example.beep.di.MainApplication
 import com.example.beep.ui.mypage.*
 import com.example.beep.ui.navigation.NavGraph
 import kotlinx.coroutines.launch
@@ -59,6 +60,10 @@ fun Login_main(
 
             Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "회원가입")
+            }
+
+            Button(onClick = { MainApplication.sharedPreferencesUtil.deleteToken() }) {
+                Text(text = "로그아웃")
             }
 
         }

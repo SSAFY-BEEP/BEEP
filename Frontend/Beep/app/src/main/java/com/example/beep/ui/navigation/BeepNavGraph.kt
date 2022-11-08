@@ -35,6 +35,7 @@ fun BeepNavGraph(navController: NavHostController) {
         messageGraph(navController)
         myPageGraph(navController)
         composable("login_main") {
+            val model: UserViewModel = hiltViewModel(it)
             LoginMainScreen()
         }
     }

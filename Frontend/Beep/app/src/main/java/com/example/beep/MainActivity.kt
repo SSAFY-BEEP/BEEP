@@ -19,6 +19,7 @@ import com.example.beep.di.MainApplication
 import com.example.beep.ui.BeepApp
 import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.login.LoginMainScreen
+import com.example.beep.ui.login.LoginScreen
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
 import com.google.android.gms.tasks.OnCompleteListener
@@ -51,8 +52,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val checkToken = MainApplication.sharedPreferencesUtil.getToken()
 
+                    Toast.makeText(baseContext, checkToken, Toast.LENGTH_SHORT).show()
+
                     if (checkToken.isNullOrBlank()) {
-                        JoinScreen()
+                        LoginScreen()
                     } else {
                         BeepApp()
                     }
@@ -75,7 +78,7 @@ class MainActivity : ComponentActivity() {
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.d("Firebase", msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
     }
 
