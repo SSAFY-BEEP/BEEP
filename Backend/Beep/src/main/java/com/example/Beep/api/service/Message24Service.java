@@ -3,6 +3,8 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface Message24Service {
@@ -15,7 +17,7 @@ public interface Message24Service {
 //   void sendMessage(Message24RequestDto.sendMessage message, boolean isBlocked);
 
     //메세지 발송(저장)
-    void sendMessageWithFile(S3RequestDto.sendMessage24 message);
+    void sendMessageWithFile(MultipartFile file,S3RequestDto.sendMessage24 message);
 
     //메세지 보관or차단 등 타입 바꾸고 DB에 저장
     Long changeMessageType(String messageId, Integer type);
