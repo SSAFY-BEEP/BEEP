@@ -1,8 +1,9 @@
 package com.example.beep.di
 
+import com.example.beep.network.api.AddressApi
+import com.example.beep.network.api.MessageApi
 import com.example.beep.network.api.PresetApi
 import com.example.beep.network.api.RetrofitApi
-import com.example.beep.network.api.S3Api
 import com.example.beep.util.AuthInterceptor
 import com.example.beep.util.BASE_URL
 import com.google.gson.Gson
@@ -51,8 +52,14 @@ object RemoteDataModule {
 
     @Provides
     @Singleton
-    fun provideS3Api(@Named("retrofit") retrofit: Retrofit): S3Api {
-        return retrofit.create(S3Api::class.java)
+    fun provideAddressApi(@Named("retrofit") retrofit: Retrofit): AddressApi {
+        return retrofit.create(AddressApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageApi(@Named("retrofit") retrofit: Retrofit): MessageApi {
+        return retrofit.create(MessageApi::class.java)
     }
 
     // OkHttpClient DI

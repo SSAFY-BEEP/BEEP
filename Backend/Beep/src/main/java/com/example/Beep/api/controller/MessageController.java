@@ -2,6 +2,8 @@ package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
+import com.example.Beep.api.domain.entity.Message24;
+import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.MessageService;
@@ -40,7 +42,7 @@ public class MessageController {
     }
 
     @ApiOperation(value = "토큰으로 받은 메시지 찾기", notes = "해당 유저 토큰으로 받은 메세지 조회(1=보관, 2=차단)")
-    @GetMapping("/recieve/{type}")
+    @GetMapping("/receive/{type}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>findReceiceMessageByToken(@PathVariable Integer type){
         return new ResponseEntity<List<MessageResponseDto>>(messageService.findReceiveMessageByType(type), HttpStatus.OK);
@@ -80,6 +82,14 @@ public class MessageController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>deleteMessage(@PathVariable Long messageId){
         messageService.deleteMessage(messageId);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "차단메세지 차단 해제", notes = "메세지아이디로 차단 해제 가능")
+    @DeleteMapping("/block/{messageId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> blockDelete(@PathVariable("messageId") Long messageId) {
+        blockService.blockDelete(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
