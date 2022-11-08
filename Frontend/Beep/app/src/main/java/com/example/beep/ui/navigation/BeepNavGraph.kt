@@ -26,7 +26,7 @@ fun BeepNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
-            HomeScreen(model)
+            HomeScreen()
         }
         messageGraph(navController)
         myPageGraph(navController)

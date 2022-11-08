@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
-import com.example.beep.ui.message.MessageViewModel
+import com.example.beep.util.collectAsStateLifecycleAware
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -30,8 +30,8 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(viewModel: AddressViewModel = viewModel()) {
-
+fun HomeScreen() {
+//    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
 
@@ -91,7 +91,7 @@ fun HomeScreen(viewModel: AddressViewModel = viewModel()) {
                 ViewMyText()
             }
         }
-        KeyboardVsAddressChoice(viewModel)
+        KeyboardVsAddressChoice()
     }
 }
 
