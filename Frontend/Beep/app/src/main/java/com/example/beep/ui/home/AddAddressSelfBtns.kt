@@ -118,7 +118,8 @@ fun PatchSubmitBtn(
         onClick = {
             Log.d("PHONE", phone)
             Log.d("NAME", name)
-            viewModel.patchAddress(apiPhone, phone, name) },
+            viewModel.patchAddress(apiPhone, phone, name)
+                  },
         modifier = Modifier
             .height(40.dp),
         elevation = ButtonDefaults.elevation(

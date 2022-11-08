@@ -10,8 +10,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,11 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beep.data.dto.mainpage.AddressResponse
-import com.example.beep.ui.mypage.BeepForTest
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.util.collectAsStateLifecycleAware
@@ -33,10 +30,11 @@ import com.example.beep.util.collectAsStateLifecycleAware
 fun ViewAddressList(
     modifier: Modifier = Modifier,
     viewModel: AddressViewModel = viewModel(),
-    changeToAddAddress: () -> Unit,
     viewEditDelBtn: Boolean,
-    isFromEdit: () -> Unit,
-
+    changeToAddAddress: () -> Unit,
+    changeToPatchAddress: () -> Unit,
+    changeDefaultNameString: (String) -> Unit,
+    changeDefaultPhoneString: (String) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
@@ -92,8 +90,9 @@ fun ViewAddressList(
                                     .weight(1f)
                                     .height(18.dp)
                                     .clickable {
-                                        isFromEdit()
-                                        changeToAddAddress()
+                                        changeDefaultNameString(address.name)
+                                        changeDefaultPhoneString(address.phone)
+                                        changeToPatchAddress()
                                     }
                                     .then(modifier)
                             ) {

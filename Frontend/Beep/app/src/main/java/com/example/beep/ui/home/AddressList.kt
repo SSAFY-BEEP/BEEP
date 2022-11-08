@@ -13,20 +13,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.beep.data.dto.mainpage.AddressResponse
 
 @Composable
 fun ShowAddressList() {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
-    var isFromEdit by remember { mutableStateOf(false) }
+    var goPatchAddress by remember { mutableStateOf(false) }
+    var defaultNameString by remember { mutableStateOf("") }
+    var defaultPhoneString by remember { mutableStateOf("") }
+
 
 
     var addressListTitle = if (goAddAddress) {
         "주소록 추가"
+    } else if(goPatchAddress) {
+    "주소록 수정"
     } else {
         "주소록"
     }
+
+
 
     var goEditDelBtnTxt = if (viewEditDelBtn) {
         "완료"
@@ -98,14 +104,21 @@ fun ShowAddressList() {
         ) {
             if(goAddAddress) {
                 AddAddressSelf(
-                    isFromEdit = isFromEdit,
                     changeToAddAddress = { goAddAddress = !goAddAddress },
+                    )
+            } else if(goPatchAddress) {
+                PatchAddress (
+                    changeToPatchAddress = { goPatchAddress = !goPatchAddress },
+                    defaultNameString = defaultNameString,
+                    defaultPhoneString = defaultPhoneString,
                     )
             } else{
                 ViewAddressList(
-                    changeToAddAddress = { goAddAddress = !goAddAddress },
                     viewEditDelBtn = viewEditDelBtn,
-                    isFromEdit = { isFromEdit = true }
+                    changeToAddAddress = { goAddAddress = !goAddAddress },
+                    changeToPatchAddress = { goPatchAddress = !goPatchAddress },
+                    changeDefaultNameString = { defaultName: String -> defaultNameString = defaultName },
+                    changeDefaultPhoneString = { defaultPhone: String -> defaultPhoneString = defaultPhone }
                 )
             }
 

@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -33,12 +34,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddAddressSelf(
-    changeToAddAddress: () -> Unit,
+fun PatchAddress(
+    changeToPatchAddress: () -> Unit,
+    defaultNameString: String,
+    defaultPhoneString: String,
 ) {
 
-    var inputNameTxt by remember { mutableStateOf("") }
-    var inputNumberTxt by remember { mutableStateOf("") }
+    var inputNameTxt by remember { mutableStateOf(defaultNameString) }
+    var inputNumberTxt by remember { mutableStateOf(defaultPhoneString) }
 //    var inputNumberTxt by remember { mutableStateOf(TextFieldValue("")) }
 
     val nameMaxLength = 20
@@ -53,7 +56,7 @@ fun AddAddressSelf(
             modifier = Modifier
 //                .height(40.dp)
         ) {
-            NameTextField(
+            PatchNameTextField(
                 value = inputNameTxt,
                 onValueChange = { inputNameTxt = it },
             )
@@ -61,7 +64,7 @@ fun AddAddressSelf(
         Row(
             modifier = Modifier
         ) {
-            NumberIntField(
+            PatchNumberIntField(
                 value = inputNumberTxt,
                 onValueChange = { inputNumberTxt = it }
             )
@@ -71,21 +74,22 @@ fun AddAddressSelf(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            AddCancelBtn(changeToAddAddress)
+            AddCancelBtn(changeToPatchAddress)
             AddToBookBtn()
-
-            AddSubmitBtn(name = inputNameTxt, phone = inputNumberTxt)
+            Log.d("Phone", inputNameTxt)
+            PatchSubmitBtn(apiPhone = defaultPhoneString, name = inputNameTxt, phone = inputNumberTxt)
+            }
         }
     }
-}
+
 
 
 @Composable
-fun NameTextField(
+fun PatchNameTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    
-) {
+
+    ) {
     OutlinedTextField(
         label = { Text(text = "이름")},
         value = value,
@@ -114,7 +118,7 @@ fun NameTextField(
 
 @ExperimentalComposeUiApi
 @Composable
-fun NumberIntField(
+fun PatchNumberIntField(
     value: String,
     onValueChange: (String) -> Unit,
 ) {
