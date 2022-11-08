@@ -1,17 +1,23 @@
 package com.example.beep.util
 
+import android.content.SharedPreferences
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class AuthInterceptor : Interceptor {
+class AuthInterceptor @Inject constructor(
+    private val sharedPref: SharedPreferences
+): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
+        var token = runBlocking {
+            sharedPref.getString(JWT,"")!!
+        }
+
         val requestBuilder = chain.request().newBuilder()
+            .addHeader(JWT, token)
+            .build()
 
-        requestBuilder.addHeader(
-            "Authorization",
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMTA3NDc5NDE4NSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2Njc4OTQ4NTF9.frK2uebvushNN-yeGhBTHfkIiFx3GnWMlndjr937gHKMmWqo-1gMAJ7hxquHn8ZsqZDIZcQyssiGa5niNbXLMw"
-        )
-
-        return chain.proceed(requestBuilder.build())
+        return chain.proceed(requestBuilder)
     }
 }

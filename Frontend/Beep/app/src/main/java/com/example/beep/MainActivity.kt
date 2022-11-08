@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.beep.di.MainApplication
 import com.example.beep.ui.BeepApp
 import com.example.beep.ui.navigation.RootNavigationGraph
 import com.example.beep.ui.theme.BeepTheme
@@ -68,7 +69,7 @@ class MainActivity : ComponentActivity() {
 
             // Get new FCM registration token
             val token = task.result
-
+            MainApplication.sharedPreferencesUtil.saveFcmToken(token)
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.d("Firebase", msg)

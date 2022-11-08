@@ -28,4 +28,15 @@ class SharedPreferencesUtil(context: Context) {
         editor.remove("token")
         editor.apply()
     }
+    // fcm토큰 저장하기
+    fun saveFcmToken(fcmToken: String) {
+        val editor = preferences.edit()
+        editor.putString("fcmToken", fcmToken)
+        editor.commit()
+    }
+    // fcm토큰 불러오기
+    fun getFcmToken(): String? {
+        val fcmToken = preferences.getString("fcmToken", null)
+        return fcmToken
+    }
 }

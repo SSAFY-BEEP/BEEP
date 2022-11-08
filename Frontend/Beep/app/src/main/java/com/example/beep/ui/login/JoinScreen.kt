@@ -4,6 +4,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -20,21 +21,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.ImeAction
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
 fun JoinScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        join()
-    }
-}
-
-@Composable
-fun join(
-) {
     var username by remember {
         mutableStateOf("")
     }
@@ -90,8 +81,9 @@ fun joinFields(
     onPassword2Change: (String) -> Unit,
     onJoinClick: () -> Unit,
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column {
         Text(text = "아이디(번호 입력)")
+
         DemoField(
             value = username,
             label = "Username",
@@ -127,6 +119,8 @@ fun joinFields(
 
         Text(text = "비밀번호 재확인")
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         DemoField(
             value = password2,
             label = "Password",
@@ -142,11 +136,12 @@ fun joinFields(
             )
         )
 
-        TextButton(
-            onClick = onJoinClick,
-        ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = onJoinClick, modifier = Modifier.fillMaxWidth()) {
             Text(text = "회원가입")
         }
+
     }
 
 }

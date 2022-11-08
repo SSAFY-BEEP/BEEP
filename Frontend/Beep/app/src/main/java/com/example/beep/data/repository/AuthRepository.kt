@@ -1,8 +1,7 @@
 package com.example.beep.data.repository
 
 import android.util.Log
-import com.example.beep.data.datasource.AuthDataSource
-import com.example.beep.data.datasource.sample.PresetDataSource
+import com.example.beep.data.repository.datasource.AuthDataSource
 import com.example.beep.data.dto.auth.LoginRequest
 import com.example.beep.data.dto.auth.SignUpRequest
 import com.example.beep.data.dto.auth.TokenResponse
