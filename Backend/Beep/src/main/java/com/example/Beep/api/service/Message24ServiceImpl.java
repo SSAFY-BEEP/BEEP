@@ -98,11 +98,12 @@ public class Message24ServiceImpl implements  Message24Service{
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
         //보낸사람에게 저장
         Message24 senderMsg = Message24.builder()
-                .ownerNum(userNum)
-                .audioUri(audioFileForSender)
                 .content(message.getContent())
+                .audioUri(audioFileForSender)
                 .senderNum(userNum)
                 .receiverNum(message.getReceiverNum())
+                .ownerNum(userNum)
+                .build();
 
         //초대메세지를 보내야하지 않을까?
         User receiver = userRepository.findByPhoneNumber(message.getReceiverNum())
