@@ -24,6 +24,7 @@ import com.example.beep.data.BottomNavItem
 import com.example.beep.ui.navigation.BeepNavGraph
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
     val navController = rememberNavController()

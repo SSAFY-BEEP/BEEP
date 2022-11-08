@@ -1,5 +1,6 @@
 package com.example.beep.ui.login
 
+import android.util.Log
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,11 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.di.MainApplication
 
 
 @Composable
 fun JoinScreen() {
-    var username by remember {
+    var phoneNumber by remember {
         mutableStateOf("")
     }
 
@@ -54,11 +56,12 @@ fun JoinScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             joinFields(
-                username = username,
+                phoneNumber = phoneNumber,
                 password1 = password1,
                 password2 = password2,
-                onUsernameChange = {
-                    username = it
+
+                onPhoneNumberChange = {
+                    phoneNumber = it
                 },
                 onPassword1Change = {
                     password1 = it
@@ -66,29 +69,30 @@ fun JoinScreen() {
                 onPassword2Change = {
                     password2 = it
                 }
-            ) {
+            )
 
-            }
         }
     }
 }
 
 @Composable
 fun joinFields(
-    username: String, password1: String, password2: String,
-    onUsernameChange: (String) -> Unit,
+    phoneNumber: String,
+    password1: String,
+    password2: String,
+    onPhoneNumberChange: (String) -> Unit,
     onPassword1Change: (String) -> Unit,
     onPassword2Change: (String) -> Unit,
-    onJoinClick: () -> Unit,
+    viewModel: UserViewModel = viewModel()
 ) {
     Column {
         Text(text = "아이디(번호 입력)")
 
         DemoField(
-            value = username,
-            label = "Username",
+            value = phoneNumber,
+            label = "phoneNumber",
             placeholder = "ex) 01012345678",
-            onValueChange = onUsernameChange,
+            onValueChange = onPhoneNumberChange,
             leadingIcon = {
                 Icon(Icons.Default.Person, contentDescription = "Email")
             },
@@ -138,10 +142,24 @@ fun joinFields(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = onJoinClick, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "회원가입")
-        }
+        SubmitBtn(phoneNumber = phoneNumber, password1 = password1, password2 = password2)
 
     }
 
+}
+
+@Composable
+fun SubmitBtn(
+    phoneNumber: String,
+    password1: String,
+    password2: String,
+    viewModel: UserViewModel = viewModel()
+) {
+    Button(onClick = {
+        Log.d("phoneNumber", phoneNumber)
+        Log.d("password", password1)
+        Log.d("passwordCheck", password2)
+        viewModel.signUp(phoneNumber, password1, password2)}) {
+        Text(text = "회원가입")
+    }
 }

@@ -14,7 +14,9 @@ import androidx.navigation.compose.navigation
 import com.example.beep.ui.home.AddAddressSelfViewModel
 import com.example.beep.ui.home.AddressViewModel
 import com.example.beep.ui.home.HomeScreen
+import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.login.LoginMainScreen
+import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen

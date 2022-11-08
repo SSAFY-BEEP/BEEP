@@ -1,11 +1,7 @@
 package com.example.beep
 
-import android.Manifest
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentValues.TAG
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,10 +15,10 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.BeepApp
-import com.example.beep.ui.navigation.RootNavigationGraph
+import com.example.beep.ui.login.JoinScreen
+import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
 import com.google.android.gms.tasks.OnCompleteListener
@@ -31,9 +27,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,15 +41,21 @@ class MainActivity : ComponentActivity() {
             Log.d("Firebase", e.toString())
         }
 
-
         setContent {
+
             BeepTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    BeepApp()
+                    val checkToken = MainApplication.sharedPreferencesUtil.getToken()
+
+                    if (checkToken.isNullOrBlank()) {
+                        JoinScreen()
+                    } else {
+                        BeepApp()
+                    }
                 }
             }
         }

@@ -13,13 +13,12 @@ class SharedPreferencesUtil(context: Context) {
     fun saveToken(token: String) {
         val editor = preferences.edit()
         editor.putString("token", token)
-        editor.commit()
+        editor.apply()
     }
 
     // 토큰 불러오기
     fun getToken(): String? {
-        val token = preferences.getString("token", null)
-        return token
+        return preferences.getString("token", null)
     }
 
     // preference 지우기
@@ -28,15 +27,15 @@ class SharedPreferencesUtil(context: Context) {
         editor.remove("token")
         editor.apply()
     }
-    // fcm토큰 저장하기
+    // fcm 토큰 저장하기
     fun saveFcmToken(fcmToken: String) {
         val editor = preferences.edit()
         editor.putString("fcmToken", fcmToken)
-        editor.commit()
+        editor.apply()
     }
-    // fcm토큰 불러오기
+
+    // fcm 토큰 불러오기
     fun getFcmToken(): String? {
-        val fcmToken = preferences.getString("fcmToken", null)
-        return fcmToken
+        return preferences.getString("fcmToken", null)
     }
 }

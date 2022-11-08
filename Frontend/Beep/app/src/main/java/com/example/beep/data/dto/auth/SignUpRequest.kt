@@ -1,7 +1,9 @@
 package com.example.beep.data.dto.auth
 
+import com.google.gson.annotations.SerializedName
+
 data class SignUpRequest(
-        val phoneNumber: String,
-        val password: String,
-        val fcmToken: String
+    @SerializedName("phoneNumber") val phoneNumber: String,
+    @SerializedName("password") val password: String,
+    @SerializedName("fcmToken") val fcmToken: String
 )
