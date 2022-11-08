@@ -1,11 +1,13 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.UserRequestDto;
+import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.dto.UserResponseDto;
 import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.domain.enums.MessageType;
+import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
 import com.example.Beep.api.repository.MessageRepository;
@@ -32,9 +34,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BlockRepository blockRepository;
     private final MessageRepository messageRepository;
+    private final MessageService messageService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
 
     @Override
     @Transactional
@@ -147,6 +151,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    //회원토큰으로 회원탈퇴(회원용)
     @Override
     @Transactional
     public void withdrawal() {
@@ -154,19 +159,41 @@ public class UserServiceImpl implements UserService {
         deleteData(user);
     }
 
+    //핸드폰번호으로 회원탈퇴(관리자용)
     @Override
+    @Transactional
     public void withdrawal(String phone) {
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
         deleteData(user);
     }
 
-    //유저 회원 탈퇴 및 데이터 지우기
+    //유저 회원 탈퇴 및 데이터 지우기(회원/관리자)
     public void deleteData(User user) {
+        //유저 pk 빼고 데이터 다 초기화
         user.withdrawal(user.getId().toString(),"0","0",Authority.ROLE_LEAVE);
-        messageRepository.deleteMessageByOwnerId(user.getId());
-        blockRepository.deleteBlockByUserIdOrTargetId(user.getId(), user.getId());
-        messageRepository.deleteMessagesBySenderIdOrReceiverIdAndType(user.getId(), user.getId(), MessageType.BLOCK.getNum());
+        //보관 메세지(차단, 삭제) 삭제
+        deleteSaveMessage(user);
+        //나를 차단한 메세지 삭제
+        deleteBlockMessagaeRelateWithMe(user);
         userRepository.save(user);
+    }
+
+    //해당 회원의 모든 보관 메세지 들고와서 메세지삭제(+S3파일 삭제)
+    public void deleteSaveMessage(User user){
+        List<Message> list = messageRepository.findByOwnerId(user.getId());
+
+        for(Message m : list){
+            messageService.deleteMessage(m.getId());
+        }
+    }
+
+    //나와 관련된 차단 메세지들 삭제(당한거나,한 것)
+    public void deleteBlockMessagaeRelateWithMe(User user){
+        List<Message> list = messageRepository.findBySenderIdAndType(user.getId(),MessageType.BLOCK.getNum());
+
+        for(Message m : list){
+            messageService.deleteMessage(m.getId());
+        }
     }
 
     @Override
@@ -176,6 +203,20 @@ public class UserServiceImpl implements UserService {
         user.changePw(passwordEncoder.encode(newPw.getPassword()));
         userRepository.save(user);
         return "Success";
+    }
+
+    @Override
+    public void changeIntroduceAudio(String introduceAudio) {
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).get();
+        
+        //기존 인삿말 오디오 존재하면 S3에서 삭제
+        if(user.getIntroduceAudio() != null){
+            s3Service.deleteFile(introduceAudio, S3Type.PERMANENT.getNum());
+        }
+        
+        //인삿말 오디오 컬럼 수정
+        user.changeIntroduceAudio(introduceAudio);
+        userRepository.save(user);
     }
 
     @Override
