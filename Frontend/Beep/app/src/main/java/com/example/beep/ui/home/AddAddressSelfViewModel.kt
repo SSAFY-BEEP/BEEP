@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,9 @@ class AddAddressSelfViewModel @Inject constructor(private val postUserAddressUse
     fun postAddress(phone: String, name: String){
         viewModelScope.launch(Dispatchers.IO) {
             postUserAddressUseCase.execute(phone, name).collectLatest {
+                Log.d("Phone", phone)
+                Log.d("Name", name)
+                Log.d("POST ADDRESS", it)
 //                if(it is ResultType.Success){
 //                    _successMsgEvent.postValue("성공")
 //                }else if(it is ResultType.Fail){

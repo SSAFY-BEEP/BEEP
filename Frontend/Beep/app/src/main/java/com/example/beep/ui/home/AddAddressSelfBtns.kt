@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
@@ -81,7 +82,10 @@ fun AddSubmitBtn(
     viewModel: AddAddressSelfViewModel = viewModel()
 ) {
     Button(
-        onClick = { viewModel.postAddress(phone, name) },
+        onClick = {
+            Log.d("PHONE", phone)
+            Log.d("NAME", name)
+            viewModel.postAddress(phone, name) },
         modifier = Modifier
             .height(40.dp),
         elevation = ButtonDefaults.elevation(
