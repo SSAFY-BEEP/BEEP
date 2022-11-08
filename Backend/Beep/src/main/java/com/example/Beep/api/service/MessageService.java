@@ -11,12 +11,20 @@ public interface MessageService {
 //    void saveSendMessage(MessageRequestDto.persistMessage persistMessage);
 //    void saveReceiveMessage(MessageRequestDto.persistMessage persistMessage);
 
+    //전체 조회
     List<MessageResponseDto> getAll();
 
+    //메세지 삭제
     void deleteMessage(Long id);
 
+    //보낸메세지 조회
     List<MessageResponseDto> findSendMessage();
+    //보관메세지 조회(보관1, 차단2)
     List<MessageResponseDto> findReceiveMessageByType(Integer type);
 
+    //메세지 타입 변경(보관1, 차단2)
+    String changeMessageType(Long messageId,Integer type);
+
+    //메세지 태그 수정
     void updateTag(MessageRequestDto.updateTag updateTag);
 }

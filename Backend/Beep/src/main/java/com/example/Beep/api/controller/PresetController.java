@@ -32,7 +32,7 @@ public class PresetController {
         presetService.PresetSave(presetRequestDto);
     }
 
-    @ApiOperation(value = "프리셋 삭제", notes = "프리셋 삭제")
+    @ApiOperation(value = "프리셋 삭제", notes = "프리셋 삭제 (pid=1 : 메세지, pid=2 : 연락처)")
     @DeleteMapping("/delete/{pid}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public void PresetDelete(@PathVariable("pid") Long pid){

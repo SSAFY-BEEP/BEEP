@@ -26,18 +26,19 @@ public class BlockController {
         return new ResponseEntity<>(blockService.getList(), HttpStatus.OK);
     }
 
-    //메세지24
-
-    @ApiOperation(value = "메세지24에서 유저 차단", notes = "메세지24의 id를 통해서 차단 기능")
-    @PostMapping("/24/{messageId}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> blockUser24(@PathVariable("messageId") String messageId) {
-        //차단관계 설정
-        blockService.blockUser24(messageId);
-        //차단 메세지 저장(차단은 2)
-        message24Service.changeMessageType(messageId, MessageType.BLOCK.getNum());
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
+    //메세지24에 존재
+//    @ApiOperation(value = "메세지24에서 유저 차단", notes = "메세지24의 id를 통해서 차단 기능")
+//    @PostMapping("/24/{messageId}")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<?> blockUser24(@PathVariable("messageId") String messageId) {
+//        //레디스 메세지 차단으로 저장(차단은 2)
+//        Long result = message24Service.changeMessageType(messageId, MessageType.BLOCK.getNum());
+//
+//        //차단관계 설정
+//        blockService.blockUser(result);
+//
+//        return new ResponseEntity<>("Success", HttpStatus.OK);
+//    }
 
     //메세지
     @ApiOperation(value = "메세지에서 유저 차단", notes = "메세지의 id를 통해서 차단 기능")
