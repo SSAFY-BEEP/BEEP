@@ -22,6 +22,7 @@ import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.ArrayList;
@@ -95,48 +96,25 @@ public class Message24ServiceImpl implements  Message24Service{
 //    }
     @Transactional
     @Override
-    public void sendMessageWithFile(S3RequestDto.sendMessage24 message) {
-        System.out.println("sendMessageWithFile------------");
+    public void sendMessageWithFile(MultipartFile file,S3RequestDto.sendMessage24 message) {
         String userNum = SecurityUtil.getCurrentUsername().get();
 
-        //S3파일 저장
-        String audioFileForSender = null;
-        if(message.getFile()!=null){
-            audioFileForSender = s3Service.uploadFile(message.getFile());
-        }
-
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
-        //보낸사람에게 저장
-        Message24 senderMsg = Message24.builder()
-                .content(message.getContent())
-                .audioUri(audioFileForSender)
-                .senderNum(userNum)
-                .receiverNum(message.getReceiverNum())
-                .ownerNum(userNum)
-                .build();
 
-        //초대메세지를 보내야하지 않을까?
+        //발신자데이터로 Message24 저장
+        saveMessage24ForOwner(file, message, userNum);
+
         Optional<User> receiver = userRepository.findByPhoneNumber(message.getReceiverNum());
-        if(receiver==null || receiver.get().getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
+
+        if(!receiver.isPresent() || receiver.get().getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
+            //초대메세지 보내기
             smsService.sendInviteSMS(message.getReceiverNum());
+
         } else {            //회원일 경우
+            //차단 여부
             boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
-            if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
-                //S3파일 저장
-                String audioFileForReceiver = null;
-                if(message.getFile()!=null){
-                    audioFileForReceiver= s3Service.uploadFile(message.getFile());
-                }
-
-                Message24 receiverMsg = Message24.builder()
-                        .ownerNum(message.getReceiverNum())
-                        .audioUri(audioFileForReceiver)
-                        .content(message.getContent())
-                        .senderNum(userNum)
-                        .receiverNum(message.getReceiverNum())
-                        .build();
-
-                repository.save(receiverMsg);
+            if(!isBlocked){ //차단 안됐을 경우에만 수신자에도 메세지 데이터 저장
+                saveMessage24ForOwner(file, message, message.getReceiverNum());
             }
 
             // 추후에fcm토큰 생기면 수정
@@ -162,6 +140,26 @@ public class Message24ServiceImpl implements  Message24Service{
         }
 
 
+    }
+
+    //해당 owner용 데이터 저장
+    public void saveMessage24ForOwner(MultipartFile file,S3RequestDto.sendMessage24 message, String ownerNum){
+        //S3파일 저장
+        String audioFileName = null;
+        if(!file.isEmpty()){
+            audioFileName= s3Service.uploadFile(file);
+        }
+
+        //수신자데이터로 Message24 저장
+        Message24 receiverMsg = Message24.builder()
+                .ownerNum(message.getReceiverNum())
+                .audioUri(audioFileName)
+                .content(message.getContent())
+                .senderNum(ownerNum)
+                .receiverNum(message.getReceiverNum())
+                .build();
+
+        repository.save(receiverMsg);
     }
 
     //메세지 보관
