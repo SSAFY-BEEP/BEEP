@@ -63,7 +63,7 @@ fun ShowAddressList() {
 
                 ) {
                 Text(
-                    text = "+",
+                    text = "Edit",
                     fontSize = 25.sp,
                     fontFamily = galmurinineFont
                 )

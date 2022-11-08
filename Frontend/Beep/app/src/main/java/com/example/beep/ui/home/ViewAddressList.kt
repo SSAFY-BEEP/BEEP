@@ -55,7 +55,6 @@ fun ViewAddressList(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-
                         Text(
                             text = "${address.name ?: ""}",
                             fontSize = 14.sp,
@@ -88,6 +87,7 @@ fun ViewAddressList(
                     }
                 }
             }
+
         }
         Column(modifier = modifier.height(200.dp)) {
             BeepForTest()
