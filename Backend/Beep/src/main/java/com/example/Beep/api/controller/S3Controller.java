@@ -64,11 +64,12 @@ public class S3Controller {
     })
 
     public ResponseEntity<?> deleteIntroduce(@RequestBody S3RequestDto.introduceAudio introduceAudio) {
-        //S3에서 introduceAudio 파일 찾아서 삭제
-        s3Service.deleteFile(introduceAudio.getIntroduceAudio(), S3Type.PERMANENT.getNum());
-
-        //DB 유저 introduce 수정
-        userService.changeIntroduceAudio(null);
+        System.out.println(introduceAudio.getIntroduceAudio());
+//        //S3에서 introduceAudio 파일 찾아서 삭제
+//        s3Service.deleteFile(introduceAudio.getIntroduceAudio(), S3Type.PERMANENT.getNum());
+//
+//        //DB 유저 introduce 수정
+//        userService.changeIntroduceAudio(null);
 
         return ResponseEntity.ok().body(introduceAudio+"삭제 완료");
     }

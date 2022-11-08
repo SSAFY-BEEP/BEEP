@@ -1,13 +1,13 @@
 package com.example.Beep.api.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 public class S3RequestDto {
     @Getter
-    @Builder
+    @NoArgsConstructor
     public static class introduceAudio {
         String introduceAudio;
     }
@@ -15,7 +15,7 @@ public class S3RequestDto {
     @Getter
     @Builder
     public static class sendMessage24 {
-        private MultipartFile file;
+//        private MultipartFile file;
         private String content;
         private String receiverNum;
     }
