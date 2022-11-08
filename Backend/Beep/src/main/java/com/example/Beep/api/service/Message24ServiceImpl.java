@@ -2,9 +2,12 @@ package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.dto.S3RequestDto;
+import com.example.Beep.api.domain.dto.SMSRequestDto;
+import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.domain.enums.MessageType;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,8 @@ public class Message24ServiceImpl implements  Message24Service{
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private final SMSService smsService;
+    private final BlockService blockService;
 
 
     //받은 메세지 조회(보관, 차단)
@@ -89,11 +95,15 @@ public class Message24ServiceImpl implements  Message24Service{
 //    }
     @Transactional
     @Override
-    public void sendMessageWithFile(S3RequestDto.sendMessage24 message, boolean isBlocked) {
+    public void sendMessageWithFile(S3RequestDto.sendMessage24 message) {
+        System.out.println("sendMessageWithFile------------");
         String userNum = SecurityUtil.getCurrentUsername().get();
 
         //S3파일 저장
-        String audioFileForSender = s3Service.uploadFile(message.getFile());
+        String audioFileForSender = null;
+        if(message.getFile()!=null){
+            audioFileForSender = s3Service.uploadFile(message.getFile());
+        }
 
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
         //보낸사람에게 저장
@@ -106,33 +116,17 @@ public class Message24ServiceImpl implements  Message24Service{
                 .build();
 
         //초대메세지를 보내야하지 않을까?
-        User receiver = userRepository.findByPhoneNumber(message.getReceiverNum())
-                .orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
-
-        // 받을 상대의 fcm 토큰
-        String registrationToken = receiver.getFcmToken();
-        // See documentation on defining a message payload.
-        com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
-                .setNotification(Notification.builder()
-                        .setTitle("[BEEP] 테스트 메시지")
-                        .setBody("테스트 입니다.")
-                        .build())
-//                .putData("title", "테스트 메시지")
-//                .putData("content", "안녕하세요")
-                .setToken(registrationToken)
-                .build();
-
-
-        // Send a message to the device corresponding to the provided
-        // registration token.
-        try{
-            String response = FirebaseMessaging.getInstance().send(fcmMessage);
-            // 성공하면 메시지 아이디를 반환함
-            System.out.println("Successfully sent message: " + response);
-
+        Optional<User> receiver = userRepository.findByPhoneNumber(message.getReceiverNum());
+        if(receiver==null || receiver.get().getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
+            smsService.sendInviteSMS(message.getReceiverNum());
+        } else {            //회원일 경우
+            boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
             if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
                 //S3파일 저장
-                String audioFileForReceiver = s3Service.uploadFile(message.getFile());
+                String audioFileForReceiver = null;
+                if(message.getFile()!=null){
+                    audioFileForReceiver= s3Service.uploadFile(message.getFile());
+                }
 
                 Message24 receiverMsg = Message24.builder()
                         .ownerNum(message.getReceiverNum())
@@ -144,10 +138,30 @@ public class Message24ServiceImpl implements  Message24Service{
 
                 repository.save(receiverMsg);
             }
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
-            return;
+
+            // 추후에fcm토큰 생기면 수정
+//            try {
+//                // 받을 상대의 fcm 토큰
+//                String registrationToken = receiver.get().getFcmToken();
+//                // See documentation on defining a message payload.
+//                com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
+//                        .setNotification(Notification.builder()
+//                                .setTitle("[BEEP] 삐삐가 도착했어요!")
+//                                .setBody(message.getContent())
+//                                .build())
+//                        .setToken(registrationToken)
+//                        .build();
+//
+//                String response = FirebaseMessaging.getInstance().send(fcmMessage);
+//                // 성공하면 메시지 아이디를 반환함
+//                System.out.println("Successfully sent message: " + response);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return;
+//            }
         }
+
+
     }
 
     //메세지 보관

@@ -38,16 +38,19 @@ public class SMSServiceImpl implements SMSService{
          * Parameters
          * 관련정보 : http://www.coolsms.co.kr/SDK_Java_API_Reference_ko#toc-0
          */
+        //msg 길이가 80보다 적으면 sms타입으로 길면 lms타입으로
+        String type = msg.getBytes().length<80? "sms" : "lms";
+
         HashMap<String, String> set = new HashMap<String, String>();
         set.put("to", targetPhone); // 수신번호
         set.put("from", api_from); // 발신번호
         set.put("text", msg); // 문자내용
-        set.put("type", "sms"); // 문자 타입
+        set.put("type", type); // 문자 타입
 
         try {
             JSONObject result = coolSms.send(set); // 보내기&전송결과받기
             System.out.println(result.toString());
-            return "Success";
+            return "Success "+type;
         } catch (CoolsmsException e) {
             e.printStackTrace();
             return "Fail";
@@ -55,9 +58,18 @@ public class SMSServiceImpl implements SMSService{
     }
 
     @Override
-    public String sendInviteSMS(SMSRequestDto.Send send) {
+    public String sendInviteSMS(String targetNum) {
         //초대 메시지 작성 필요!
-        return sendSMS(send.getTargetPhone(), send.getMsg());
+        String msg ="[BEEP]\n";
+        msg+= "삡-\n";
+        msg+= "누군가 당신에게 삐삐메세지를 보냈어요.\n";
+        msg+= "24시간이 지나면 사라져요!";
+        msg+= "\n\n";
+        msg+= "받은 비밀메세지가 궁금하다면?";
+        msg+= "초성으로 소통하는 삐삐앱 BEEP으로!\n";
+        //임시링크
+        msg+= "https://play.google.com/store/apps/details?id=com.tenbil.beeper";
+        return sendSMS(targetNum, msg);
 //        return "Success";
     }
 
@@ -65,7 +77,7 @@ public class SMSServiceImpl implements SMSService{
     public String sendCertSMS(String targetPhone) {
         //6자리 난수
         int certNum = new Random(System.currentTimeMillis()).nextInt(999999);
-        String msg = "인증번호 : " + Integer.toString(certNum);
+        String msg ="[BEEP] 인증코드 :" + Integer.toString(certNum);
         String result = sendSMS(targetPhone, msg);
 
         //인증 번호를 리턴
@@ -80,7 +92,7 @@ public class SMSServiceImpl implements SMSService{
         User user = userRepository.findByPhoneNumber(targetPhone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
         user.changePw(passwordEncoder.encode(newPw));
         //메시지 내용
-        String msg = "새로운 비밀번호 : " + newPw;
+        String msg ="[BEEP]임시비밀번호 : " + newPw;
         String result = sendSMS(targetPhone, msg);
         //메시지가 정상적으로 가야 비밀번호를 바꿔줌
         if(result.equals("Success")) {
