@@ -5,15 +5,15 @@ import com.example.beep.data.dto.mainpage.AddressResponse
 import retrofit2.http.*
 
 interface AddressApi {
-    @GET("/api/phonebook")
+    @GET("phonebook")
     suspend fun getUserAddress(): List<AddressResponse>
 
-    @POST("/api/phonebook")
-    suspend fun postUserAddress(@Body addressInfo: AddressRequest)
+    @POST("phonebook")
+    suspend fun postUserAddress(@Body addressInfo: List<AddressRequest>): String
 
-    @DELETE("/api/phonebook/{phone}")
+    @DELETE("phonebook/{phone}")
     suspend fun deleteUserAddress(@Path("phone") phone: String)
 
-    @PATCH("/api/phonebook/{phone}")
+    @PATCH("phonebook/{phone}")
     suspend fun patchUserAddress(@Path("phone") phone: String, @Body addressInfo: AddressRequest)
 }

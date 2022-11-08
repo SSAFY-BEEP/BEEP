@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Preview
@@ -25,7 +27,11 @@ fun AddCancelBtn() {
         onClick = { /*showMessage*/ },
         modifier = Modifier
             .height(40.dp)
-            .border(width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")), shape = RoundedCornerShape(10.dp)),
+            .border(
+                width = 1.dp,
+                color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                shape = RoundedCornerShape(10.dp)
+            ),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
@@ -70,9 +76,16 @@ fun AddToBookBtn() {
 }
 
 @Composable
-fun AddSubmitBtn() {
+fun AddSubmitBtn(
+    name: String,
+    phone: String,
+    viewModel: AddAddressSelfViewModel = viewModel()
+) {
     Button(
-        onClick = { /*showMessage*/ },
+        onClick = {
+            Log.d("PHONE", phone)
+            Log.d("NAME", name)
+            viewModel.postAddress(phone, name) },
         modifier = Modifier
             .height(40.dp),
         elevation = ButtonDefaults.elevation(

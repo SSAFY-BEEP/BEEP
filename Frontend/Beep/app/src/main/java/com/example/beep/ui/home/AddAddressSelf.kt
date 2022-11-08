@@ -26,13 +26,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beep.R
-
+import com.example.beep.data.dto.mainpage.AddressResponse
+import com.example.beep.util.collectAsStateLifecycleAware
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Preview
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddAddressSelf() {
+fun AddAddressSelf(
+) {
+
     var inputNameTxt by remember { mutableStateOf("") }
     var inputNumberTxt by remember { mutableStateOf("") }
 //    var inputNumberTxt by remember { mutableStateOf(TextFieldValue("")) }
@@ -69,7 +73,7 @@ fun AddAddressSelf() {
         ) {
             AddCancelBtn()
             AddToBookBtn()
-            AddSubmitBtn()
+            AddSubmitBtn(name = inputNameTxt, phone = inputNumberTxt)
         }
     }
 }

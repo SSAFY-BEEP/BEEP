@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.beep.ui.home.AddAddressSelfViewModel
 import com.example.beep.ui.home.AddressViewModel
 import com.example.beep.ui.home.HomeScreen
 import com.example.beep.ui.login.LoginMainScreen
@@ -26,6 +27,7 @@ fun BeepNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
+            val postAddress: AddAddressSelfViewModel = hiltViewModel(it)
             HomeScreen()
         }
         messageGraph(navController)
@@ -49,6 +51,7 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 fun NavGraphBuilder.myPageGraph(navController: NavController) {
     navigation(startDestination = "myPage", route = "settings") {
 
@@ -64,8 +67,8 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             MessagePresetScreen(viewModel = model)
         }
         composable("greetingPreset") {
-            val model: MyPageViewModel = hiltViewModel(it)
-            GreetingSettingScreen(viewModel = model)
+            val model: IntroduceViewModel = hiltViewModel(it)
+            IntroduceScreen(viewModel = model)
         }
         composable("colorSetting") {
             ColorSettingScreen()
@@ -79,6 +82,9 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
+        }
+        composable("recordIntroduce") {
+            RecordVoiceScreen()
         }
     }
 }

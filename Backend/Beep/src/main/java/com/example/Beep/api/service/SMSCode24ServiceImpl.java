@@ -1,13 +1,10 @@
 package com.example.Beep.api.service;
 
-import com.example.Beep.api.domain.entity.SMS;
 import com.example.Beep.api.domain.entity.SMSCode24;
 import com.example.Beep.api.repository.SMSCode24Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

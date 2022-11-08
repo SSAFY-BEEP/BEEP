@@ -13,6 +13,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
@@ -55,9 +56,9 @@ object RemoteDataModule {
     fun provideAddressApi(@Named("retrofit") retrofit: Retrofit): AddressApi {
         return retrofit.create(AddressApi::class.java)
     }
-    
+
     @Provides
-    @Singleton    
+    @Singleton
     fun provideMessageApi(@Named("retrofit") retrofit: Retrofit): MessageApi {
         return retrofit.create(MessageApi::class.java)
     }
@@ -65,9 +66,17 @@ object RemoteDataModule {
     // OkHttpClient DI
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
+            .addInterceptor(httpLoggingInterceptor)
             .build()
+    }
+
+    // HttpLoggingInterceptor DI
+    @Provides
+    @Singleton
+    fun provideInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 }

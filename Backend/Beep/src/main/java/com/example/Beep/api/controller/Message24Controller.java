@@ -58,13 +58,11 @@ public class Message24Controller {
 
     //메세지 파일 들고와서 S3에 저장하면서 DB에도 등록
     @PostMapping("/sendFile")
-    @ApiOperation(value = "음성메세지와 함께 메세지 전송", notes = "음성메세지와 함께 메세지 전송")
+    @ApiOperation(value = "메세지 전송(음성파일함께)", notes = "음성메세지와 함께 메세지 전송")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> sendMessageWithFile(@ModelAttribute S3RequestDto.sendMessage24 message24) {
         //S3에 파일 등록
-        boolean isBlocked = blockService.isBlocked(message24.getReceiverNum());
-
-        service.sendMessageWithFile(message24, isBlocked);
+        service.sendMessageWithFile(message24);
 
         return ResponseEntity.ok().body(message24.getContent());
     }
