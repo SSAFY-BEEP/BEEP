@@ -31,10 +31,11 @@ import com.example.beep.util.collectAsStateLifecycleAware
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
-@Preview
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddAddressSelf(
+    isFromEdit: Boolean,
+    changeToAddAddress: () -> Unit,
 ) {
 
     var inputNameTxt by remember { mutableStateOf("") }
@@ -71,9 +72,13 @@ fun AddAddressSelf(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            AddCancelBtn()
+            AddCancelBtn(changeToAddAddress)
             AddToBookBtn()
-            AddSubmitBtn(name = inputNameTxt, phone = inputNumberTxt)
+            if (isFromEdit) {
+                PatchSubmitBtn(apiPhone = inputNumberTxt, name = inputNameTxt, phone = inputNumberTxt)
+            } else {
+                AddSubmitBtn(name = inputNameTxt, phone = inputNumberTxt)
+            }
         }
     }
 }

@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
-@Preview
 @Composable
-fun AddCancelBtn() {
+fun AddCancelBtn(
+    changeToAddAddress: () -> Unit,
+) {
     Button(
-        onClick = { /*showMessage*/ },
+        onClick = { changeToAddAddress() },
         modifier = Modifier
             .height(40.dp)
             .border(
@@ -99,6 +100,38 @@ fun AddSubmitBtn(
         ) {
         Text(
             text = "등록",
+            fontFamily = galmurinineFont,
+            fontSize = 16.sp,
+            color = Color.White
+        )
+    }
+}
+
+@Composable
+fun PatchSubmitBtn(
+    apiPhone: String,
+    name: String,
+    phone: String,
+    viewModel: PatchAddressViewModel = viewModel()
+) {
+    Button(
+        onClick = {
+            Log.d("PHONE", phone)
+            Log.d("NAME", name)
+            viewModel.patchAddress(apiPhone, phone, name) },
+        modifier = Modifier
+            .height(40.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#7AA8FF"))),
+        shape = RoundedCornerShape(10.dp),
+        contentPadding = PaddingValues(10.dp, 0.dp),
+    ) {
+        Text(
+            text = "수정",
             fontFamily = galmurinineFont,
             fontSize = 16.sp,
             color = Color.White

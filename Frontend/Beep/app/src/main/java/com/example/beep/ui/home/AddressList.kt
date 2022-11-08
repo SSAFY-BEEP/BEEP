@@ -18,11 +18,20 @@ import com.example.beep.data.dto.mainpage.AddressResponse
 @Composable
 fun ShowAddressList() {
     var goAddAddress by remember { mutableStateOf(false) }
+    var viewEditDelBtn by remember { mutableStateOf(false) }
+    var isFromEdit by remember { mutableStateOf(false) }
+
 
     var addressListTitle = if (goAddAddress) {
         "주소록 추가"
     } else {
         "주소록"
+    }
+
+    var goEditDelBtnTxt = if (viewEditDelBtn) {
+        "완료"
+    } else {
+        "Edit"
     }
 
     Column(
@@ -46,28 +55,31 @@ fun ShowAddressList() {
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),
                 fontFamily = galmurinineFont
             )
-            Button(
-                onClick = { goAddAddress = !goAddAddress },
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 10.dp, 0.dp)
-                    .width(25.dp)
-                    .height(25.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.3F)),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(0.dp),
+            if (!goAddAddress) {
+                Button(
+                    onClick = { viewEditDelBtn = !viewEditDelBtn },
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 10.dp, 0.dp)
+                        .width(60.dp)
+                        .height(25.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.3F)),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
 
-                ) {
-                Text(
-                    text = "Edit",
-                    fontSize = 25.sp,
-                    fontFamily = galmurinineFont
-                )
+                    ) {
+                    Text(
+                        text = goEditDelBtnTxt,
+                        fontSize = 16.sp,
+                        fontFamily = galmurinineFont
+                    )
+                }
             }
+
         }
         Box(
             modifier = Modifier
@@ -85,9 +97,16 @@ fun ShowAddressList() {
                 ),
         ) {
             if(goAddAddress) {
-                AddAddressSelf()
+                AddAddressSelf(
+                    isFromEdit = isFromEdit,
+                    changeToAddAddress = { goAddAddress = !goAddAddress },
+                    )
             } else{
-                ViewAddressList()
+                ViewAddressList(
+                    changeToAddAddress = { goAddAddress = !goAddAddress },
+                    viewEditDelBtn = viewEditDelBtn,
+                    isFromEdit = { isFromEdit = true }
+                )
             }
 
 
