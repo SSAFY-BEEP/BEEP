@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 class UserViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val loginUseCase: LoginUseCase,
+    private val newPasswordUseCase: NewPasswordUseCase,
+    private val withdrawalUseCase: WithdrawalUseCase,
     private val validatePhoneNumber: ValidatePhoneNumber = ValidatePhoneNumber(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
     private val validatePasswordCheck: ValidatePasswordCheck = ValidatePasswordCheck(),

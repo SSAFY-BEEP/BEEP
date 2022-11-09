@@ -22,4 +22,15 @@ class AuthDataSource @Inject constructor(
     ): Flow<LoginResponse> = flow {
         emit(authApi.login(request))
     }
+
+    fun newPassword(
+        request: NewPasswordRequest
+    ): Flow<String> = flow {
+        emit(authApi.newPassword(request))
+    }
+
+    fun withdrawal(
+    ): Flow<String> = flow {
+        emit(authApi.withdrawal())
+    }
 }
