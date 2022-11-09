@@ -1,6 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.repository.datasource.S3DataSource
+import com.example.beep.data.datasource.S3DataSource
 import com.example.beep.data.dto.mypage.S3Request
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

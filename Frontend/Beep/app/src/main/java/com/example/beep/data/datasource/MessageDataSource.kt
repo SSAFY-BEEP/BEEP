@@ -1,4 +1,4 @@
-package com.example.beep.data.repository.datasource
+package com.example.beep.data.datasource
 
 import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.dto.message.MessageResponse
