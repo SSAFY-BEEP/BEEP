@@ -1,7 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.repository.datasource.sample.MessageDataSource
-import com.example.beep.data.dto.message.MessageRequest
+import com.example.beep.data.repository.datasource.MessageDataSource
 import com.example.beep.data.dto.message.MessageResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,9 +13,13 @@ class MessageRepository @Inject constructor(private val messageDataSource: Messa
     fun getSendMessage(): Flow<List<MessageResponse>> =
         flow { messageDataSource.getSendMessage().collect { emit(it)} }
 
-    fun changeTag(messageRequest: MessageRequest): Flow<String> =
-        flow { messageDataSource.changeTag(messageRequest).collect { emit(it)} }
+    fun changeTag(id: Long, tag: String): Flow<String> =
+        flow { messageDataSource.changeTag(id, tag).collect { emit(it)} }
 
     fun deleteMessage(messageId : Long): Flow<String> =
         flow { messageDataSource.deleteMessage(messageId).collect {emit(it)} }
+
+    fun blockMessage(messageId: Long) = flow {
+        messageDataSource.blockMessage(messageId).collect { emit(it) }
+    }
 }

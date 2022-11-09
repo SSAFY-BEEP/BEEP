@@ -1,4 +1,4 @@
-package com.example.beep.data.repository.datasource.sample
+package com.example.beep.data.repository.datasource
 
 import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.dto.message.MessageResponse
@@ -18,11 +18,15 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
         emit(messageApi.getSendMessage())
     }
 
-    fun changeTag(messageRequest: MessageRequest): Flow<String> = flow {
-        emit(messageApi.changeTag(messageRequest))
+    fun changeTag(id: Long, tag: String): Flow<String> = flow {
+        emit(messageApi.changeTag(MessageRequest(id, tag)))
     }
 
     fun deleteMessage(messageId: Long): Flow<String> = flow {
         emit(messageApi.deleteMessage(messageId))
+    }
+
+    fun blockMessage(messageId: Long) = flow {
+        emit(messageApi.blockMessage(messageId))
     }
 }

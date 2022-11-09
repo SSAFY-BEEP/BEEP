@@ -20,12 +20,12 @@ import com.example.beep.util.collectAsStateLifecycleAware
 import android.util.Log
 
 @Composable
-fun MessageScreen(viewModel: MessageViewModel = viewModel(), onNextButtonClicked: () -> Unit) {
+fun MessageScreen(messageViewModel: MessageViewModel = viewModel(), onNextButtonClicked: () -> Unit) {
     var toggleMenu by remember { mutableStateOf(true) }
-    val receiveMessageList: List<MessageResponse> by viewModel.receiveMessages.collectAsStateLifecycleAware(
+    val receiveMessageList: List<MessageResponse> by messageViewModel.receiveMessages.collectAsStateLifecycleAware(
         initial = emptyList()
     )
-    val sendMessageList: List<MessageResponse> by viewModel.sendMessages.collectAsStateLifecycleAware(
+    val sendMessageList: List<MessageResponse> by messageViewModel.sendMessages.collectAsStateLifecycleAware(
         initial = emptyList()
     )
     Log.d("API", "receive $receiveMessageList")
@@ -44,7 +44,7 @@ fun MessageScreen(viewModel: MessageViewModel = viewModel(), onNextButtonClicked
                     modifier = Modifier,
                     currentMenu = toggleMenu,
                     messageList = receiveMessageList, onDelete = { id: Long ->
-                        viewModel.deleteMessage(
+                        messageViewModel.deleteMessage(
                             id
                         )
                     })
@@ -52,7 +52,7 @@ fun MessageScreen(viewModel: MessageViewModel = viewModel(), onNextButtonClicked
                     modifier = Modifier,
                     currentMenu = toggleMenu,
                     messageList = sendMessageList, onDelete = { id: Long ->
-                        viewModel.deleteMessage(
+                        messageViewModel.deleteMessage(
                             id
                         )
                     })
