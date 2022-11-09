@@ -24,35 +24,20 @@ public class DictionaryController {
     @ApiOperation(value = "사전 단어 검색", notes = "단어(초성/숫자)로 사전에서 뜻 검색")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> FindWord(@PathVariable ("word") String word){
-        try{
-            return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindWord(word), HttpStatus.OK);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindWord(word), HttpStatus.OK);
     }
 
     @GetMapping("/value/{value}")
     @ApiOperation(value = "사전 뜻 검색", notes = "뜻으로 사전에서 뜻 검색")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> FindValue(@PathVariable ("value") String value){
-        try{
-            return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindValue(value), HttpStatus.OK);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindValue(value), HttpStatus.OK);
     }
 
     @GetMapping("/random")
     @ApiOperation(value = "사전 랜덤 5개", notes = "랜덤으로 5개 사전 데이터 리턴")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>Random(){
-        try{
-            return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindRandom(),HttpStatus.OK);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return new ResponseEntity<List<DictionaryResponseDto>>(dictionaryService.FindRandom(),HttpStatus.OK);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.beep.data.repository.datasource
+package com.example.beep.data.datasource
 
 import android.util.Log
 import com.example.beep.data.dto.message.MessageRequest
