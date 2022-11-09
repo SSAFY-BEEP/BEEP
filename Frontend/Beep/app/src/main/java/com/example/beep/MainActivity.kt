@@ -52,8 +52,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val checkToken = MainApplication.sharedPreferencesUtil.getToken()
 
-                    Toast.makeText(baseContext, checkToken, Toast.LENGTH_SHORT).show()
-
                     if (checkToken.isNullOrBlank()) {
                         LoginScreen()
                     } else {
