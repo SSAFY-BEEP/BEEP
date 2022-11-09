@@ -18,6 +18,11 @@ class VoiceRecorder {
                     instance = it
                 }
             }
+
+        @JvmStatic
+        fun nullInstance() {
+            instance = null
+        }
     }
 
 

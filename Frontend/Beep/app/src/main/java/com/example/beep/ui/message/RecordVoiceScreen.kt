@@ -23,6 +23,7 @@ import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.io.File
 
 enum class RecordState {
     BEFORE_RECORDING,
@@ -46,12 +47,6 @@ fun RecordVoiceScreen(
     )
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
     var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
-    LaunchedEffect(key1 = null) {
-        println("LaunchedEffect Launched!!")
-        viewModel.actionSender.collect {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT)
-        }
-    }
 
     Column(
         modifier = modifier
@@ -68,6 +63,9 @@ fun RecordVoiceScreen(
                         voicePermissionState.launchPermissionRequest()
                     }
                     if (voicePermissionState.hasPermission) {
+                        if (File(filepath).exists()) {
+                            File(filepath).delete()
+                        }
                         startRecording(context, filepath)
                         currentState = RecordState.ON_RECORDING
                     }
@@ -81,7 +79,7 @@ fun RecordVoiceScreen(
                     currentState = RecordState.AFTER_RECORDING
                 }
                 RecordState.AFTER_RECORDING -> {
-                    startPlaying(context, filepath)
+                    startPlaying(filepath)
                     currentState = RecordState.ON_PLAYING
                 }
                 RecordState.ON_PLAYING -> {
@@ -119,18 +117,20 @@ fun stopRecording(context: Context) {
         stop()
         release()
     }
+    VoiceRecorder.nullInstance()
 }
 
-fun startPlaying(context: Context, filepath: String) {
+fun startPlaying(filepath: String) {
     VoicePlayer.getInstance().apply {
         setDataSource(filepath)
         prepare()
         setOnCompletionListener { stopPlaying() }
-    }
+    }.start()
 }
 
 fun stopPlaying() {
     VoicePlayer.getInstance().release()
+    VoicePlayer.nullInstance()
 }
 
 @Composable

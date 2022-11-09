@@ -1,5 +1,9 @@
 package com.example.beep.ui.mypage
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.mypage.S3Request
@@ -21,9 +25,15 @@ class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): 
         _actionSender.send(result)
     }
 
-    val introduceUri: Flow<String> = s3UseCase.getIntroduceUseCase()
+//    val introduceUriFlow: Flow<String> = s3UseCase.introduceFlow
 
-    val currentIntroduceUrl: Flow<String> = s3UseCase.getIntroduceUseCase()
+    var introduceUrl by mutableStateOf("")
+
+    fun getIntroduce() {
+        viewModelScope.launch {
+            introduceUrl = s3UseCase.getIntroduceUseCase()
+        }
+    }
 
     fun postIntroduce(voice: MultipartBody.Part) {
         viewModelScope.launch {
@@ -39,5 +49,9 @@ class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): 
                 produceResult(it)
             }
         }
+    }
+
+    init {
+        getIntroduce()
     }
 }

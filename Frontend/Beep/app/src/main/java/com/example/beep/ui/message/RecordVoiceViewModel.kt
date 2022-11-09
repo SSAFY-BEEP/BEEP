@@ -17,7 +17,7 @@ import java.io.FileInputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase): ViewModel() {
+class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase) : ViewModel() {
     val _actionSender = Channel<String>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val actionSender = _actionSender.receiveAsFlow()
 
@@ -29,7 +29,7 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
         viewModelScope.launch {
             val file = File(filepath)
             val fis = FileInputStream(file)
-            val byteArray =fis.readBytes()
+            val byteArray = fis.readBytes()
             val partFile = MultipartBody.Part.createFormData(
                 "voice",
                 "${System.currentTimeMillis()}record.mp3",
