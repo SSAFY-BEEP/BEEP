@@ -13,7 +13,7 @@ public enum ErrorCode {
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     /*
-     * 400 BAD_REQUEST: 잘못된 요청
+     * 401 UNAUTHORIZED: 권한 없음
      */
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 
