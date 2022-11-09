@@ -5,6 +5,8 @@ import com.example.Beep.api.domain.dto.PresetResponseDto;
 import com.example.Beep.api.domain.enums.Authority;
 import com.example.Beep.api.domain.entity.Preset;
 import com.example.Beep.api.domain.entity.User;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.PresetRepository;
 import com.example.Beep.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,22 +51,18 @@ public class PresetServiceImpl implements PresetService{
 
     @Override
     public List<PresetResponseDto> PresetFind(Long id) {
-        try {
-            User user = userRepository.findById(id).get();
-            if(user.getAuthority().equals(Authority.ROLE_LEAVE)){
-                return null;
-            }
-            List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
-                    .map(Preset -> PresetResponseDto.builder()
-                            .uid(id)
-                            .number(Preset.getNumber())
-                            .part(Preset.getPart())
-                            .content(Preset.getContent())
-                            .build()).collect(Collectors.toList());
-            return presetResponseDtoList;
-        }catch (NoSuchElementException n){
-            System.out.println("없는 유저 입니다");
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+        if(user.getAuthority()==Authority.ROLE_LEAVE){
+            return null;
         }
-        return null;
+        List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
+                .map(Preset -> PresetResponseDto.builder()
+                        .pid(Preset.getId())
+                        .uid(id)
+                        .number(Preset.getNumber())
+                        .part(Preset.getPart())
+                        .content(Preset.getContent())
+                        .build()).collect(Collectors.toList());
+        return presetResponseDtoList;
     }
 }

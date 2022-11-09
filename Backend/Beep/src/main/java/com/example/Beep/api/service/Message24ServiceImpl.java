@@ -225,7 +225,7 @@ public class Message24ServiceImpl implements  Message24Service{
         Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
         
         //삭제하는 유저가 해당 메세지 데이터 소유자가 아니면 에러
-        if(message24.getOwnerNum() != userNum) throw new CustomException(ErrorCode.BAD_REQUEST);
+        if(!message24.getOwnerNum().equals(userNum) ) throw new CustomException(ErrorCode.BAD_REQUEST);
 
         //음성파일 존재하면 S3파일 삭제
         if(message24.getAudioUri()!=null){
