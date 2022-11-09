@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Beep"
-        android:name=".MainApplication"
+        android:name=".di.MainApplication"
         tools:targetApi="31">
         <!-- [START fcm_disable_auto_init] -->
         <meta-data

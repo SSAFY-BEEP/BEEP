@@ -1,4 +1,4 @@
-package com.example.beep.data.datasource
+package com.example.beep.data.repository.datasource
 
 import com.example.beep.data.dto.mainpage.AddressRequest
 import com.example.beep.data.dto.mainpage.AddressResponse

@@ -23,23 +23,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.beep.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.datatransport.cct.StringMerger
 
 @Composable
 fun LoginScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Login()
-    }
-}
-
-@Composable
-fun Login() {
-
-    var username by remember {
+    var phoneNumber by remember {
         mutableStateOf("")
     }
 
@@ -47,7 +37,10 @@ fun Login() {
         mutableStateOf("")
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Image(
             painter = painterResource(id = R.drawable.image58),
             contentDescription = "Login",
@@ -82,18 +75,14 @@ fun Login() {
 
             Spacer(modifier = Modifier.height(120.dp))
 
-            LoginFields(username, password,
-                onUsernameChange = {
-                    username = it
+            LoginFields(phoneNumber, password,
+                onPhoneNumberChange = {
+                    phoneNumber = it
                 }, onPasswordChange = {
                     password = it
                 }, onForgotPasswordClick = {
 
                 })
-            LoginFooter(
-                onSignInClick = {},
-                onSignUpClick = {}
-            )
 
         }
     }
@@ -114,18 +103,19 @@ fun LoginHeader() {
 
 @Composable
 fun LoginFields(
-    username: String, password: String,
-    onUsernameChange: (String) -> Unit,
+    phoneNumber: String, password: String,
+    onPhoneNumberChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit,
+    viewModel: UserViewModel = viewModel()
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "아이디 ")
+        Text(text = "아이디")
         DemoField(
-            value = username,
-            label = "Username",
+            value = phoneNumber,
+            label = "phoneNumber",
             placeholder = "ex) 01012345678",
-            onValueChange = onUsernameChange,
+            onValueChange = onPhoneNumberChange,
             leadingIcon = {
                 Icon(Icons.Default.Person, contentDescription = "Email")
             },
@@ -159,17 +149,21 @@ fun LoginFields(
         ) {
             Text(text = "Forgot Password?")
         }
+
+        LoginFooter(onSignUpClick = {}, phoneNumber = phoneNumber, password = password)
     }
 
 }
 
 @Composable
 fun LoginFooter(
-    onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    phoneNumber: String,
+    password: String,
+    viewModel: UserViewModel = viewModel()
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Button(onClick = onSignInClick, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = { viewModel.login(phoneNumber,password)}, modifier = Modifier.fillMaxWidth()) {
             Text(text = "sign In")
         }
         TextButton(onClick = onSignUpClick) {
