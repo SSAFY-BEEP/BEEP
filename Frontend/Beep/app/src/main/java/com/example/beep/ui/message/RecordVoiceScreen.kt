@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -58,7 +57,7 @@ fun RecordVoiceScreen(
 
         RecordButton(state = currentState) {
             when (currentState) {
-                RecordState.BEFORE_RECORDING, RecordState.ASK_POST -> {
+                RecordState.BEFORE_RECORDING -> {
                     if (!voicePermissionState.hasPermission) {
                         voicePermissionState.launchPermissionRequest()
                     }
@@ -79,22 +78,31 @@ fun RecordVoiceScreen(
                     currentState = RecordState.AFTER_RECORDING
                 }
                 RecordState.AFTER_RECORDING -> {
-                    startPlaying(filepath)
+                    startPlaying(
+                        filepath,
+                        changeCurrentState = { currentState = RecordState.ASK_POST })
                     currentState = RecordState.ON_PLAYING
                 }
                 RecordState.ON_PLAYING -> {
                     stopPlaying()
+                    currentState = RecordState.ASK_POST
+                }
+                RecordState.ASK_POST -> {
                     currentState = RecordState.BEFORE_RECORDING
                 }
             }
         }
 
-        Button(onClick = {
-            viewModel.postIntroduce(
-                filepath = filepath,
-                togglePopup = togglePopup
-            )
-        }) {
+        Button(
+            enabled = currentState == RecordState.AFTER_RECORDING
+                    || currentState == RecordState.ON_PLAYING
+                    || currentState == RecordState.ASK_POST,
+            onClick = {
+                viewModel.postIntroduce(
+                    filepath = filepath,
+                    togglePopup = togglePopup
+                )
+            }) {
             Text(text = "음성파일 등록")
         }
     }
@@ -102,6 +110,7 @@ fun RecordVoiceScreen(
 
 @RequiresApi(Build.VERSION_CODES.S)
 fun startRecording(context: Context, filepath: String) {
+    VoiceRecorder.nullInstance()
     VoiceRecorder.getInstance(context).apply {
         setAudioSource(MediaRecorder.AudioSource.MIC)
         setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -120,11 +129,15 @@ fun stopRecording(context: Context) {
     VoiceRecorder.nullInstance()
 }
 
-fun startPlaying(filepath: String) {
+fun startPlaying(filepath: String, changeCurrentState: () -> Unit) {
+    VoicePlayer.nullInstance()
     VoicePlayer.getInstance().apply {
         setDataSource(filepath)
         prepare()
-        setOnCompletionListener { stopPlaying() }
+        setOnCompletionListener {
+            stopPlaying()
+            changeCurrentState()
+        }
     }.start()
 }
 
@@ -136,7 +149,7 @@ fun stopPlaying() {
 @Composable
 fun RecordButton(state: RecordState, action: () -> Unit) {
     val text = when (state) {
-        RecordState.BEFORE_RECORDING, RecordState.ASK_POST -> {
+        RecordState.BEFORE_RECORDING -> {
             "녹음하기"
         }
         RecordState.ON_RECORDING -> {
@@ -147,6 +160,9 @@ fun RecordButton(state: RecordState, action: () -> Unit) {
         }
         RecordState.ON_PLAYING -> {
             "재생중지"
+        }
+        RecordState.ASK_POST -> {
+            "다시 녹음하기"
         }
     }
     Button(onClick = action) {
