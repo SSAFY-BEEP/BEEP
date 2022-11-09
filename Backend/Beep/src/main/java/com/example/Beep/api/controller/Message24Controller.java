@@ -61,7 +61,7 @@ public class Message24Controller {
     @PostMapping(value="/sendFile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "메세지 전송(음성파일함께)", notes = "음성메세지와 함께 메세지 전송")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> sendMessageWithFile(@RequestPart MultipartFile file ,@RequestPart S3RequestDto.sendMessage24 message24) {
+    public ResponseEntity<?> sendMessageWithFile(@RequestPart(required = false) MultipartFile file ,@RequestPart S3RequestDto.sendMessage24 message24) {
         //S3에 파일 등록
         service.sendMessageWithFile(file, message24);
 
