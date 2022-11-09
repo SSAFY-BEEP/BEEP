@@ -30,6 +30,7 @@ import com.example.beep.util.collectAsStateLifecycleAware
 fun AddressListContent(
     modifier: Modifier = Modifier,
     viewModel: AddressViewModel = viewModel(),
+    viewModelDelete: AddressDeleteViewModel = viewModel(),
     viewEditDelBtn: Boolean,
     changeToAddAddress: () -> Unit,
     changeToPatchAddress: () -> Unit,
@@ -47,6 +48,7 @@ fun AddressListContent(
     } else {
         9
     }
+
 
     Box(
         modifier = modifier
@@ -126,6 +128,7 @@ fun AddressListContent(
                                         .width(16.dp)
                                         .height(16.dp)
                                         .clickable {
+                                            viewModelDelete.deleteAddress(address.phone)
                                         }
                                         .then(modifier)
                                 ) {

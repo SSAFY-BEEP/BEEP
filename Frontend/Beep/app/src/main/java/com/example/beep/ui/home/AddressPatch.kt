@@ -64,7 +64,12 @@ fun AddressPatch(
             AddCancelBtn(changeToPatchAddress)
             AddToBookBtn()
             Log.d("Phone", inputNameTxt)
-            PatchSubmitBtn(apiPhone = defaultPhoneString, name = inputNameTxt, phone = inputNumberTxt)
+            PatchSubmitBtn(
+                apiPhone = defaultPhoneString,
+                name = inputNameTxt,
+                phone = inputNumberTxt,
+                changeToPatchAddress = changeToPatchAddress
+            )
             }
         }
     }
