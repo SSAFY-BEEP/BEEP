@@ -1,61 +1,47 @@
-package com.example.beep.ui.message
+package com.example.beep.ui.home
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.data.dto.message.MessageRequest
-import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.Message24UseCase
-import com.example.beep.domain.MessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
-class MessageViewModel @Inject constructor(private val messageUseCase: MessageUseCase, private val message24UseCase: Message24UseCase) :
-    ViewModel() {
+class HomeViewModel @Inject constructor(private val message24UseCase: Message24UseCase) :
+ViewModel() {
 
-    private val type = 1
-
-    //보관 메시지 리스트
-    val receiveMessages: Flow<List<MessageResponse>> = messageUseCase.getReceive(type)
-    val sendMessages: Flow<List<MessageResponse>> = messageUseCase.getSend()
     //24시간 후에 사라지는 일반 메시지 리스트
     val receiveMsg24: Flow<List<Message24Response>> = message24UseCase.getReceive24()
     val sendMsg24: Flow<List<Message24Response>> = message24UseCase.getSend24()
 
-    fun changeTag(id: Long, tag: String) {
+    fun getOne24(messageId : String) : Message24Response? {
+        var result : Message24Response? = null
         viewModelScope.launch(Dispatchers.IO) {
-            messageUseCase.changeTag(id, tag).collectLatest {
-                Log.d("changeTag", it)
+            message24UseCase.get24(messageId).collectLatest {
+                Log.d("getOne", it.id)
+                result = it
             }
         }
-
+        return result
     }
 
-    fun deleteMessage(messageId : Long) {
+    fun sendMsg(file: MultipartBody.Part?, content: String, receiverNum: String) {
+        Log.d("POST REQUEST", "content : $content, receiverNum : $receiverNum")
         viewModelScope.launch(Dispatchers.IO) {
-            messageUseCase.deleteMessage(messageId).collectLatest {
-                Log.d("Delete Persistent", it)
-            }
-        }
-    }
-
-    fun blockMessage(messageId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            messageUseCase.blockMessage(messageId).collectLatest {
-                Log.d("Block Message", it)
+            message24UseCase.sendMsg(file, content, receiverNum).collectLatest {
+                Log.d("POST RESULT", it.toString())
             }
         }
     }
 
-    //message24를 보관 메시지로 저장
-    fun saveMsg24(messageId: String) {
+    fun saveMessage(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.saveMsg(messageId).collectLatest {
                 Log.d("API REQUEST", "SAVE MSG24")

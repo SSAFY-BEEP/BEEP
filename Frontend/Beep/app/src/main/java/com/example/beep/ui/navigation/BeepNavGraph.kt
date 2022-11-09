@@ -16,6 +16,7 @@ import com.example.beep.ui.home.AddressViewModel
 import com.example.beep.ui.home.HomeScreen
 import com.example.beep.ui.home.AddressPatchViewModel
 import com.example.beep.ui.login.JoinScreen
+import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
@@ -33,6 +34,7 @@ fun BeepNavGraph(navController: NavHostController) {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
             val patchAddress: AddressPatchViewModel = hiltViewModel(it)
+            val homeModel: HomeViewModel = hiltViewModel(it)
             HomeScreen()
         }
         messageGraph(navController)
