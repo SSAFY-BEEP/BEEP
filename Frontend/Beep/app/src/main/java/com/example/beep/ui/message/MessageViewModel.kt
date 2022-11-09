@@ -1,11 +1,9 @@
 package com.example.beep.ui.message
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.Message24UseCase
 import com.example.beep.domain.MessageUseCase

@@ -32,12 +32,16 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
     val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(initial = emptyList());
     val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(initial = emptyList());
+
+    //프리셋가져오기
+    val presetList = presetViewModel.getPresetByToken()
+
 //    Log.d("Message24 Receive", receiveMsg.value.get(0).toString())
 //    Log.d("Message24 Send", sendMsg.value.get(0).toString())
 
