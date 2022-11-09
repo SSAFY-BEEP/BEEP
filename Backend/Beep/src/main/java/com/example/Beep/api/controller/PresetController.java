@@ -47,9 +47,16 @@ public class PresetController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저의 프리셋 전체 조회", notes = "유저 id로 프리셋 전체 목록 찾기")
+    @ApiOperation(value = "유저 프리셋 찾기(유저토큰)", notes = "유저 프리셋 찾기")
+    @GetMapping("/find")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> PresetFindByToken(){
+        return new ResponseEntity<List<PresetResponseDto>>(presetService.PresetFind(null),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "유저 프리셋 찾기(관리자)", notes = "유저 프리셋 찾기")
     @GetMapping("/find/{uid}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<?> PresetFind(@PathVariable("uid") Long uid){
         return new ResponseEntity<List<PresetResponseDto>>(presetService.PresetFind(uid),HttpStatus.OK);
     }
