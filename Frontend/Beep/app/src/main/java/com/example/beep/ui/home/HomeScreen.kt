@@ -34,10 +34,14 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
+
+    //프리셋가져오기
+    val presetList = presetViewModel.getPresetByToken()
+
     val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
         initial = Response.success(
             emptyList()
@@ -110,6 +114,10 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         KeyboardVsAddressChoice()
     }
 }
+
+
+
+
 
 
 @Preview
