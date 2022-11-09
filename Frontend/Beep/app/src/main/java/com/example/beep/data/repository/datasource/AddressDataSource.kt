@@ -19,7 +19,9 @@ class AddressDataSource @Inject constructor(private val addressApi: AddressApi){
         val newAddressList = listOf(AddressRequest(phone, name))
         emit(addressApi.postUserAddress(newAddressList))
     }
-
+    fun deleteUserAddress(phone: String): Flow<String> = flow {
+        emit(addressApi.deleteUserAddress(phone))
+    }
     fun patchUserAddress(apiPhone: String, phone: String, name: String,): Flow<AddressResponse> = flow {
         emit(addressApi.patchUserAddress(apiPhone, AddressRequest(phone, name)))
     }
