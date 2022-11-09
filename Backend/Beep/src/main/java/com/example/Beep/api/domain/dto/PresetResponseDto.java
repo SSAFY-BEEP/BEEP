@@ -13,7 +13,8 @@ public class PresetResponseDto {
     String content;
 
     @Builder
-    public PresetResponseDto(Long uid,Integer number,Integer part,String content){
+    public PresetResponseDto(Long pid,Long uid,Integer number,Integer part,String content){
+        this.pid=pid;
         this.uid=uid;
         this.number=number;
         this.part=part;
