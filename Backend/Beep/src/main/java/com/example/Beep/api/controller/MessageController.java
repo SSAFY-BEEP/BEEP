@@ -2,8 +2,6 @@ package com.example.Beep.api.controller;
 
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
-import com.example.Beep.api.domain.entity.Message24;
-import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.domain.enums.MessageType;
 import com.example.Beep.api.service.BlockService;
 import com.example.Beep.api.service.MessageService;

@@ -1,6 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.repository.datasource.PresetDataSource
+import com.example.beep.data.datasource.PresetDataSource
 import com.example.beep.data.dto.mypage.PresetResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

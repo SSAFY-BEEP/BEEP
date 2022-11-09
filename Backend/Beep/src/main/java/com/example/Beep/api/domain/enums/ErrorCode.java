@@ -12,6 +12,10 @@ public enum ErrorCode {
      * 400 BAD_REQUEST: 잘못된 요청
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    /*
+     * 401 UNAUTHORIZED: 권한 없음
+     */
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 
     /*
      * 404 NOT_FOUND: 리소스를 찾을 수 없음
@@ -22,6 +26,11 @@ public enum ErrorCode {
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
      */
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드입니다."),
+
+    /*
+     * 406 NOT_ACCEPTABLE: 해당 유저토큰의 데이터와 요청이 불일치 할 경우
+     */
+    METHOD_NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE, "해당 유저에게 불가능한 요청입니다."),
 
     /*
      204 NO_CONTENT: 데이터 조회 결과가 없음

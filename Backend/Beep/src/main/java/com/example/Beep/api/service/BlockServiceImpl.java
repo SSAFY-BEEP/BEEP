@@ -53,9 +53,9 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public boolean isBlocked(String targetNum) {
-        String ownerNum = SecurityUtil.getCurrentUsername().orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User findUser = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User findTarget = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        String ownerNum = SecurityUtil.getCurrentUsername().orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User findUser = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User findTarget = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         return blockRepository.existsByUserAndTarget(findUser, findTarget);
     }
@@ -63,14 +63,14 @@ public class BlockServiceImpl implements BlockService {
     //메세지24 id로 차단관계 저장
     @Override
     public String blockByMsgId(String message24Id) {
-        Message24 message24 = message24Repository.findById(message24Id).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
+        Message24 message24 = message24Repository.findById(message24Id).orElseThrow(()->new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         String ownerNum = SecurityUtil.getCurrentUsername().get();  //토근의 유저핸드폰번호
         //토큰의 유저 핸드폰번호와 receiver의 핸드폰번호가 같지 않으면 에러
-        if(!ownerNum.equals(message24.getReceiverNum())) throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+        if(!ownerNum.equals(message24.getReceiverNum())) throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
 
-        User user = userRepository.findByPhoneNumber(message24.getOwnerNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
-        User target = userRepository.findByPhoneNumber(message24.getSenderNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ALLOWED));
+        User user = userRepository.findByPhoneNumber(message24.getOwnerNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User target = userRepository.findByPhoneNumber(message24.getSenderNum()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //존재하는 차단관계인지 확인
         if(blockRepository.existsByUserAndTarget(user, target)){ //이미 존재
@@ -98,7 +98,7 @@ public class BlockServiceImpl implements BlockService {
 
             String ownerNum = SecurityUtil.getCurrentUsername().get();  //토근의 유저핸드폰번호
             //토큰의 유저 핸드폰번호와 receiver의 핸드폰번호가 같지 않으면 에러
-            if(!ownerNum.equals(message.getReceiver().getPhoneNumber())) throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+            if(!ownerNum.equals(message.getReceiver().getPhoneNumber())) throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
 
             //메세지 타입 변경
             String result = messageService.changeMessageType(messageId, MessageType.BLOCK.getNum());
