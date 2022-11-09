@@ -77,19 +77,11 @@ public class MessageController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "보관함에서 삭제", notes = "message id로 삭제")
+    @ApiOperation(value = "보관함에서 삭제/차단 해제", notes = "message id로 삭제")
     @DeleteMapping("/{messageId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?>deleteMessage(@PathVariable Long messageId){
         messageService.deleteMessage(messageId);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "차단메세지 차단 해제", notes = "메세지아이디로 차단 해제 가능")
-    @DeleteMapping("/block/{messageId}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> blockDelete(@PathVariable("messageId") Long messageId) {
-        blockService.blockDelete(messageId);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
