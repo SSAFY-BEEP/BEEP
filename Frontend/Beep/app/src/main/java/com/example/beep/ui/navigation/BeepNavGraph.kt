@@ -14,6 +14,7 @@ import androidx.navigation.compose.navigation
 import com.example.beep.ui.home.AddAddressSelfViewModel
 import com.example.beep.ui.home.AddressViewModel
 import com.example.beep.ui.home.HomeScreen
+import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
@@ -29,6 +30,7 @@ fun BeepNavGraph(navController: NavHostController) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddAddressSelfViewModel = hiltViewModel(it)
+            val homeModel: HomeViewModel = hiltViewModel(it)
             HomeScreen()
         }
         messageGraph(navController)

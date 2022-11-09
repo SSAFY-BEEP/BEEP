@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,11 +31,14 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen() {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
-
+    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(initial = emptyList());
+    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(initial = emptyList());
+//    Log.d("Message24 Receive", receiveMsg.value.get(0).toString())
+//    Log.d("Message24 Send", sendMsg.value.get(0).toString())
 
     Column(
         modifier = Modifier
@@ -54,7 +58,8 @@ fun HomeScreen() {
                 contentScale = ContentScale.FillWidth
             )
             Button(
-                onClick = { /*showMessage*/ },
+                //임시로 메시지 보내기 넣음
+                onClick = { /*showMessage*/ homeViewModel.sendMsg(null, "5012", "01012345678") },
                 modifier = Modifier
                     .width(70.dp)
                     .offset(60.dp, 133.dp)

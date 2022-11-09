@@ -62,6 +62,12 @@ object RemoteDataModule {
 
     @Provides
     @Singleton
+    fun provideMessage24Api(@Named("retrofit") retrofit: Retrofit): Message24Api {
+        return retrofit.create(Message24Api::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideS3Api(@Named("retrofit") retrofit: Retrofit): S3Api {
         return retrofit.create(S3Api::class.java)
     }
