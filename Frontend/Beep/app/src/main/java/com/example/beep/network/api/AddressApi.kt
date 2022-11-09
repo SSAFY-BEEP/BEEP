@@ -12,8 +12,8 @@ interface AddressApi {
     suspend fun postUserAddress(@Body addressInfo: List<AddressRequest>): String
 
     @DELETE("phonebook/{phone}")
-    suspend fun deleteUserAddress(@Path("phone") phone: String)
+    suspend fun deleteUserAddress(@Path("phone") phone: String): String
 
     @PATCH("phonebook/{phone}")
-    suspend fun patchUserAddress(@Path("phone") phone: String, @Body addressInfo: AddressRequest)
+    suspend fun patchUserAddress(@Path("phone") apiPhone: String, @Body addressInfo: AddressRequest): AddressResponse
 }
