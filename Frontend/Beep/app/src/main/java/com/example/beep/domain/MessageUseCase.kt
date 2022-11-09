@@ -9,6 +9,7 @@ import javax.inject.Singleton
 class MessageUseCase @Inject constructor(private val messageRepository: MessageRepository) {
     fun getReceive(type: Int) = messageRepository.getReceiveMessage(type)
     fun getSend() = messageRepository.getSendMessage()
-    fun changeTag(messageRequest: MessageRequest) = messageRepository.changeTag(messageRequest)
+    fun changeTag(id: Long, tag: String) = messageRepository.changeTag(id, tag)
     fun deleteMessage(messageId: Long) = messageRepository.deleteMessage(messageId)
+    fun blockMessage(messageId: Long) = messageRepository.blockMessage(messageId)
 }
