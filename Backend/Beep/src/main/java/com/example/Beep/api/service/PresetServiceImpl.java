@@ -9,6 +9,7 @@ import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.PresetRepository;
 import com.example.Beep.api.repository.UserRepository;
+import com.example.Beep.api.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,14 +52,23 @@ public class PresetServiceImpl implements PresetService{
 
     @Override
     public List<PresetResponseDto> PresetFind(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
-        if(user.getAuthority()==Authority.ROLE_LEAVE){
-            return null;
+        User user;
+        if(id==null){
+            String ownerNum = SecurityUtil.getCurrentUsername().get();
+            user = userRepository.findByPhoneNumber(ownerNum).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        } else{
+            user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         }
+
+
+        if(user.getAuthority()==Authority.ROLE_LEAVE){
+            throw new CustomException(ErrorCode.METHOD_NOT_ALLOWED);
+        }
+
         List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
                 .map(Preset -> PresetResponseDto.builder()
                         .pid(Preset.getId())
-                        .uid(id)
+                        .uid(user.getId())
                         .number(Preset.getNumber())
                         .part(Preset.getPart())
                         .content(Preset.getContent())

@@ -1,4 +1,4 @@
-package com.example.beep.data.repository.datasource
+package com.example.beep.data.datasource
 
 import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.data.dto.message.Message24Response
@@ -6,33 +6,35 @@ import com.example.beep.network.api.Message24Api
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.Multipart
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class Message24DataSource @Inject constructor(private val message24Api: Message24Api){
-    fun getReceiveMsg24() : Flow<List<Message24Response>> = flow {
+    fun getReceiveMsg24() : Flow<Response<List<Message24Response>>> = flow {
         emit(message24Api.getReceiveMsg24())
     }
 
-    fun getSendMsg24() : Flow<List<Message24Response>> = flow {
+    fun getSendMsg24() : Flow<Response<List<Message24Response>>> = flow {
         emit(message24Api.getSendMsg24())
     }
 
-    fun getMsg24(id : String) : Flow<Message24Response> = flow {
+    fun getMsg24(id : String) : Flow<Response<Message24Response>> = flow {
         emit(message24Api.getMsg24(id))
     }
 
-    fun sendMsg(file : MultipartBody.Part?, content: String, receiverNum: String) = flow {
+    fun sendMsg(file : MultipartBody.Part?, content: String, receiverNum: String): Flow<Response<String>>
+    = flow {
         emit(message24Api.sendMessage(file, Message24Request(content, receiverNum)))
     }
 
-    fun saveMsg(messageId: String) = flow {
+    fun saveMsg(messageId: String) : Flow<Response<String>> = flow {
         emit(message24Api.saveMessage(messageId))
     }
 
-    fun deleteMsg(messageId: String) = flow {
+    fun deleteMsg(messageId: String) : Flow<Response<String>> = flow {
         emit(message24Api.deleteMessage(messageId))
     }
 

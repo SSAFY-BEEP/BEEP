@@ -23,8 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.di.MainApplication
 import com.example.beep.util.collectAsStateLifecycleAware
+import retrofit2.Response
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -36,12 +38,20 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
-    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(initial = emptyList());
-    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(initial = emptyList());
 
     //프리셋가져오기
     val presetList = presetViewModel.getPresetByToken()
 
+    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
+        initial = Response.success(
+            emptyList()
+        )
+    );
+    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
+        initial = Response.success(
+            emptyList()
+        )
+    );
 //    Log.d("Message24 Receive", receiveMsg.value.get(0).toString())
 //    Log.d("Message24 Send", sendMsg.value.get(0).toString())
 
@@ -92,7 +102,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
                 ),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.0001F)),
                 shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
-                ) {
+            ) {
 
             }
             if (sendText) {
