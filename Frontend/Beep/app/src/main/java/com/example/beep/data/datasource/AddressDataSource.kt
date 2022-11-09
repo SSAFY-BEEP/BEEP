@@ -20,7 +20,7 @@ class AddressDataSource @Inject constructor(private val addressApi: AddressApi){
         emit(addressApi.postUserAddress(newAddressList))
     }
 
-    fun patchUserAddress(apiPhone: String, phone: String, name: String,): Flow<String> = flow {
+    fun patchUserAddress(apiPhone: String, phone: String, name: String,): Flow<AddressResponse> = flow {
         emit(addressApi.patchUserAddress(apiPhone, AddressRequest(phone, name)))
     }
 }

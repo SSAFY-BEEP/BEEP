@@ -1,12 +1,9 @@
 package com.example.beep.ui.home
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -14,7 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,7 +21,7 @@ fun AddCancelBtn(
     changeToAddAddress: () -> Unit,
 ) {
     Button(
-        onClick = { changeToAddAddress() },
+        onClick = changeToAddAddress,
         modifier = Modifier
             .height(40.dp)
             .border(
@@ -80,13 +76,16 @@ fun AddToBookBtn() {
 fun AddSubmitBtn(
     name: String,
     phone: String,
-    viewModel: AddAddressSelfViewModel = viewModel()
+    viewModel: AddressPostSelfViewModel = viewModel(),
+    changeToAddAddress: () -> Unit,
 ) {
     Button(
         onClick = {
             Log.d("PHONE", phone)
             Log.d("NAME", name)
-            viewModel.postAddress(phone, name) },
+            viewModel.postAddress(phone, name)
+            changeToAddAddress()
+                  },
         modifier = Modifier
             .height(40.dp),
         elevation = ButtonDefaults.elevation(
@@ -112,7 +111,7 @@ fun PatchSubmitBtn(
     apiPhone: String,
     name: String,
     phone: String,
-    viewModel: PatchAddressViewModel = viewModel()
+    viewModel: AddressPatchViewModel = viewModel()
 ) {
     Button(
         onClick = {

@@ -15,13 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ShowAddressList() {
+fun ShowAddressList(
+) {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
     var goPatchAddress by remember { mutableStateOf(false) }
     var defaultNameString by remember { mutableStateOf("") }
     var defaultPhoneString by remember { mutableStateOf("") }
 
+    var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
 
 
     var addressListTitle = if (goAddAddress) {
@@ -35,9 +37,9 @@ fun ShowAddressList() {
 
 
     var goEditDelBtnTxt = if (viewEditDelBtn) {
-        "완료"
+        "SUBMIT"
     } else {
-        "Edit"
+        "EDIT"
     }
 
     Column(
@@ -59,7 +61,8 @@ fun ShowAddressList() {
                 fontSize = 20.sp,
                 modifier = Modifier
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                fontFamily = galmurinineFont
+                fontFamily = galmurinineFont,
+                color = themeColorBlue
             )
             if (!goAddAddress) {
                 Button(
@@ -73,15 +76,16 @@ fun ShowAddressList() {
                         pressedElevation = 0.dp,
                         disabledElevation = 0.dp
                     ),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.3F)),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = themeColorBlue),
                     shape = RoundedCornerShape(5.dp),
                     contentPadding = PaddingValues(0.dp),
 
                     ) {
                     Text(
                         text = goEditDelBtnTxt,
-                        fontSize = 16.sp,
-                        fontFamily = galmurinineFont
+                        fontSize = 14.sp,
+                        fontFamily = galmurinineFont,
+                        color = Color.White
                     )
                 }
             }
@@ -98,22 +102,22 @@ fun ShowAddressList() {
                 )
                 .border(
                     width = 1.dp,
-                    color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    color = themeColorBlue,
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
             if(goAddAddress) {
-                AddAddressSelf(
+                AddressPostSelf(
                     changeToAddAddress = { goAddAddress = !goAddAddress },
                     )
             } else if(goPatchAddress) {
-                PatchAddress (
+                AddressPatch (
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
                     defaultNameString = defaultNameString,
                     defaultPhoneString = defaultPhoneString,
                     )
             } else{
-                ViewAddressList(
+                AddressListContent(
                     viewEditDelBtn = viewEditDelBtn,
                     changeToAddAddress = { goAddAddress = !goAddAddress },
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
