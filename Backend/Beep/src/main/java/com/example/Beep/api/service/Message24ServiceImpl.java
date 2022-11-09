@@ -146,7 +146,7 @@ public class Message24ServiceImpl implements  Message24Service{
     public void saveMessage24ForOwner(MultipartFile file,S3RequestDto.sendMessage24 message,String senderNum , String ownerNum){
         //S3파일 저장
         String audioFileName = null;
-        if(!file.isEmpty()){
+        if( file != null && !file.isEmpty()){
             audioFileName= s3Service.uploadFile(file);
         }
 
