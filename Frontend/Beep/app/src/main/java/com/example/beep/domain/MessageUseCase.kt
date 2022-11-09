@@ -1,6 +1,5 @@
 package com.example.beep.domain
 
-import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.repository.MessageRepository
 import javax.inject.Inject
 import javax.inject.Singleton

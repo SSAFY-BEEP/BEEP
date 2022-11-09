@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void withdrawal(String phone) {
-        User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+        User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         deleteData(user);
     }
 

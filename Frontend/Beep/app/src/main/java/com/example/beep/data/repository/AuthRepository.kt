@@ -1,7 +1,7 @@
 package com.example.beep.data.repository
 
 import com.example.beep.data.dto.auth.*
-import com.example.beep.data.repository.datasource.AuthDataSource
+import com.example.beep.data.datasource.AuthDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

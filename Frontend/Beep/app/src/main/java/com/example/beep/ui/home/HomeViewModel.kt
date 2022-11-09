@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,25 +19,33 @@ class HomeViewModel @Inject constructor(private val message24UseCase: Message24U
 ViewModel() {
 
     //24시간 후에 사라지는 일반 메시지 리스트
-    val receiveMsg24: Flow<List<Message24Response>> = message24UseCase.getReceive24()
-    val sendMsg24: Flow<List<Message24Response>> = message24UseCase.getSend24()
+    val receiveMsg24: Flow<Response<List<Message24Response>>> = message24UseCase.getReceive24()
+    val sendMsg24: Flow<Response<List<Message24Response>>> = message24UseCase.getSend24()
 
     fun getOne24(messageId : String) : Message24Response? {
         var result : Message24Response? = null
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.get24(messageId).collectLatest {
-                Log.d("getOne", it.id)
-                result = it
+                if(it.code() == 200) {
+                    Log.d("Get One Msg24", it.body().toString())
+                    result = it.body()
+                } else {
+                    Log.d("Get One Msg24", "Fail!!")
+                }
             }
         }
         return result
     }
 
     fun sendMsg(file: MultipartBody.Part?, content: String, receiverNum: String) {
-        Log.d("POST REQUEST", "content : $content, receiverNum : $receiverNum")
+        Log.d("Send REQUEST", "content : $content, receiverNum : $receiverNum")
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.sendMsg(file, content, receiverNum).collectLatest {
-                Log.d("POST RESULT", it.toString())
+                if(it.code() == 200) {
+                    Log.d("Send Message", it.body()!!)
+                } else {
+                    Log.d("Send Message", "Fail!!")
+                }
             }
         }
     }
@@ -44,7 +53,11 @@ ViewModel() {
     fun saveMessage(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.saveMsg(messageId).collectLatest {
-                Log.d("API REQUEST", "SAVE MSG24")
+                if(it.code() == 200) {
+                    Log.d("Save Message24", it.body()!!)
+                } else {
+                    Log.d("Save Message24", "Fail!!")
+                }
             }
         }
     }
@@ -52,7 +65,11 @@ ViewModel() {
     fun deleteMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.deleteMsg(messageId).collectLatest {
-                Log.d("API REQUEST", "DELETE MSG24")
+                if(it.code() == 200) {
+                    Log.d("Delete Message24", it.body()!!)
+                } else {
+                    Log.d("Delete Message24", "Fail!!")
+                }
             }
         }
     }
@@ -60,7 +77,11 @@ ViewModel() {
     fun blockMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.blockMsg(messageId).collectLatest {
-                Log.d("API REQUEST", "BLOCK MSG24")
+                if(it.code() == 200) {
+                    Log.d("Block Message24", it.body()!!)
+                } else {
+                    Log.d("Block Message24", "Fail!!")
+                }
             }
         }
     }

@@ -89,7 +89,7 @@ public class SMSServiceImpl implements SMSService{
         //난수로 12자리 임시 비밀번호 생성
         String newPw = getRamdomPassword(12);
         //유저가 없으면 오류
-        User user = userRepository.findByPhoneNumber(targetPhone).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+        User user = userRepository.findByPhoneNumber(targetPhone).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         user.changePw(passwordEncoder.encode(newPw));
         //메시지 내용
         String msg ="[BEEP]임시비밀번호 : " + newPw;

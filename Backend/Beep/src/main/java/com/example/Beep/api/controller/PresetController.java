@@ -4,6 +4,8 @@ import com.example.Beep.api.domain.dto.DictionaryResponseDto;
 import com.example.Beep.api.domain.dto.PresetRequestDto;
 import com.example.Beep.api.domain.dto.PresetResponseDto;
 import com.example.Beep.api.domain.entity.Preset;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.service.PresetServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,18 +27,24 @@ public class PresetController {
 
     private final PresetServiceImpl presetService;
 
-    @ApiOperation(value = "프리셋 설정 및 업데이트", notes = "프리셋 설정 및 업데이트")
+    @ApiOperation(value = "프리셋 설정 및 업데이트", notes = "프리셋 설정 및 업데이트(pid=1 : 메세지, pid=2 : 연락처)")
     @PostMapping("/save")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void PresetSave(@RequestBody PresetRequestDto presetRequestDto){
+    public ResponseEntity<?> PresetSave(@RequestBody PresetRequestDto presetRequestDto){
         presetService.PresetSave(presetRequestDto);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "프리셋 삭제", notes = "프리셋 삭제 (pid=1 : 메세지, pid=2 : 연락처)")
+    @ApiOperation(value = "프리셋 삭제", notes = "프리셋id로 프리셋 삭제")
     @DeleteMapping("/delete/{pid}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public void PresetDelete(@PathVariable("pid") Long pid){
-        presetService.PresetDelete(pid);
+    public ResponseEntity<?> PresetDelete(@PathVariable("pid") Long pid){
+        try{
+            presetService.PresetDelete(pid);
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저 프리셋 찾기(유저토큰)", notes = "유저 프리셋 찾기")
