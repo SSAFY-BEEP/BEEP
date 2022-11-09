@@ -111,13 +111,15 @@ fun PatchSubmitBtn(
     apiPhone: String,
     name: String,
     phone: String,
-    viewModel: AddressPatchViewModel = viewModel()
-) {
+    viewModel: AddressPatchViewModel = viewModel(),
+    changeToPatchAddress: () -> Unit,
+    ) {
     Button(
         onClick = {
             Log.d("PHONE", phone)
             Log.d("NAME", name)
             viewModel.patchAddress(apiPhone, phone, name)
+            changeToPatchAddress()
                   },
         modifier = Modifier
             .height(40.dp),
