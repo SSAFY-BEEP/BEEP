@@ -2,7 +2,6 @@ package com.example.beep.network.api
 
 import com.example.beep.data.dto.mypage.PresetRequest
 import com.example.beep.data.dto.mypage.PresetResponse
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.*
 
 interface PresetApi {

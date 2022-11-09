@@ -51,9 +51,10 @@ public class PresetServiceImpl implements PresetService{
 
     @Override
     public List<PresetResponseDto> PresetFind(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.BAD_REQUEST));
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        //탈퇴한 회원
         if(user.getAuthority()==Authority.ROLE_LEAVE){
-            return null;
+            throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
         }
         List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
                 .map(Preset -> PresetResponseDto.builder()

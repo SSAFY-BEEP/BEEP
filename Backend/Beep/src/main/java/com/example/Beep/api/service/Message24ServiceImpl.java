@@ -168,12 +168,12 @@ public class Message24ServiceImpl implements  Message24Service{
     public Long changeMessageType(String messageId, Integer type) {
 
         Message24 find = repository.findById(messageId).get();
-        User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //차단을 하는 사람
         String ownerNum = SecurityUtil.getCurrentUsername().get();
-        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관/차단이니까)
         if(find.getType() == type){
@@ -212,7 +212,7 @@ public class Message24ServiceImpl implements  Message24Service{
     //해당 메세지 id의 메세지 데이터
     @Override
     public Message24 getMessage(String id) {
-        return repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        return repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
     }
 
 
@@ -222,10 +222,10 @@ public class Message24ServiceImpl implements  Message24Service{
     public void deleteMessageById(String id) {
         String userNum = SecurityUtil.getCurrentUsername().get();
         //해당 메세지id로 메세지 삭제
-        Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+        Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         
         //삭제하는 유저가 해당 메세지 데이터 소유자가 아니면 에러
-        if(!message24.getOwnerNum().equals(userNum) ) throw new CustomException(ErrorCode.BAD_REQUEST);
+        if(!message24.getOwnerNum().equals(userNum) ) throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
 
         //음성파일 존재하면 S3파일 삭제
         if(message24.getAudioUri()!=null){

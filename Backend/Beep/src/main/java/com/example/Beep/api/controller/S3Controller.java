@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class S3Controller {
     })
     public ResponseEntity<?> uploadVoice(@RequestPart MultipartFile voice) {
         String voiceUrl = s3Service.uploadFile(voice);
-        return ResponseEntity.ok().body(voiceUrl);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PostMapping("/introduce")
@@ -51,7 +52,7 @@ public class S3Controller {
         //DB 유저 introduce 수정
         userService.changeIntroduceAudio(voiceUrl);
 
-        return ResponseEntity.ok().body(voiceUrl);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @PatchMapping("/introduce")
@@ -68,7 +69,7 @@ public class S3Controller {
 
        //DB 유저 introduce 수정
         userService.changeIntroduceAudio(null);
-        return ResponseEntity.ok().body(introduceAudio+"삭제 완료");
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @GetMapping("/voice")
