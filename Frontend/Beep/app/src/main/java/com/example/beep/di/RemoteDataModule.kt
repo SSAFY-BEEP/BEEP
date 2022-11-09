@@ -75,10 +75,12 @@ object RemoteDataModule {
     // OkHttpClient DI
     @Provides
     @Singleton
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
             .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(authInterceptor)
             .build()
     }
 
