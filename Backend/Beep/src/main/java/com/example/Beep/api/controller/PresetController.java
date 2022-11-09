@@ -32,7 +32,7 @@ public class PresetController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> PresetSave(@RequestBody PresetRequestDto presetRequestDto){
         presetService.PresetSave(presetRequestDto);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "프리셋 삭제", notes = "프리셋id로 프리셋 삭제")
@@ -44,7 +44,7 @@ public class PresetController {
         } catch (Exception e){
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저의 프리셋 전체 조회", notes = "유저 id로 프리셋 전체 목록 찾기")

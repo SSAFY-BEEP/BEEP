@@ -1,6 +1,5 @@
 package com.example.Beep.api.controller;
 
-import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.enums.MessageType;
@@ -9,8 +8,6 @@ import com.example.Beep.api.service.Message24ServiceImpl;
 import com.example.Beep.api.service.S3Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @Api(value = "2. 24시간메세지(레디스)", tags={"2. 24시간메세지(레디스)"})
@@ -88,7 +84,7 @@ public class Message24Controller {
         //DB에서 메세지 삭제
         service.deleteMessageById(messageId);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     //메세지 보관
@@ -102,7 +98,7 @@ public class Message24Controller {
         //S3 저장
         s3Service.copyFile(messageId);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     //메세지 차단

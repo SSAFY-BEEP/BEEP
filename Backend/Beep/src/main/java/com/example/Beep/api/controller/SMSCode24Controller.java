@@ -25,7 +25,7 @@ public class SMSCode24Controller {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> sendCode(@RequestParam String phoneNumber, @RequestParam String code) {
         smsCode24Service.saveCode(phoneNumber, code);
-        return new ResponseEntity<>("성공", HttpStatus.OK);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "문자확인코드 인증", notes = "핸드폰번호와 확인코드가 일치하면 true, 아니면 false")

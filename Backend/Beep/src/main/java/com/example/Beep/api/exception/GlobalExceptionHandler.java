@@ -19,22 +19,4 @@ public class GlobalExceptionHandler {
         log.error("handleCustomException: {}", e.getErrorCode());
         return new ResponseEntity<ErrorResponse>(new ErrorResponse(e.getErrorCode()), HttpStatus.MULTI_STATUS);
     }
-
-    /*
-     * HTTP 405 Exception
-     */
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<?> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
-        log.error("handleHttpRequestMethodNotSupportedException: {}", e.getMessage());
-        return new ResponseEntity<ErrorResponse>(HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
-    /*
-     * HTTP 500 Exception
-     */
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<?> handleException(final Exception e) {
-        log.error("handleException: {}", e.getMessage());
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
