@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 import com.example.beep.util.collectAsStateLifecycleAware
 
 val galmurinineFont = FontFamily(

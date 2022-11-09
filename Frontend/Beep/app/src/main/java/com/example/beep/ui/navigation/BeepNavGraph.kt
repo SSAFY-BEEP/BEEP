@@ -15,7 +15,9 @@ import com.example.beep.ui.home.AddressPostSelfViewModel
 import com.example.beep.ui.home.AddressViewModel
 import com.example.beep.ui.home.HomeScreen
 import com.example.beep.ui.home.AddressPatchViewModel
+import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.login.LoginMainScreen
+import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen
@@ -36,6 +38,7 @@ fun BeepNavGraph(navController: NavHostController) {
         messageGraph(navController)
         myPageGraph(navController)
         composable("login_main") {
+            val model: UserViewModel = hiltViewModel(it)
             LoginMainScreen()
         }
     }

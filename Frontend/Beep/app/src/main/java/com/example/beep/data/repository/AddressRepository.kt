@@ -1,6 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.datasource.AddressDataSource
+import com.example.beep.data.repository.datasource.AddressDataSource
 import com.example.beep.data.dto.mainpage.AddressRequest
 import com.example.beep.data.dto.mainpage.AddressResponse
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,6 @@
 package com.example.beep.data.repository
 
-import com.example.beep.data.datasource.sample.MessageDataSource
+import com.example.beep.data.repository.datasource.sample.MessageDataSource
 import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.dto.message.MessageResponse
 import kotlinx.coroutines.flow.Flow

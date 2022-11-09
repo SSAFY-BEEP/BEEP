@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -57,12 +58,12 @@ public class Message24Controller {
 //    }
 
     //메세지 파일 들고와서 S3에 저장하면서 DB에도 등록
-    @PostMapping("/sendFile")
+    @PostMapping(value="/sendFile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "메세지 전송(음성파일함께)", notes = "음성메세지와 함께 메세지 전송")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> sendMessageWithFile(@ModelAttribute S3RequestDto.sendMessage24 message24) {
+    public ResponseEntity<?> sendMessageWithFile(@RequestPart(required = false) MultipartFile file ,@RequestPart S3RequestDto.sendMessage24 message24) {
         //S3에 파일 등록
-        service.sendMessageWithFile(message24);
+        service.sendMessageWithFile(file, message24);
 
         return ResponseEntity.ok().body(message24.getContent());
     }
