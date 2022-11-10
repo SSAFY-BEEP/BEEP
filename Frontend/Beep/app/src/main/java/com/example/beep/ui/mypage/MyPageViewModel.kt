@@ -1,8 +1,6 @@
 package com.example.beep.ui.mypage
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.domain.PresetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
