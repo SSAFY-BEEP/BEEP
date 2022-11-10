@@ -1,12 +1,12 @@
 package com.example.Beep.api.controller;
 
+import com.example.Beep.api.domain.dto.ApiResult;
 import com.example.Beep.api.service.SMSCode24Service;
 import com.example.Beep.api.service.SMSService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,19 +22,19 @@ public class SMSController {
     @ApiOperation(value = "휴대폰 인증 메시지 발송", notes = "받은 휴대폰 번호로 6자리 난수를 발송하고 프론트에도 리턴")
     @GetMapping("/cert/{phone}")
     @Transactional
-    public ResponseEntity<?> sendCertSMS(@PathVariable String phone){
+    public ApiResult<?> sendCertSMS(@PathVariable String phone){
         String result = smsService.sendCertSMS(phone);
         if(!result.equals("Fail")) {
             smsCode24Service.saveCode(phone, result);
         }
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ApiResult<>("Success", HttpStatus.OK);
     }
 
     @ApiOperation(value = "비밀번호 찾기", notes = "비밀번호를 찾고 바꾼 비밀번호를 리턴해줌")
     @GetMapping("/findPw/{phone}")
-    public ResponseEntity<?> findPassword(@PathVariable String phone) {
+    public ApiResult<?> findPassword(@PathVariable String phone) {
         String result = smsService.sendTempPwSMS(phone);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ApiResult<>(result, HttpStatus.OK);
     }
 
 }
