@@ -11,14 +11,14 @@ import javax.inject.Singleton
 
 @Singleton
 class PresetDataSource @Inject constructor(private val presetApi: PresetApi){
-    fun getUserPreset(uid: Long): Flow<Response<List<PresetResponse>>> = flow {
-        emit(presetApi.getUserPreset(uid))
+    fun getUserPreset(): Flow<Response<List<PresetResponse>>> = flow {
+        emit(presetApi.getUserPreset())
     }
     fun getUserPresetByToken(): Flow<Response<List<PresetResponse>>> = flow {
         emit(presetApi.getUserPresetByToken())
     }
-    fun updatePreset(uid : Long, number : Int, part : Int, content : String): Flow<Response<String>> = flow {
-        val prestRequest = PresetRequest(uid, number, part, content);
+    fun updatePreset(number : Int, part : Int, content : String): Flow<Response<String>> = flow {
+        val prestRequest = PresetRequest(number, part, content);
         emit(presetApi.updatePreset(prestRequest))
     }
     fun deletePreset(pid: Long): Flow<Response<String>> = flow {

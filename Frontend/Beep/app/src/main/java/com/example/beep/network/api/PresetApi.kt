@@ -6,8 +6,8 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface PresetApi {
-    @GET("preset/find/{uid}")
-    suspend fun getUserPreset(@Path("uid") uid: Long): Response<List<PresetResponse>>
+    @GET("preset/find")
+    suspend fun getUserPreset(): Response<List<PresetResponse>>
 
     @GET("preset/find")
     suspend fun getUserPresetByToken(): Response<List<PresetResponse>>

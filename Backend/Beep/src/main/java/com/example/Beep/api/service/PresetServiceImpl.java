@@ -10,6 +10,7 @@ import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.PresetRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,23 +21,27 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class PresetServiceImpl implements PresetService{
 
 
-    @Autowired
-    PresetRepository presetRepository;
+    private final PresetRepository presetRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public void PresetSave(PresetRequestDto presetRequestDto) {
+        //토큰의 유저 가져오기
+        User user = userRepository.findByPhoneNumber(SecurityUtil.getCurrentUsername().get()).orElseThrow(()->new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE));
+
         try{
-            Preset now=presetRepository.findPreset(presetRequestDto.getNumber().longValue(),presetRequestDto.getUid().longValue()).get();
+            //프리셋 수정
+            Preset now=presetRepository.findPreset(presetRequestDto.getNumber().longValue(),user.getId(), presetRequestDto.getPart()).get();    //없으면 catch
             now.update(presetRequestDto.getNumber(), presetRequestDto.getContent());
             presetRepository.save(now);
         }catch (NoSuchElementException n){
+            //프리셋 생성
             Preset preset= Preset.builder()
-                    .user(userRepository.findById(presetRequestDto.getUid()).get())
+                    .user(user)
                     .number(presetRequestDto.getNumber())
                     .part(presetRequestDto.getPart())
                     .content(presetRequestDto.getContent())
