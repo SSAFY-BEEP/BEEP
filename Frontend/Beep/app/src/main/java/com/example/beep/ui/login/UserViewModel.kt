@@ -1,5 +1,7 @@
 package com.example.beep.ui.login
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.runtime.*
 import com.example.beep.ui.login.LoginFormEvent.*
+import com.example.beep.util.ResultType
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -95,17 +98,9 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             signUpUseCase.execute(request).collectLatest {
-                val requestLogin =
-                    LoginRequest(phoneNumber = state.phoneNumber, password = state.password)
-                loginUseCase.execute(requestLogin).collectLatest {
-                    if (it.token.isNotBlank()) {
-                        MainApplication.sharedPreferencesUtil.saveToken(it.token)
-                    }
-                }
-
+                    Log.d("성공 결과","$it")
             }
         }
-
     }
 
     sealed class ValidationEvent {
@@ -151,8 +146,11 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
                 loginUseCase.execute(request).collectLatest {
-                    if (it.token.isNotBlank()) {
-                        MainApplication.sharedPreferencesUtil.saveToken(it.token)
+                    if(it is ResultType.Success) {
+                        Log.d("text log","$it")
+                        MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
+                    } else {
+                        Log.d("error", "$it")
                     }
                 }
         }
