@@ -1,5 +1,6 @@
 package com.example.beep.data.datasource
 
+import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.auth.*
 import com.example.beep.network.api.AuthApi
 import kotlinx.coroutines.flow.Flow
@@ -13,13 +14,24 @@ class AuthDataSource @Inject constructor(
 ) {
     fun signUp(
         request: SignUpRequest
-    ): Flow<SignUpResponse> = flow {
+    ): Flow<BaseResponse<SignUpResponse>> = flow {
         emit(authApi.signUp(request))
     }
 
     fun login(
         request: LoginRequest
-    ): Flow<LoginResponse> = flow {
+    ): Flow<BaseResponse<LoginResponse>> = flow {
         emit(authApi.login(request))
+    }
+
+    fun newPassword(
+        request: NewPasswordRequest
+    ): Flow<BaseResponse<String>> = flow {
+        emit(authApi.newPassword(request))
+    }
+
+    fun withdrawal(
+    ): Flow<BaseResponse<String>> = flow {
+        emit(authApi.withdrawal())
     }
 }

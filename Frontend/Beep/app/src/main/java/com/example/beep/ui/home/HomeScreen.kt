@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.di.MainApplication
 import com.example.beep.util.collectAsStateLifecycleAware
-import retrofit2.Response
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -34,22 +34,22 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
+
+    //프리셋가져오기
+//    val presetList = presetViewModel.getPresetByToken()
+
     val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
-        initial = Response.success(
-            emptyList()
-        )
+        initial = emptyList<BaseResponse<Message24Response>>()
     );
     val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
-        initial = Response.success(
-            emptyList()
-        )
+        initial = emptyList<BaseResponse<Message24Response>>()
     );
-//    Log.d("Message24 Receive", receiveMsg.value.get(0).toString())
-//    Log.d("Message24 Send", sendMsg.value.get(0).toString())
+    Log.d("Message24 Receive", receiveMsg.value.toString())
+    Log.d("Message24 Send", sendMsg.value.toString())
 
     Column(
         modifier = Modifier
@@ -110,6 +110,10 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         KeyboardVsAddressChoice()
     }
 }
+
+
+
+
 
 
 @Preview

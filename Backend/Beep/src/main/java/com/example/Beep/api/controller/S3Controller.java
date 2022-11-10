@@ -1,5 +1,6 @@
 package com.example.Beep.api.controller;
 
+import com.example.Beep.api.domain.dto.ApiResult;
 import com.example.Beep.api.domain.dto.S3RequestDto;
 import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.service.S3Service;
@@ -10,7 +11,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +33,9 @@ public class S3Controller {
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> uploadVoice(@RequestPart MultipartFile voice) {
+    public ApiResult<?> uploadVoice(@RequestPart MultipartFile voice) {
         String voiceUrl = s3Service.uploadFile(voice);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ApiResult<>("Success", HttpStatus.OK);
     }
 
     @PostMapping("/introduce")
@@ -46,13 +46,13 @@ public class S3Controller {
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> uploadIntroduce(@RequestPart MultipartFile voice) {
+    public ApiResult<?> uploadIntroduce(@RequestPart MultipartFile voice) {
         //S3에 파일 등록
         String voiceUrl = s3Service.persistFile(voice);
         //DB 유저 introduce 수정
         userService.changeIntroduceAudio(voiceUrl);
 
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ApiResult<>("Success", HttpStatus.OK);
     }
 
     @PatchMapping("/introduce")
@@ -63,13 +63,13 @@ public class S3Controller {
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> deleteIntroduce(@RequestBody S3RequestDto.introduceAudio introduceAudio) {
+    public ApiResult<?> deleteIntroduce(@RequestBody S3RequestDto.introduceAudio introduceAudio) {
         //S3에서 introduceAudio 파일 찾아서 삭제
         s3Service.deleteFile(introduceAudio.getIntroduceAudio(), S3Type.PERMANENT.getNum());
 
        //DB 유저 introduce 수정
         userService.changeIntroduceAudio(null);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ApiResult<>("Success", HttpStatus.OK);
     }
 
     @GetMapping("/voice")
@@ -80,9 +80,9 @@ public class S3Controller {
             @ApiResponse(code = 401, message = "권한 에러"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> findUserVoice() {
+    public ApiResult<?> findUserVoice() {
         String voiceUrl = s3Service.findUserVoice();
-        return ResponseEntity.ok().body(voiceUrl);
+        return new ApiResult<>(voiceUrl, HttpStatus.OK);
     }
 }
 
