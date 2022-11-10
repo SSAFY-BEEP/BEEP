@@ -122,7 +122,7 @@ public class Message24ServiceImpl implements  Message24Service{
                     com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
                             .setNotification(notification)
                             .setToken(receiver.getFcmToken())
-                            .putData("", "[BEEP]")
+                            .putData("header", "[BEEP]")
                             .putData("content", "메시지 도착 : " + message.getContent())
                             .build();
                     //보내기
