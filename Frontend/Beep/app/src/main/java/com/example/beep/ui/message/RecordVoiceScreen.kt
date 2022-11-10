@@ -7,12 +7,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +21,7 @@ import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.mypage.BeepForTest
 import java.io.File
 
 enum class RecordState {
@@ -40,18 +40,46 @@ fun RecordVoiceScreen(
     viewModel: RecordVoiceViewModel = viewModel(),
     togglePopup: () -> Unit
 ) {
+    when (viewModel.recordVoiceUiState) {
+        is UiState.Loading -> {
+            RecordLoadingScreen()
+        }
+        is UiState.Success<String> -> {
+            RecordSuccessScreen(togglePopup = togglePopup)
+        }
+        is UiState.Error -> {
+            RecordErrorScreen()
+        }
+    }
+
+}
+
+@Composable
+fun RecordErrorScreen() {
+    Text(text = "에러가 뜨다니 ㅠㅠㅠ")
+}
+
+@Composable
+fun RecordLoadingScreen() {
+    Text(text = "로딩중")
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RecordSuccessScreen(
+    modifier: Modifier = Modifier,
+    togglePopup: () -> Unit,
+    viewModel: RecordVoiceViewModel = viewModel()
+) {
     val context = LocalContext.current
     val voicePermissionState = rememberPermissionState(
         android.Manifest.permission.RECORD_AUDIO
     )
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
     var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
-
     Column(
-        modifier = modifier
-            .height(200.dp)
-            .width(150.dp)
-            .border(BorderStroke(2.dp, Color.Black))
+        modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Record voice Screen")
 
@@ -92,19 +120,24 @@ fun RecordVoiceScreen(
                 }
             }
         }
-
-        Button(
-            enabled = currentState == RecordState.AFTER_RECORDING
-                    || currentState == RecordState.ON_PLAYING
-                    || currentState == RecordState.ASK_POST,
-            onClick = {
-                viewModel.postIntroduce(
-                    filepath = filepath,
-                    togglePopup = togglePopup
-                )
-            }) {
-            Text(text = "음성파일 등록")
+        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Button(
+                enabled = currentState == RecordState.AFTER_RECORDING
+                        || currentState == RecordState.ON_PLAYING
+                        || currentState == RecordState.ASK_POST,
+                onClick = {
+                    viewModel.postIntroduce(
+                        filepath = filepath,
+                        togglePopup = togglePopup
+                    )
+                }) {
+                Text(text = "바꾸기")
+            }
+            Button(onClick = togglePopup) {
+                Text(text = "취소")
+            }
         }
+
     }
 }
 

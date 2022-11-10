@@ -25,29 +25,23 @@ class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): 
         _actionSender.send(result)
     }
 
-//    val introduceUriFlow: Flow<String> = s3UseCase.introduceFlow
-
     var introduceUrl by mutableStateOf("")
 
     fun getIntroduce() {
         viewModelScope.launch {
-            introduceUrl = s3UseCase.getIntroduceUseCase()
+            introduceUrl = s3UseCase.getIntroduceUseCase().body()?:""
         }
     }
 
     fun postIntroduce(voice: MultipartBody.Part) {
         viewModelScope.launch {
-            s3UseCase.postIntroduceUseCase(voice).collectLatest {
-                produceResult(it)
-            }
+            s3UseCase.postIntroduceUseCase(voice)
         }
     }
 
     fun deleteIntroduce(introduceUri: String) {
         viewModelScope.launch {
-            s3UseCase.deleteIntroduceUseCase(S3Request(introduceUri)).collectLatest {
-                produceResult(it)
-            }
+            s3UseCase.deleteIntroduceUseCase(S3Request(introduceUri))
         }
     }
 

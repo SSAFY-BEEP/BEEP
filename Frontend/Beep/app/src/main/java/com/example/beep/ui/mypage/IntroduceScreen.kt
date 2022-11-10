@@ -25,38 +25,38 @@ import kotlinx.coroutines.delay
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
-    var isPopupVisible by remember { mutableStateOf(false) }
+    var isRecordScreen by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-//    val introduceUrlFlow by viewModel.introduceUriFlow.collectAsStateLifecycleAware(initial = "")
-
-    LaunchedEffect(key1 = isPopupVisible) {
-        println("LaunchedEffect Launched!!")
+    LaunchedEffect(key1 = isRecordScreen) {
         viewModel.getIntroduce()
     }
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier) {
-            Text(text = "GreetingSettingScreen")
-            Text(text = viewModel.introduceUrl)
-            VoicePlayer.nullInstance()
-            IntroducePlayer(viewModel.introduceUrl)
-            Button(onClick = { isPopupVisible = !isPopupVisible }) {
-                Text(text = "자기소개 녹음")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 70.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "나의 인사말")
+        if (isRecordScreen) {
+            RecordVoiceScreen() {
+                isRecordScreen = !isRecordScreen
             }
-//            Text(text = introduceUrlFlow)
-        }
-        if (isPopupVisible) {
-            RecordVoiceScreen(modifier = Modifier.offset(50.dp, 100.dp)) {
-                isPopupVisible = !isPopupVisible
+        } else {
+            IntroducePlayer(viewModel.introduceUrl) {
+                isRecordScreen = !isRecordScreen
             }
         }
+        BeepForTest()
     }
 }
 
 @Composable
 fun IntroducePlayer(
     audioUrl: String,
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    viewModel: IntroduceViewModel = viewModel(),
+    toggleScreen: () -> Unit
 ) {
     var voiceLength by remember { mutableStateOf(0) }
     var isReady by remember { mutableStateOf(false) }
@@ -64,38 +64,45 @@ fun IntroducePlayer(
     var sliderPosition by remember { mutableStateOf(0f) }
     var cursor by remember { mutableStateOf(0) }
 
-    if (!VoicePlayer.hasInstance()) {
+    if (VoicePlayer.hasInstance()) {
         VoicePlayer.nullInstance()
-        VoicePlayer.getInstance().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-            )
-            setDataSource(S3_CONSTANT_URI + audioUrl)
-            setOnPreparedListener {
-                isReady = true
-                voiceLength = it.duration
+    }
+    VoicePlayer.getInstance().apply {
+        setAudioAttributes(
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+        )
+        setDataSource(S3_CONSTANT_URI + viewModel.introduceUrl)
+        setOnPreparedListener {
+            isReady = true
+            voiceLength = it.duration
+        }
+        prepareAsync()
+        setOnCompletionListener {
+            if (voiceLength != 0) {
+                it.stop()
+                it.release()
             }
-            prepareAsync()
-            setOnCompletionListener {
-                if (voiceLength != 0) {
-                    it.stop()
-                    it.release()
-                }
-                isReady = true
-            }
+            isPlaying = false
         }
     }
+    Log.d("VoicePlayer", "VoicePlayer Initialized")
+
     Log.d("Render", "IntroducePlayer")
 
     DisposableEffect(key1 = lifecycleOwner) {
         Log.d("DisposableEvent", "DisposableEvent")
         onDispose {
             Log.d("onDispose", "onDispose")
-//            player = null
+            if (VoicePlayer.hasInstance()) {
+                VoicePlayer.getInstance().release()
+            }
+            VoicePlayer.nullInstance()
         }
     }
     LaunchedEffect(key1 = isPlaying) {
+        Log.d("LaunchedEffect", "IntroducePlay")
         cursor = 0
+        voiceLength = VoicePlayer.getInstance().duration
         while (isPlaying && cursor < voiceLength) {
             cursor += 100
             if (cursor >= voiceLength) {
@@ -104,57 +111,80 @@ fun IntroducePlayer(
             sliderPosition = cursor.toFloat() / voiceLength.toFloat()
             delay(100)
         }
+        cursor = 0
+        sliderPosition = 0f
     }
-
-    Text(text = "${formatMillisecondToSecond(cursor)}/${formatMillisecondToSecond(voiceLength)}")
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = {
-            if (!isPlaying) {
-                VoicePlayer.nullInstance()
-                VoicePlayer.getInstance().apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build()
-                    )
-                    setDataSource(S3_CONSTANT_URI + audioUrl)
-                    setOnPreparedListener {
-                        isReady = true
-                        voiceLength = it.duration
-                        it.start()
-                    }
-                    prepareAsync()
-                    setOnCompletionListener {
-                        if (voiceLength != 0) {
-                            it.stop()
-                            it.release()
+    Column(
+        modifier = Modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text(text = viewModel.introduceUrl)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = {
+                if (!isPlaying) {
+                    VoicePlayer.nullInstance()
+                    VoicePlayer.getInstance().apply {
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build()
+                        )
+                        setDataSource(S3_CONSTANT_URI + audioUrl)
+                        setOnPreparedListener {
+                            voiceLength = it.duration
+                            it.start()
+                            isPlaying = true
                         }
-                        isReady = true
+                        prepareAsync()
+                        setOnCompletionListener {
+                            if (voiceLength != 0) {
+                                it.stop()
+                                it.release()
+                                isPlaying = false
+//                                cursor = 0
+//                                sliderPosition = 0f
+                            }
+                            isReady = false
+                        }
                     }
+                } else {
+                    VoicePlayer.getInstance().stop()
+                    VoicePlayer.getInstance().release()
+                    isPlaying = false
+                    cursor = 0
+                    sliderPosition = 0f
                 }
-                isReady = false
-            } else {
-                VoicePlayer.getInstance().stop()
-                VoicePlayer.getInstance().release()
-            }
-            isPlaying = !isPlaying
-        }, enabled = isReady) {
-            if (!isPlaying) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = "introduce play button",
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Filled.Stop,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = "introduce stop button",
-                )
-            }
+            }, enabled = isReady) {
+                if (!isPlaying) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        tint = MaterialTheme.colors.secondary,
+                        contentDescription = "introduce play button",
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.Stop,
+                        tint = MaterialTheme.colors.secondary,
+                        contentDescription = "introduce stop button",
+                    )
+                }
 
+            }
+            LinearProgressIndicator(sliderPosition)
+            Text(
+                text = "${formatMillisecondToSecond(cursor)}/${
+                    formatMillisecondToSecond(
+                        voiceLength
+                    )
+                }"
+            )
         }
-        LinearProgressIndicator(sliderPosition)
+        Button(onClick = toggleScreen) {
+            Text(text = "자기소개 바꾸기")
+        }
     }
+
 }
 
 fun formatMillisecondToSecond(ms: Int): String {

@@ -1,5 +1,8 @@
 package com.example.beep.ui.message
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.domain.S3UseCase
@@ -12,9 +15,16 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 import java.io.File
 import java.io.FileInputStream
 import javax.inject.Inject
+
+sealed interface UiState<out T : Any> {
+    data class Success<out T : Any>(val data: T) : UiState<T>
+    object Error : UiState<Nothing>
+    object Loading : UiState<Nothing>
+}
 
 @HiltViewModel
 class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase) : ViewModel() {
@@ -25,8 +35,10 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
         _actionSender.send(result)
     }
 
+    var recordVoiceUiState: UiState<String> by mutableStateOf(UiState.Success("Initial State"))
     fun postIntroduce(filepath: String, togglePopup: () -> Unit) {
         viewModelScope.launch {
+            recordVoiceUiState = UiState.Loading
             val file = File(filepath)
             val fis = FileInputStream(file)
             val byteArray = fis.readBytes()
@@ -35,10 +47,13 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
                 "${System.currentTimeMillis()}record.mp3",
                 byteArray.toRequestBody(contentType = "multipart/form-data".toMediaTypeOrNull())
             )
-            s3UseCase.postIntroduceUseCase(partFile).collectLatest {
-                produceResult(it)
+            try {
+                recordVoiceUiState =
+                    UiState.Success(s3UseCase.postIntroduceUseCase(partFile).body()!!)
+                togglePopup()
+            } catch (e: Exception) {
+                recordVoiceUiState = UiState.Error
             }
-            togglePopup()
         }
     }
 }

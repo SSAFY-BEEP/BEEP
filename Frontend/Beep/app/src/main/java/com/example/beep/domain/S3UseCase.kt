@@ -8,6 +8,6 @@ import javax.inject.Inject
 class S3UseCase @Inject constructor(private val s3Repository: S3Repository){
 //    val introduceFlow = s3Repository.introduceFlow
     suspend fun getIntroduceUseCase() = s3Repository.getIntroduce()
-    fun deleteIntroduceUseCase(request: S3Request) = s3Repository.deleteIntroduce(request)
-    fun postIntroduceUseCase(voice: MultipartBody.Part) = s3Repository.postIntroduce(voice)
+    suspend fun deleteIntroduceUseCase(request: S3Request) = s3Repository.deleteIntroduce(request)
+    suspend fun postIntroduceUseCase(voice: MultipartBody.Part) = s3Repository.postIntroduce(voice)
 }

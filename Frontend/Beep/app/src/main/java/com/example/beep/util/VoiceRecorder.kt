@@ -23,6 +23,8 @@ class VoiceRecorder {
         fun nullInstance() {
             instance = null
         }
+
+        fun hasInstance() = instance != null
     }
 
 

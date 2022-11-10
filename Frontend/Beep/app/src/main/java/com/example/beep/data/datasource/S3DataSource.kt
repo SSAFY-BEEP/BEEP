@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,13 +20,10 @@ class S3DataSource @Inject constructor(private val s3Api: S3Api) {
 //            Log.d("FlowTimer", "fetched introduce")
 //        }
 //    }
-    suspend fun getIntroduce(): String = s3Api.getIntroduce()
+    suspend fun getIntroduce(): Response<String> = s3Api.getIntroduce()
 
-    fun deleteIntroduce(request: S3Request): Flow<String> = flow {
-        emit(s3Api.deleteIntroduce(request))
-    }
+    suspend fun deleteIntroduce(request: S3Request): Response<String> = s3Api.deleteIntroduce(request)
 
-    fun postIntroduce(voice: MultipartBody.Part): Flow<String> = flow {
-        emit(s3Api.postIntroduce(voice))
-    }
+    suspend fun postIntroduce(voice: MultipartBody.Part): Response<String> =
+        s3Api.postIntroduce(voice)
 }
