@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PresetRepository extends JpaRepository<Preset,Long> {
 
-    @Query(value = "select * from preset p where p.number = :uNumber And p.user_id =:pid",nativeQuery = true)
-    Optional<Preset>findPreset(@Param("uNumber") Long uNumber,@Param("pid") Long pid);
+    @Query(value = "select * from preset p where p.number = :number and p.user_id =:userId and p.part = :part",nativeQuery = true)
+    Optional<Preset>findPreset(Long number, Long userId, Integer part);
 }

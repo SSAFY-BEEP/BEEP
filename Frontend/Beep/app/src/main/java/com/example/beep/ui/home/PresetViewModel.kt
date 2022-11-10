@@ -15,9 +15,9 @@ class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseC
     ViewModel() {
 
     //유저의 프리셋 리스트 가져오기
-    fun getPreset(uid : Long) {
+    fun getPreset() {
         viewModelScope.launch(Dispatchers.IO) {
-            presetUseCase.getUserPreset(uid).collectLatest {
+            presetUseCase.getUserPreset().collectLatest {
                 Log.d("getPreset", it.toString())
             }
         }
@@ -34,7 +34,7 @@ class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseC
     //프리셋 수정/추가
     fun updatePreset(uid : Long, number : Int, part : Int, content : String) {
         viewModelScope.launch(Dispatchers.IO) {
-            presetUseCase.updatePreset(uid, number, part, content).collectLatest {
+            presetUseCase.updatePreset( number, part, content).collectLatest {
                 Log.d("updatePreset", it.toString())
             }
         }
