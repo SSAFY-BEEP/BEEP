@@ -28,13 +28,6 @@ sealed interface UiState<out T : Any> {
 
 @HiltViewModel
 class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase) : ViewModel() {
-    val _actionSender = Channel<String>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val actionSender = _actionSender.receiveAsFlow()
-
-    private suspend fun produceResult(result: String) {
-        _actionSender.send(result)
-    }
-
     var recordVoiceUiState: UiState<String> by mutableStateOf(UiState.Success("Initial State"))
     fun postIntroduce(filepath: String, togglePopup: () -> Unit) {
         viewModelScope.launch {

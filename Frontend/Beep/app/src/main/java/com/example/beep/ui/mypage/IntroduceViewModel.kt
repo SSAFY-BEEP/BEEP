@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.mypage.S3Request
 import com.example.beep.domain.S3UseCase
+import com.example.beep.ui.message.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -18,12 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): ViewModel() {
-    val _actionSender = Channel<String>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val actionSender = _actionSender.receiveAsFlow()
+    var introduceVoiceUiState: UiState<String> by mutableStateOf(UiState.Success("Initial State"))
 
-    private suspend fun produceResult(result: String) {
-        _actionSender.send(result)
-    }
 
     var introduceUrl by mutableStateOf("")
 
