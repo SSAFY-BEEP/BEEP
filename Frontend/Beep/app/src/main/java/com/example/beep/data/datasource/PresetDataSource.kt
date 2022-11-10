@@ -1,5 +1,6 @@
 package com.example.beep.data.datasource
 
+import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.mypage.PresetRequest
 import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.network.api.PresetApi
@@ -11,17 +12,17 @@ import javax.inject.Singleton
 
 @Singleton
 class PresetDataSource @Inject constructor(private val presetApi: PresetApi){
-    fun getUserPreset(): Flow<Response<List<PresetResponse>>> = flow {
+    fun getUserPreset(): Flow<BaseResponse<Any>> = flow {
         emit(presetApi.getUserPreset())
     }
-    fun getUserPresetByToken(): Flow<Response<List<PresetResponse>>> = flow {
+    fun getUserPresetByToken(): Flow<BaseResponse<Any>> = flow {
         emit(presetApi.getUserPresetByToken())
     }
-    fun updatePreset(number : Int, part : Int, content : String): Flow<Response<String>> = flow {
+    fun updatePreset(number : Int, part : Int, content : String): Flow<BaseResponse<Any>> = flow {
         val prestRequest = PresetRequest(number, part, content)
         emit(presetApi.updatePreset(prestRequest))
     }
-    fun deletePreset(pid: Long): Flow<Response<String>> = flow {
+    fun deletePreset(pid: Long): Flow<BaseResponse<Any>> = flow {
         emit(presetApi.deletePreset(pid))
     }
 }
