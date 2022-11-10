@@ -3,9 +3,9 @@ package com.example.beep.ui.mypage
 import androidx.lifecycle.ViewModel
 import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.domain.PresetUseCase
+import com.example.beep.domain.UserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 

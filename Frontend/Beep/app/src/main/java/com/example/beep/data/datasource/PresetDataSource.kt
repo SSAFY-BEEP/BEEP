@@ -18,7 +18,7 @@ class PresetDataSource @Inject constructor(private val presetApi: PresetApi){
         emit(presetApi.getUserPresetByToken())
     }
     fun updatePreset(number : Int, part : Int, content : String): Flow<Response<String>> = flow {
-        val prestRequest = PresetRequest(number, part, content);
+        val prestRequest = PresetRequest(number, part, content)
         emit(presetApi.updatePreset(prestRequest))
     }
     fun deletePreset(pid: Long): Flow<Response<String>> = flow {

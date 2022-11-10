@@ -5,8 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 
-interface AuthApi {
-
+interface AuthApi  {
     @POST("user/signup")
     suspend fun signUp(@Body request: SignUpRequest): SignUpResponse
 
@@ -18,7 +17,4 @@ interface AuthApi {
 
     @PATCH("user/withdrawal")
     suspend fun withdrawal(): String
-
-
-
 }
