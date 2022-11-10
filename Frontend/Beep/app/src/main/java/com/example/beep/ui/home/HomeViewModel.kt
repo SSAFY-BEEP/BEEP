@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.BaseResponse
+import com.example.beep.data.dto.ErrorResponse
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.domain.Message24UseCase
+import com.example.beep.util.adapter.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +21,8 @@ class HomeViewModel @Inject constructor(private val message24UseCase: Message24U
 ViewModel() {
 
     //24시간 후에 사라지는 일반 메시지 리스트
-    val receiveMsg24: Flow<BaseResponse<List<Message24Response>>> = message24UseCase.getReceive24()
-    val sendMsg24: Flow<BaseResponse<List<Message24Response>>> = message24UseCase.getSend24()
+    val receiveMsg24: Flow<NetworkResponse<BaseResponse<List<Message24Response>>, BaseResponse<ErrorResponse>>> = message24UseCase.getReceive24()
+    val sendMsg24: Flow<NetworkResponse<BaseResponse<List<Message24Response>>, BaseResponse<ErrorResponse>>> = message24UseCase.getSend24()
 
     fun getOne24(messageId : String) : Message24Response? {
         var result : Message24Response? = null

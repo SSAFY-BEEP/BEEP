@@ -1,9 +1,11 @@
 package com.example.beep.data.datasource
 
 import com.example.beep.data.dto.BaseResponse
+import com.example.beep.data.dto.ErrorResponse
 import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.network.api.Message24Api
+import com.example.beep.util.adapter.NetworkResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -12,11 +14,11 @@ import javax.inject.Singleton
 
 @Singleton
 class Message24DataSource @Inject constructor(private val message24Api: Message24Api){
-    fun getReceiveMsg24() : Flow<BaseResponse<List<Message24Response>>> = flow {
+    fun getReceiveMsg24() : Flow<NetworkResponse<BaseResponse<List<Message24Response>>, BaseResponse<ErrorResponse>>> = flow {
         emit(message24Api.getReceiveMsg24())
     }
 
-    fun getSendMsg24() : Flow<BaseResponse<List<Message24Response>>> = flow {
+    fun getSendMsg24() : Flow<NetworkResponse<BaseResponse<List<Message24Response>>, BaseResponse<ErrorResponse>>> = flow {
         emit(message24Api.getSendMsg24())
     }
 

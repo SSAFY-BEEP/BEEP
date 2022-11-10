@@ -3,6 +3,7 @@ package com.example.beep.di
 import com.example.beep.network.api.*
 import com.example.beep.util.AuthInterceptor
 import com.example.beep.util.BASE_URL
+import com.example.beep.util.adapter.NetworkResponseAdapterFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -24,6 +25,7 @@ object RemoteDataModule {
     @Named("retrofit")
     fun provideRetrofitInstance(gson: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder().baseUrl(BASE_URL)
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(gson)).client(client)
             .build()
     }
