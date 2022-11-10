@@ -19,14 +19,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): ViewModel() {
-    var introduceVoiceUiState: UiState<String> by mutableStateOf(UiState.Success("Initial State"))
+    var introduceVoiceUiState: UiState<String> by mutableStateOf(UiState.Loading)
 
 
     var introduceUrl by mutableStateOf("")
 
     fun getIntroduce() {
         viewModelScope.launch {
-            introduceUrl = s3UseCase.getIntroduceUseCase().body()?:""
+            introduceVoiceUiState = UiState.Loading
+            val result = s3UseCase.getIntroduceUseCase()
+            if (result.status == "OK") {
+                introduceVoiceUiState = UiState.Success(result.data)
+            } else {
+                introduceVoiceUiState = UiState.Error
+            }
         }
     }
 

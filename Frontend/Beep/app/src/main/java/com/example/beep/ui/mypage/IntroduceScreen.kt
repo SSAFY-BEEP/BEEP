@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import com.example.beep.ui.message.RecordVoiceScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.message.UiState
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
 import kotlinx.coroutines.delay
@@ -57,6 +60,26 @@ fun IntroducePlayer(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: IntroduceViewModel = viewModel(),
     toggleScreen: () -> Unit
+) {
+    when (viewModel.introduceVoiceUiState) {
+        is UiState.Loading -> {
+            LoadingScreen()
+        }
+        is UiState.Success<String> -> {
+            IntroduceSuccessScreen(audioUrl, lifecycleOwner, toggleScreen)
+        }
+        is UiState.Error -> {
+            ErrorScreen()
+        }
+    }
+}
+
+@Composable
+fun IntroduceSuccessScreen(
+    audioUrl: String,
+    lifecycleOwner: LifecycleOwner,
+    toggleScreen: () -> Unit,
+    viewModel: IntroduceViewModel = viewModel(),
 ) {
     var voiceLength by remember { mutableStateOf(0) }
     var isReady by remember { mutableStateOf(false) }
@@ -184,7 +207,6 @@ fun IntroducePlayer(
             Text(text = "자기소개 바꾸기")
         }
     }
-
 }
 
 fun formatMillisecondToSecond(ms: Int): String {

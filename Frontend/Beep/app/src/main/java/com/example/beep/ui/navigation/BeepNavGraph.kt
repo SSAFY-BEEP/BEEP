@@ -21,6 +21,7 @@ import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen
 import com.example.beep.ui.message.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
+import com.example.beep.ui.savedmessage.SavedMessageScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalComposeUiApi::class)
@@ -42,6 +43,10 @@ fun BeepNavGraph(navController: NavHostController) {
             val model: UserViewModel = hiltViewModel(it)
             LoginMainScreen()
         }
+        composable("savedMessage") {
+            val model: MessageViewModel = hiltViewModel(it)
+            SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
+        }
     }
 }
 
@@ -50,7 +55,7 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
     navigation(startDestination = "messageList", route = "message") {
         composable("messageList") {
             val model: MessageViewModel = hiltViewModel(it)
-            MessageScreen(model) { navController.navigate("recordVoice") }
+            MessageScreen(model) { route: String -> navController.navigate(route) }
         }
     }
 }

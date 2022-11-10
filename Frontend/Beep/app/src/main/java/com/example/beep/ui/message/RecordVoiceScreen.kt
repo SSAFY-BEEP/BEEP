@@ -21,6 +21,8 @@ import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.mypage.BeepForTest
 import java.io.File
 
@@ -42,13 +44,13 @@ fun RecordVoiceScreen(
 ) {
     when (viewModel.recordVoiceUiState) {
         is UiState.Loading -> {
-            RecordLoadingScreen()
+            LoadingScreen()
         }
         is UiState.Success<String> -> {
             RecordSuccessScreen(togglePopup = togglePopup)
         }
         is UiState.Error -> {
-            RecordErrorScreen()
+            ErrorScreen()
         }
     }
 
@@ -57,11 +59,6 @@ fun RecordVoiceScreen(
 @Composable
 fun RecordErrorScreen() {
     Text(text = "에러가 뜨다니 ㅠㅠㅠ")
-}
-
-@Composable
-fun RecordLoadingScreen() {
-    Text(text = "로딩중")
 }
 
 @RequiresApi(Build.VERSION_CODES.S)

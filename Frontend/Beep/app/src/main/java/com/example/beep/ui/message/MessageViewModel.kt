@@ -16,7 +16,10 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class MessageViewModel @Inject constructor(private val messageUseCase: MessageUseCase, private val message24UseCase: Message24UseCase) :
+class MessageViewModel @Inject constructor(
+    private val messageUseCase: MessageUseCase,
+    private val message24UseCase: Message24UseCase
+) :
     ViewModel() {
 
     private val type = 1
@@ -24,6 +27,7 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
     //보관 메시지 리스트
     val receiveMessages: Flow<Response<List<MessageResponse>>> = messageUseCase.getReceive(type)
     val sendMessages: Flow<Response<List<MessageResponse>>> = messageUseCase.getSend()
+
     //24시간 후에 사라지는 일반 메시지 리스트
     val receiveMsg24: Flow<Response<List<Message24Response>>> = message24UseCase.getReceive24()
     val sendMsg24: Flow<Response<List<Message24Response>>> = message24UseCase.getSend24()
@@ -42,10 +46,10 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
 
     }
 
-    fun deleteMessage(messageId : Long) {
+    fun deleteMessage(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             messageUseCase.deleteMessage(messageId).collectLatest {
-                if(it.code() == 200) {
+                if (it.code() == 200) {
                     Log.d("Delete Persistent", it.body()!!)
                 } else {
                     Log.d("Delete Persistent", "Fail!!")
@@ -57,7 +61,7 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
     fun blockMessage(messageId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             messageUseCase.blockMessage(messageId).collectLatest {
-                if(it.code() == 200) {
+                if (it.code() == 200) {
                     Log.d("Block Message", it.body()!!)
                 } else {
                     Log.d("Block Message", "Fail!!")
@@ -71,7 +75,7 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
     fun saveMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.saveMsg(messageId).collectLatest {
-                if(it.code() == 200) {
+                if (it.code() == 200) {
                     Log.d("SAVE Message24", it.body()!!)
                 } else {
                     Log.d("SAVE Message24", "Fail!!")
@@ -83,7 +87,7 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
     fun deleteMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.deleteMsg(messageId).collectLatest {
-                if(it.code() == 200) {
+                if (it.code() == 200) {
                     Log.d("Delete Msg24", it.body()!!)
                 } else {
                     Log.d("Delete Msg24", "Fail!!")
@@ -95,7 +99,7 @@ class MessageViewModel @Inject constructor(private val messageUseCase: MessageUs
     fun blockMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.blockMsg(messageId).collectLatest {
-                if(it.code() == 200) {
+                if (it.code() == 200) {
                     Log.d("Block Msg24", it.body()!!)
                 } else {
                     Log.d("Block Msg24", "Fail!!")

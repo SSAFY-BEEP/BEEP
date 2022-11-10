@@ -52,6 +52,11 @@ fun BeepApp() {
                         name = "LoginMain",
                         route = "login_main",
                         icon = Icons.Default.Person
+                    ),
+                    BottomNavItem(
+                        name = "SavedMessage",
+                        route = "savedMessage",
+                        icon = Icons.Default.Person
                     )
                 ),
                 navController = navController,

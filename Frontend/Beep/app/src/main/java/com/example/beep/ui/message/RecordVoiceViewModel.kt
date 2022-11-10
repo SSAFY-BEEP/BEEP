@@ -40,11 +40,12 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
                 "${System.currentTimeMillis()}record.mp3",
                 byteArray.toRequestBody(contentType = "multipart/form-data".toMediaTypeOrNull())
             )
-            try {
+            val result = s3UseCase.postIntroduceUseCase(partFile)
+            if (result.status == "OK") {
                 recordVoiceUiState =
-                    UiState.Success(s3UseCase.postIntroduceUseCase(partFile).body()!!)
+                    UiState.Success(result.data)
                 togglePopup()
-            } catch (e: Exception) {
+            } else {
                 recordVoiceUiState = UiState.Error
             }
         }

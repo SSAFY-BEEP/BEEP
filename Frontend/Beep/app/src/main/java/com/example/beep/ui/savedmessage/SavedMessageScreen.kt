@@ -1,4 +1,4 @@
-package com.example.beep.ui.message
+package com.example.beep.ui.savedmessage
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -18,33 +18,28 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.util.collectAsStateLifecycleAware
 import android.util.Log
+import com.example.beep.ui.message.UiState
 import retrofit2.Response
 
 @Composable
-fun MessageScreen(
-    messageViewModel: MessageViewModel = viewModel(),
-    onClickMenu: (String) -> Unit
+fun SavedMessageScreen(
+    viewModel: SavedMessageViewModel = viewModel(),
+    navigateTo: (String) -> Unit
 ) {
     var toggleMenu by remember { mutableStateOf(true) }
-    val receiveMessageList = messageViewModel.receiveMessages.collectAsStateLifecycleAware(
-        initial = Response.success(emptyList())
-    )
-    val sendMessageList = messageViewModel.sendMessages.collectAsStateLifecycleAware(
-//        initial = emptyList<MessageResponse>()
-        initial = Response.success(emptyList())
 
-    )
     Log.d("RECEIVE", "receive ${receiveMessageList.value.body().toString()}")
     Log.d("SEND", "send ${sendMessageList.value.body().toString()}")
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        when (viewModel.savedMessageUiState) {
+            is UiState.Loading -> {}
+            is UiState.Success -> {}
+            is UiState.Error -> {}
+        }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//            테스트용 버튼
-//            Button(onClick = { messageViewModel.changeTag(8, "test") }) {
-//
-//            }
             SwitchReceivedSent(
                 currentMenu = toggleMenu,
                 selectReceived = { toggleMenu = true },
