@@ -12,4 +12,8 @@ class AddressRepository @Inject constructor(private val addressDataSource: Addre
         flow { addressDataSource.getUserAddress().collect { emit(it)} }
     fun postUserAddress(phone: String, name: String,): Flow<String> =
         flow { addressDataSource.postUserAddress(phone, name).collect { emit(it)} }
+    fun deleteUserAddress(phone: String): Flow<String> =
+        flow { addressDataSource.deleteUserAddress(phone).collect { emit(it)} }
+    fun patchUserAddress(apiPhone: String, phone: String, name: String,): Flow<AddressResponse> =
+        flow { addressDataSource.patchUserAddress(apiPhone, phone, name).collect { emit(it)} }
 }

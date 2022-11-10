@@ -1,12 +1,12 @@
 package com.example.Beep.api.service;
 
 import com.example.Beep.api.domain.dto.DictionaryResponseDto;
+import com.example.Beep.api.domain.enums.ErrorCode;
+import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.DictionaryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class DictionaryServiceImpl implements DictionaryService{
 
-    @Autowired
-    DictionaryRepository dictionaryRepository;
+    private  final DictionaryRepository dictionaryRepository;
 
     public List<DictionaryResponseDto> FindWord(String word) {
         List<DictionaryResponseDto>dictionaryResponseDtoList=dictionaryRepository.findByWordContaining(word)
@@ -42,13 +41,17 @@ public class DictionaryServiceImpl implements DictionaryService{
 
     @Override
     public List<DictionaryResponseDto> FindRandom() {
-        List<DictionaryResponseDto>dictionaryResponseDtoList=dictionaryRepository.findRandom()
-                .stream()
-                .map(Dictionary -> DictionaryResponseDto.builder()
-                        .word(Dictionary.getWord())
-                        .value(Dictionary.getValue())
-                        .build()).collect(Collectors.toList());
+        try{
+            List<DictionaryResponseDto>dictionaryResponseDtoList=dictionaryRepository.findRandom()
+                    .stream()
+                    .map(Dictionary -> DictionaryResponseDto.builder()
+                            .word(Dictionary.getWord())
+                            .value(Dictionary.getValue())
+                            .build()).collect(Collectors.toList());
 
-        return dictionaryResponseDtoList;
+            return dictionaryResponseDtoList;
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.BAD_REQUEST);
+        }
     }
 }

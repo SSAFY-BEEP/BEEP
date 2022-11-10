@@ -1,44 +1,34 @@
 package com.example.beep.ui.home
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.beep.R
-import com.example.beep.data.dto.mainpage.AddressResponse
-import com.example.beep.util.collectAsStateLifecycleAware
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
-@Preview
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddAddressSelf(
+fun AddressPatch(
+    changeToPatchAddress: () -> Unit,
+    defaultNameString: String,
+    defaultPhoneString: String,
 ) {
 
-    var inputNameTxt by remember { mutableStateOf("") }
-    var inputNumberTxt by remember { mutableStateOf("") }
+    var inputNameTxt by remember { mutableStateOf(defaultNameString) }
+    var inputNumberTxt by remember { mutableStateOf(defaultPhoneString) }
 //    var inputNumberTxt by remember { mutableStateOf(TextFieldValue("")) }
 
     val nameMaxLength = 20
@@ -53,7 +43,7 @@ fun AddAddressSelf(
             modifier = Modifier
 //                .height(40.dp)
         ) {
-            NameTextField(
+            PatchNameTextField(
                 value = inputNameTxt,
                 onValueChange = { inputNameTxt = it },
             )
@@ -61,7 +51,7 @@ fun AddAddressSelf(
         Row(
             modifier = Modifier
         ) {
-            NumberIntField(
+            PatchNumberIntField(
                 value = inputNumberTxt,
                 onValueChange = { inputNumberTxt = it }
             )
@@ -71,20 +61,27 @@ fun AddAddressSelf(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            AddCancelBtn()
+            AddCancelBtn(changeToPatchAddress)
             AddToBookBtn()
-            AddSubmitBtn(name = inputNameTxt, phone = inputNumberTxt)
+            Log.d("Phone", inputNameTxt)
+            PatchSubmitBtn(
+                apiPhone = defaultPhoneString,
+                name = inputNameTxt,
+                phone = inputNumberTxt,
+                changeToPatchAddress = changeToPatchAddress
+            )
+            }
         }
     }
-}
+
 
 
 @Composable
-fun NameTextField(
+fun PatchNameTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    
-) {
+
+    ) {
     OutlinedTextField(
         label = { Text(text = "이름")},
         value = value,
@@ -113,7 +110,7 @@ fun NameTextField(
 
 @ExperimentalComposeUiApi
 @Composable
-fun NumberIntField(
+fun PatchNumberIntField(
     value: String,
     onValueChange: (String) -> Unit,
 ) {

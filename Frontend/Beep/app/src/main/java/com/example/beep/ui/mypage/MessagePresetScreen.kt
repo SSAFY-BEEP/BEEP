@@ -16,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.data.sample.messagePresetList
 import com.example.beep.util.collectAsStateLifecycleAware
+import retrofit2.Response
 
 @Composable
 fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel) {
     val scrollState = rememberScrollState()
-    val userMessagePresetList: List<PresetResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
-        initial = emptyList()
+    val userMessagePresetList = viewModel.exampleEntities.collectAsStateLifecycleAware(
+        initial = Response.success(emptyList())
     )
     Column(
         modifier = modifier
@@ -32,7 +33,7 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
                 .height(400.dp)
                 .verticalScroll(scrollState)
         ) {
-            for (preset in userMessagePresetList) {
+            for (preset in userMessagePresetList.value.body()!!) {
                 TextButton(onClick = { /*TODO*/ }) {
                     Text(text = "${preset.number} : ${preset.content ?: ""}")
                 }

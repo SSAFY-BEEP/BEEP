@@ -62,6 +62,12 @@ object RemoteDataModule {
 
     @Provides
     @Singleton
+    fun provideMessage24Api(@Named("retrofit") retrofit: Retrofit): Message24Api {
+        return retrofit.create(Message24Api::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideS3Api(@Named("retrofit") retrofit: Retrofit): S3Api {
         return retrofit.create(S3Api::class.java)
     }
@@ -69,10 +75,12 @@ object RemoteDataModule {
     // OkHttpClient DI
     @Provides
     @Singleton
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
             .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(authInterceptor)
             .build()
     }
 

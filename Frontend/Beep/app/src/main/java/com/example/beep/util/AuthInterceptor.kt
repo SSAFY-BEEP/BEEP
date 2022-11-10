@@ -1,15 +1,18 @@
 package com.example.beep.util
 
+import com.example.beep.di.MainApplication
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class AuthInterceptor : Interceptor {
+class AuthInterceptor @Inject constructor(): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
+        val token = MainApplication.sharedPreferencesUtil.getToken()
 
         requestBuilder.addHeader(
             "Authorization",
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMTA3NDc5NDE4NSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NjgwNjk1ODd9.8ReBmGUD0XuSX4GXgpcCJUR7pCiCUW02ErQhd5UPy8fSfQfwRnKPZXWsqoTsf9B37WQ7uiiiggn1kl7ePkg6xQ"
+            "Bearer $token"
         )
 
         return chain.proceed(requestBuilder.build())

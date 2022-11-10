@@ -49,7 +49,7 @@ public class S3Service {
         } catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
         }
-//        System.out.println(fileName+"url 주소인가여?");
+        System.out.println(fileName+"url 주소인가여?");
         String[]url=fileName.split("url");
         return fileName;
     }
@@ -80,8 +80,9 @@ public class S3Service {
     //메세지24 보관/차단 -> 영구메세지로 S3파일 복사
     public void copyFile(String messageId){
         Message24 message24 = message24Repository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
-
-        amazonS3.copyObject(bucket,message24.getAudioUri(),bucket2,message24.getAudioUri());
+        if(message24.getAudioUri()!=null){
+            amazonS3.copyObject(bucket,message24.getAudioUri(),bucket2,message24.getAudioUri());
+        }
     }
 
     public String createFileName(String fileName) {

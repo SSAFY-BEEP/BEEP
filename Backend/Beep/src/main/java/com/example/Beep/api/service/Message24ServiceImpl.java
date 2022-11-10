@@ -22,6 +22,7 @@ import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.ArrayList;
@@ -95,73 +96,66 @@ public class Message24ServiceImpl implements  Message24Service{
 //    }
     @Transactional
     @Override
-    public void sendMessageWithFile(S3RequestDto.sendMessage24 message) {
-        System.out.println("sendMessageWithFile------------");
+    public void sendMessageWithFile(MultipartFile file,S3RequestDto.sendMessage24 message) {
+        //보낸사람, 받은사람 기준으로 데이터 2번 저장
         String userNum = SecurityUtil.getCurrentUsername().get();
+        User receiver = userRepository.findByPhoneNumber(message.getReceiverNum()).orElse(null);
 
+        //발신자데이터로 Message24 저장
+        saveMessage24ForOwner(file, message, userNum, userNum);
+
+        if(receiver == null || receiver.getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
+            //초대메세지 보내기
+            smsService.sendInviteSMS(message.getReceiverNum());
+
+        } else { //회원일 경우
+            //차단 여부 확인
+            boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
+            if (!isBlocked) { //차단 안됐을 경우
+                //앱이 백그라운드일때 수신될 알림
+                Notification notification = Notification.builder()
+                        .setTitle("[BEEP]")
+                        .setBody("메시지가 도착했습니다!!")
+                        .build();
+                try {
+                    //fcm 메시지 작성
+                    com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
+                            .setNotification(notification)
+                            .setToken(receiver.getFcmToken())
+                            .putData("header", "[BEEP]")
+                            .putData("content", "메시지 도착 : " + message.getContent())
+                            .build();
+                    //보내기
+                    String result = FirebaseMessaging.getInstance().send(fcmMessage);
+                    //성공
+                    System.out.println("Send Success " + result);
+                    saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }
+    }
+
+    //해당 owner용 데이터 저장
+    public void saveMessage24ForOwner(MultipartFile file,S3RequestDto.sendMessage24 message,String senderNum , String ownerNum){
         //S3파일 저장
-        String audioFileForSender = null;
-        if(message.getFile()!=null){
-            audioFileForSender = s3Service.uploadFile(message.getFile());
+        String audioFileName = null;
+        if( file != null && !file.isEmpty()){
+            audioFileName= s3Service.uploadFile(file);
         }
 
-        //보낸사람, 받은사람 기준으로 데이터 2번 저장
-        //보낸사람에게 저장
-        Message24 senderMsg = Message24.builder()
+        //수신자데이터로 Message24 저장
+        Message24 receiverMsg = Message24.builder()
+                .ownerNum(ownerNum)
+                .audioUri(audioFileName)
                 .content(message.getContent())
-                .audioUri(audioFileForSender)
-                .senderNum(userNum)
+                .senderNum(senderNum)
                 .receiverNum(message.getReceiverNum())
-                .ownerNum(userNum)
                 .build();
 
-        //초대메세지를 보내야하지 않을까?
-        Optional<User> receiver = userRepository.findByPhoneNumber(message.getReceiverNum());
-        if(receiver==null || receiver.get().getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
-            smsService.sendInviteSMS(message.getReceiverNum());
-        } else {            //회원일 경우
-            boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
-            if(!isBlocked){ //차단 안됐을 경우에만 수신자에게도 전해짐
-                //S3파일 저장
-                String audioFileForReceiver = null;
-                if(message.getFile()!=null){
-                    audioFileForReceiver= s3Service.uploadFile(message.getFile());
-                }
-
-                Message24 receiverMsg = Message24.builder()
-                        .ownerNum(message.getReceiverNum())
-                        .audioUri(audioFileForReceiver)
-                        .content(message.getContent())
-                        .senderNum(userNum)
-                        .receiverNum(message.getReceiverNum())
-                        .build();
-
-                repository.save(receiverMsg);
-            }
-
-            // 추후에fcm토큰 생기면 수정
-//            try {
-//                // 받을 상대의 fcm 토큰
-//                String registrationToken = receiver.get().getFcmToken();
-//                // See documentation on defining a message payload.
-//                com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
-//                        .setNotification(Notification.builder()
-//                                .setTitle("[BEEP] 삐삐가 도착했어요!")
-//                                .setBody(message.getContent())
-//                                .build())
-//                        .setToken(registrationToken)
-//                        .build();
-//
-//                String response = FirebaseMessaging.getInstance().send(fcmMessage);
-//                // 성공하면 메시지 아이디를 반환함
-//                System.out.println("Successfully sent message: " + response);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return;
-//            }
-        }
-
-
+        repository.save(receiverMsg);
     }
 
     //메세지 보관
@@ -170,12 +164,12 @@ public class Message24ServiceImpl implements  Message24Service{
     public Long changeMessageType(String messageId, Integer type) {
 
         Message24 find = repository.findById(messageId).get();
-        User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
-        User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User sender = userRepository.findByPhoneNumber(find.getSenderNum()).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User receiver = userRepository.findByPhoneNumber(find.getReceiverNum()).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //차단을 하는 사람
         String ownerNum = SecurityUtil.getCurrentUsername().get();
-        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        User owner = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //해당 메세지의 type이 현재 type이랑 같으면 에러(중복 보관/차단이니까)
         if(find.getType() == type){
@@ -214,7 +208,7 @@ public class Message24ServiceImpl implements  Message24Service{
     //해당 메세지 id의 메세지 데이터
     @Override
     public Message24 getMessage(String id) {
-        return repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.POSTS_NOT_FOUND));
+        return repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
     }
 
 
@@ -224,10 +218,10 @@ public class Message24ServiceImpl implements  Message24Service{
     public void deleteMessageById(String id) {
         String userNum = SecurityUtil.getCurrentUsername().get();
         //해당 메세지id로 메세지 삭제
-        Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
-        
+        Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+
         //삭제하는 유저가 해당 메세지 데이터 소유자가 아니면 에러
-        if(message24.getOwnerNum() != userNum) throw new CustomException(ErrorCode.BAD_REQUEST);
+        if(!message24.getOwnerNum().equals(userNum) ) throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
 
         //음성파일 존재하면 S3파일 삭제
         if(message24.getAudioUri()!=null){

@@ -13,16 +13,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.beep.data.dto.mainpage.AddressResponse
 
 @Composable
-fun ShowAddressList() {
+fun ShowAddressList(
+) {
     var goAddAddress by remember { mutableStateOf(false) }
+    var viewEditDelBtn by remember { mutableStateOf(false) }
+    var goPatchAddress by remember { mutableStateOf(false) }
+    var defaultNameString by remember { mutableStateOf("") }
+    var defaultPhoneString by remember { mutableStateOf("") }
+
+    var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
+
 
     var addressListTitle = if (goAddAddress) {
         "주소록 추가"
+    } else if(goPatchAddress) {
+    "주소록 수정"
     } else {
         "주소록"
+    }
+
+
+
+    var goEditDelBtnTxt = if (viewEditDelBtn) {
+        "SUBMIT"
+    } else {
+        "EDIT"
     }
 
     Column(
@@ -44,30 +61,35 @@ fun ShowAddressList() {
                 fontSize = 20.sp,
                 modifier = Modifier
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                fontFamily = galmurinineFont
+                fontFamily = galmurinineFont,
+                color = themeColorBlue
             )
-            Button(
-                onClick = { goAddAddress = !goAddAddress },
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 10.dp, 0.dp)
-                    .width(25.dp)
-                    .height(25.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.3F)),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(0.dp),
+            if (!goAddAddress) {
+                Button(
+                    onClick = { viewEditDelBtn = !viewEditDelBtn },
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 10.dp, 0.dp)
+                        .width(60.dp)
+                        .height(25.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = themeColorBlue),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
 
-                ) {
-                Text(
-                    text = "+",
-                    fontSize = 25.sp,
-                    fontFamily = galmurinineFont
-                )
+                    ) {
+                    Text(
+                        text = goEditDelBtnTxt,
+                        fontSize = 14.sp,
+                        fontFamily = galmurinineFont,
+                        color = Color.White
+                    )
+                }
             }
+
         }
         Box(
             modifier = Modifier
@@ -80,14 +102,28 @@ fun ShowAddressList() {
                 )
                 .border(
                     width = 1.dp,
-                    color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    color = themeColorBlue,
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
             if(goAddAddress) {
-                AddAddressSelf()
+                AddressPostSelf(
+                    changeToAddAddress = { goAddAddress = !goAddAddress },
+                    )
+            } else if(goPatchAddress) {
+                AddressPatch (
+                    changeToPatchAddress = { goPatchAddress = !goPatchAddress },
+                    defaultNameString = defaultNameString,
+                    defaultPhoneString = defaultPhoneString,
+                    )
             } else{
-                ViewAddressList()
+                AddressListContent(
+                    viewEditDelBtn = viewEditDelBtn,
+                    changeToAddAddress = { goAddAddress = !goAddAddress },
+                    changeToPatchAddress = { goPatchAddress = !goPatchAddress },
+                    changeDefaultNameString = { defaultName: String -> defaultNameString = defaultName },
+                    changeDefaultPhoneString = { defaultPhone: String -> defaultPhoneString = defaultPhone }
+                )
             }
 
 

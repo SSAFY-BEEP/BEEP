@@ -2,16 +2,19 @@ package com.example.beep.network.api
 
 import com.example.beep.data.dto.mypage.PresetRequest
 import com.example.beep.data.dto.mypage.PresetResponse
-import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import retrofit2.http.*
 
 interface PresetApi {
-    @GET("preset/find/{uid}")
-    suspend fun getUserPreset(@Path("uid") uid: Int): List<PresetResponse>
+    @GET("preset/find")
+    suspend fun getUserPreset(): Response<List<PresetResponse>>
+
+    @GET("preset/find")
+    suspend fun getUserPresetByToken(): Response<List<PresetResponse>>
 
     @POST("preset/save")
-    suspend fun updatePreset(@Body preset: PresetRequest)
+    suspend fun updatePreset(@Body preset: PresetRequest) :Response<String>
 
     @DELETE("preset/delete/{pid}")
-    suspend fun deletePreset(@Path("pid") pid: Int)
+    suspend fun deletePreset(@Path("pid") pid: Long) : Response<String>
 }

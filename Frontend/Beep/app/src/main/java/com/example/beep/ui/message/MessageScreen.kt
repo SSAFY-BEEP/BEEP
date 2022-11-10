@@ -18,44 +18,67 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.util.collectAsStateLifecycleAware
 import android.util.Log
+import retrofit2.Response
 
 @Composable
-fun MessageScreen(viewModel: MessageViewModel = viewModel(), onNextButtonClicked: () -> Unit) {
+fun MessageScreen(
+    messageViewModel: MessageViewModel = viewModel(),
+    onNextButtonClicked: () -> Unit
+) {
     var toggleMenu by remember { mutableStateOf(true) }
-    val receiveMessageList: List<MessageResponse> by viewModel.receiveMessages.collectAsStateLifecycleAware(
-        initial = emptyList()
+    val receiveMessageList = messageViewModel.receiveMessages.collectAsStateLifecycleAware(
+        initial = Response.success(emptyList())
     )
-    val sendMessageList: List<MessageResponse> by viewModel.sendMessages.collectAsStateLifecycleAware(
-        initial = emptyList()
+    val sendMessageList = messageViewModel.sendMessages.collectAsStateLifecycleAware(
+//        initial = emptyList<MessageResponse>()
+        initial = Response.success(emptyList())
+
     )
-    Log.d("API", "receive $receiveMessageList")
-    Log.d("API", "send $sendMessageList")
+    Log.d("RECEIVE", "receive ${receiveMessageList.value.body().toString()}")
+    Log.d("SEND", "send ${sendMessageList.value.body().toString()}")
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//            테스트용 버튼
+//            Button(onClick = { messageViewModel.changeTag(8, "test") }) {
+//
+//            }
             SwitchReceivedSent(
                 currentMenu = toggleMenu,
                 selectReceived = { toggleMenu = true },
                 selectSent = { toggleMenu = false })
             Column(modifier = Modifier.weight(4f)) {
-                if (toggleMenu) MessageList(
-                    modifier = Modifier,
-                    currentMenu = toggleMenu,
-                    messageList = receiveMessageList, onDelete = { id: Long ->
-                        viewModel.deleteMessage(
-                            id
-                        )
-                    })
-                else MessageList(
-                    modifier = Modifier,
-                    currentMenu = toggleMenu,
-                    messageList = sendMessageList, onDelete = { id: Long ->
-                        viewModel.deleteMessage(
-                            id
-                        )
-                    })
+                if (toggleMenu) {
+                    if (sendMessageList.value.code() == 200) {
+                        MessageList(
+                            modifier = Modifier,
+                            currentMenu = toggleMenu,
+                            messageList = receiveMessageList.value.body()!!,
+                            onDelete = { id: Long ->
+                                messageViewModel.deleteMessage(
+                                    id
+                                )
+                            })
+                    } else {
+                        Text(text = "오류가 발생했습니다.")
+                    }
+                } else {
+                    if (sendMessageList.value.code() == 200) {
+                        MessageList(
+                            modifier = Modifier,
+                            currentMenu = toggleMenu,
+                            messageList = sendMessageList.value.body()!!,
+                            onDelete = { id: Long ->
+                                messageViewModel.deleteMessage(
+                                    id
+                                )
+                            })
+                    } else {
+                        Text(text = "오류가 발생했습니다.")
+                    }
+                }
             }
         }
     }
@@ -65,8 +88,8 @@ fun MessageScreen(viewModel: MessageViewModel = viewModel(), onNextButtonClicked
 fun DeleteDialog(id: (Long) -> Unit) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = "삭제 하시겠습니까?")},
-        text = {Text(text = "메시지가 삭제됩니다.")},
+        title = { Text(text = "삭제 하시겠습니까?") },
+        text = { Text(text = "메시지가 삭제됩니다.") },
         confirmButton = {
             TextButton(onClick = { /*onDelete(id)*/ }) {
                 Text("확인")

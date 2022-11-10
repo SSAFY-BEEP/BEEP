@@ -89,11 +89,12 @@ public class MessageServiceImpl implements MessageService{
         return result;
     }
 
+    @Transactional
     @Override
     public void deleteMessage(Long messageId) {
         try{
             //음성파일 있으면 S3 삭제
-            Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+            Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
             if(message.getAudioUri()!=null){
                 s3Service.deleteFile(message.getAudioUri(), S3Type.PERMANENT.getNum());
             }
@@ -158,12 +159,13 @@ public class MessageServiceImpl implements MessageService{
     }
 
     //보관/차단 메세지 타입 변경
+    @Transactional
     @Override
     public String changeMessageType(Long messageId,Integer type) {
-        Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
+        Message message = messageRepository.findById(messageId).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
         //바꾸려는 타입이랑 현재타입이 같으면 에러!
-        if(type == message.getType()) throw new CustomException(ErrorCode.BAD_REQUEST);
+        if(type == message.getType()) throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
 
         //차단->보관 이면 차단관계 삭제
         else if(message.getType()==2 && type==1){

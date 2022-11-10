@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,7 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.data.dto.message.Message24Response
+import com.example.beep.di.MainApplication
 import com.example.beep.util.collectAsStateLifecycleAware
+import retrofit2.Response
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -30,11 +34,26 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen() {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     var sendText by remember { mutableStateOf(false) }
     val image = painterResource(R.drawable.bbibbi_white)
 
+    //프리셋가져오기
+    val presetList = presetViewModel.getPresetByToken()
+
+    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
+        initial = Response.success(
+            emptyList()
+        )
+    );
+    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
+        initial = Response.success(
+            emptyList()
+        )
+    );
+//    Log.d("Message24 Receive", receiveMsg.value.get(0).toString())
+//    Log.d("Message24 Send", sendMsg.value.get(0).toString())
 
     Column(
         modifier = Modifier
@@ -54,7 +73,8 @@ fun HomeScreen() {
                 contentScale = ContentScale.FillWidth
             )
             Button(
-                onClick = { /*showMessage*/ },
+                //임시로 메시지 보내기 넣음
+                onClick = { /*showMessage*/ homeViewModel.sendMsg(null, "5012", "01012345678") },
                 modifier = Modifier
                     .width(70.dp)
                     .offset(60.dp, 133.dp)
@@ -82,7 +102,7 @@ fun HomeScreen() {
                 ),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.0001F)),
                 shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
-                ) {
+            ) {
 
             }
             if (sendText) {
