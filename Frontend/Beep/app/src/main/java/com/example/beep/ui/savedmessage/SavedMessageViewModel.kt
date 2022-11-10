@@ -29,7 +29,6 @@ class SavedMessageViewModel @Inject constructor(
     private val messageUseCase: MessageUseCase,
 ) :
     ViewModel() {
-
     var savedMessageUiState: UiState<Any> by mutableStateOf(UiState.Loading)
 
     fun changeTag(id: Long, tag: String) {
@@ -49,7 +48,7 @@ class SavedMessageViewModel @Inject constructor(
         var result: BaseResponse<Any> = BaseResponse("Before Init", "BeforeInit")
         when (type) {
             SavedMessageType.SEND -> {
-                result = messageUseCase.getSend()
+//                result = messageUseCase.getSend()
             }
             SavedMessageType.RECEIVED -> {
                 messageUseCase.getReceive(1)
