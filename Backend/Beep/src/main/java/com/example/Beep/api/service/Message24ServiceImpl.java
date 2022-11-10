@@ -97,49 +97,45 @@ public class Message24ServiceImpl implements  Message24Service{
     @Transactional
     @Override
     public void sendMessageWithFile(MultipartFile file,S3RequestDto.sendMessage24 message) {
-        String userNum = SecurityUtil.getCurrentUsername().get();
-
         //보낸사람, 받은사람 기준으로 데이터 2번 저장
+        String userNum = SecurityUtil.getCurrentUsername().get();
+        User receiver = userRepository.findByPhoneNumber(message.getReceiverNum()).orElse(null);
 
         //발신자데이터로 Message24 저장
         saveMessage24ForOwner(file, message, userNum, userNum);
 
-        Optional<User> receiver = userRepository.findByPhoneNumber(message.getReceiverNum());
-
-        if(!receiver.isPresent() || receiver.get().getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
+        if(receiver == null || receiver.getAuthority()== Authority.ROLE_LEAVE){ //비회원일 경우
             //초대메세지 보내기
             smsService.sendInviteSMS(message.getReceiverNum());
 
-        } else {            //회원일 경우
-            //차단 여부
+        } else { //회원일 경우
+            //차단 여부 확인
             boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
-            if(!isBlocked){ //차단 안됐을 경우에만 수신자에도 메세지 데이터 저장
-                saveMessage24ForOwner(file, message,userNum, message.getReceiverNum());
+            if (!isBlocked) { //차단 안됐을 경우
+                //앱이 백그라운드일때 수신될 알림
+                Notification notification = Notification.builder()
+                        .setTitle("[BEEP]")
+                        .setBody("메시지가 도착했습니다!!")
+                        .build();
+                try {
+                    //fcm 메시지 작성
+                    com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
+                            .setNotification(notification)
+                            .setToken(receiver.getFcmToken())
+                            .putData("", "[BEEP]")
+                            .putData("content", "메시지 도착 : " + message.getContent())
+                            .build();
+                    //보내기
+                    String result = FirebaseMessaging.getInstance().send(fcmMessage);
+                    //성공
+                    System.out.println("Send Success " + result);
+                    saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
             }
-
-            // 추후에fcm토큰 생기면 수정
-//            try {
-//                // 받을 상대의 fcm 토큰
-//                String registrationToken = receiver.get().getFcmToken();
-//                // See documentation on defining a message payload.
-//                com.google.firebase.messaging.Message fcmMessage = com.google.firebase.messaging.Message.builder()
-//                        .setNotification(Notification.builder()
-//                                .setTitle("[BEEP] 삐삐가 도착했어요!")
-//                                .setBody(message.getContent())
-//                                .build())
-//                        .setToken(registrationToken)
-//                        .build();
-//
-//                String response = FirebaseMessaging.getInstance().send(fcmMessage);
-//                // 성공하면 메시지 아이디를 반환함
-//                System.out.println("Successfully sent message: " + response);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return;
-//            }
         }
-
-
     }
 
     //해당 owner용 데이터 저장
@@ -223,7 +219,7 @@ public class Message24ServiceImpl implements  Message24Service{
         String userNum = SecurityUtil.getCurrentUsername().get();
         //해당 메세지id로 메세지 삭제
         Message24 message24 = repository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
-        
+
         //삭제하는 유저가 해당 메세지 데이터 소유자가 아니면 에러
         if(!message24.getOwnerNum().equals(userNum) ) throw new CustomException(ErrorCode.METHOD_NOT_ACCEPTABLE);
 
