@@ -70,6 +70,9 @@ public class PhoneBookServiceImpl implements PhoneBookService {
         PhoneBook target = phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(phone, user.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         target.update(update.getPhone(), update.getName());
+        if(phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(target.getTargetPhone(), user.getId()).isPresent()){
+            throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
+        }
         phoneBookRepository.save(target);
         PhoneBookResponseDto.Phone result = PhoneBookResponseDto.Phone.builder()
                 .phone(target.getTargetPhone())
