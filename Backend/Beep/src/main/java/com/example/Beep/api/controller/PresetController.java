@@ -27,9 +27,9 @@ public class PresetController {
 
     private final PresetServiceImpl presetService;
 
-    @ApiOperation(value = "프리셋 설정 및 업데이트", notes = "프리셋 설정 및 업데이트(pid=1 : 메세지, pid=2 : 연락처)")
+    @ApiOperation(value = "프리셋 설정 및 업데이트(유저토큰)", notes = "프리셋 설정 및 업데이트(pid=1 : 메세지, pid=2 : 연락처)")
     @PostMapping("/save")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<?> PresetSave(@RequestBody PresetRequestDto presetRequestDto){
         presetService.PresetSave(presetRequestDto);
         return new ResponseEntity<>("Success", HttpStatus.OK);

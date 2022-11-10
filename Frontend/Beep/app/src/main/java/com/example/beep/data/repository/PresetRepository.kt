@@ -1,13 +1,13 @@
 package com.example.beep.data.repository
 
 import com.example.beep.data.dto.mypage.PresetResponse
-import com.example.beep.data.repository.datasource.PresetDataSource
+import com.example.beep.data.datasource.PresetDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import javax.inject.Inject
 
-class PresetRepository @Inject constructor(private val presetDataSource: PresetDataSource ) {
+class PresetRepository @Inject constructor(private val presetDataSource: PresetDataSource) {
     fun getUserPreset(): Flow<Response<List<PresetResponse>>> =
         flow { presetDataSource.getUserPreset().collect { emit(it) } }
 
