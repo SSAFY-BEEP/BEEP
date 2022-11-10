@@ -98,7 +98,26 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             signUpUseCase.execute(request).collectLatest {
+                if(it is ResultType.Success){
                     Log.d("성공 결과","$it")
+                    val request =
+                        LoginRequest(
+                            phoneNumber = state.phoneNumber,
+                            password = state.password
+                        )
+                    loginUseCase.execute(request).collectLatest { it ->
+                        if(it is ResultType.Success) {
+                            Log.d("text log","$it")
+                            MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
+                        } else {
+                            Log.d("error", "$it")
+                        }
+                    }
+                } else {
+                    Log.d("실패","$it")
+
+                }
+
             }
         }
     }
