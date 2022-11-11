@@ -18,66 +18,62 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.util.collectAsStateLifecycleAware
 import android.util.Log
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.message.UiState
 import retrofit2.Response
 
 @Composable
 fun SavedMessageScreen(
     viewModel: SavedMessageViewModel = viewModel(),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     navigateTo: (String) -> Unit
 ) {
-    var toggleMenu by remember { mutableStateOf(true) }
-
-    Log.d("RECEIVE", "receive ${receiveMessageList.value.body().toString()}")
-    Log.d("SEND", "send ${sendMessageList.value.body().toString()}")
+    Log.d("MessageType", viewModel.currentSavedMessageType.name)
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        when (viewModel.savedMessageUiState) {
-            is UiState.Loading -> {}
-            is UiState.Success -> {}
-            is UiState.Error -> {}
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            SwitchReceivedSent(
-                currentMenu = toggleMenu,
-                selectReceived = { toggleMenu = true },
-                selectSent = { toggleMenu = false })
-            Column(modifier = Modifier.weight(4f)) {
-                if (toggleMenu) {
-                    if (sendMessageList.value.code() == 200) {
-                        MessageList(
-                            modifier = Modifier,
-                            currentMenu = toggleMenu,
-                            messageList = receiveMessageList.value.body()!!,
-                            onDelete = { id: Long ->
-                                messageViewModel.deleteMessage(
-                                    id
-                                )
-                            })
-                    } else {
-                        Text(text = "오류가 발생했습니다.")
-                    }
-                } else {
-                    if (sendMessageList.value.code() == 200) {
-                        MessageList(
-                            modifier = Modifier,
-                            currentMenu = toggleMenu,
-                            messageList = sendMessageList.value.body()!!,
-                            onDelete = { id: Long ->
-                                messageViewModel.deleteMessage(
-                                    id
-                                )
-                            })
-                    } else {
-                        Text(text = "오류가 발생했습니다.")
-                    }
-                }
+        when (val currentUiState = viewModel.savedMessageUiState) {
+            is UiState.Loading -> {
+                LoadingScreen()
+            }
+            is UiState.Success -> {
+                SavedMessageSuccessScreen(messageList = currentUiState.data)
+            }
+            is UiState.Error -> {
+                ErrorScreen()
             }
         }
     }
 }
+
+@Composable
+fun SavedMessageSuccessScreen(
+    messageList: List<MessageResponse>,
+    modifier: Modifier = Modifier,
+    viewModel: SavedMessageViewModel = viewModel()
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        SwitchReceivedSent(
+            currentMenu = viewModel.currentSavedMessageType,
+            selectReceived = { viewModel.changeCurrentSavedMessageType(SavedMessageType.RECEIVED) },
+            selectSent = { viewModel.changeCurrentSavedMessageType(SavedMessageType.SEND) })
+        Column(modifier = Modifier.weight(4f)) {
+            MessageList(
+                modifier = Modifier,
+                currentMenu = viewModel.currentSavedMessageType,
+                messageList = messageList,
+                onDelete = { id: Long ->
+                    viewModel.deleteMessage(id)
+                })
+        }
+    }
+}
+
 
 @Composable
 fun DeleteDialog(id: (Long) -> Unit) {
@@ -99,19 +95,25 @@ fun DeleteDialog(id: (Long) -> Unit) {
 }
 
 @Composable
-fun SwitchReceivedSent(currentMenu: Boolean, selectReceived: () -> Unit, selectSent: () -> Unit) {
+fun SwitchReceivedSent(
+    currentMenu: SavedMessageType,
+    selectReceived: () -> Unit,
+    selectSent: () -> Unit
+) {
     Row(horizontalArrangement = Arrangement.Center) {
         Button(
             onClick = selectReceived,
             colors =
-            if (currentMenu) ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            if (currentMenu == SavedMessageType.RECEIVED) ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
             Text(text = "수신")
         }
         Button(
             onClick = selectSent, colors =
-            if (!currentMenu) ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            if (currentMenu == SavedMessageType.SEND) ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primary
+            )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
             Text(text = "송신")
@@ -123,39 +125,27 @@ fun SwitchReceivedSent(currentMenu: Boolean, selectReceived: () -> Unit, selectS
 @Composable
 fun MessageList(
     modifier: Modifier = Modifier,
-    currentMenu: Boolean,
+    currentMenu: SavedMessageType,
     messageList: List<MessageResponse>,
     onDelete: (Long) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
-        if (currentMenu) {
-            items(messageList) {
-                MessageItem(
-                    message = it,
-                    modifier = modifier,
-                    currentMenu = currentMenu,
-                    onDelete = onDelete
-                )
-            }
-        } else {
-            items(messageList) {
-                MessageItem(
-                    message = it,
-                    modifier = modifier,
-                    currentMenu = currentMenu,
-                    onDelete = onDelete
-                )
-            }
+        items(messageList) {
+            MessageItem(
+                message = it,
+                modifier = modifier,
+                currentMenu = currentMenu,
+                onDelete = onDelete
+            )
         }
     }
-
 }
 
 @Composable
 fun MessageItem(
     message: MessageResponse,
     modifier: Modifier = Modifier,
-    currentMenu: Boolean,
+    currentMenu: SavedMessageType,
     onDelete: (Long) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -224,7 +214,7 @@ fun AudioBtn(audioUri: String?) {
 }
 
 @Composable
-fun MessageOptions(currentMenu: Boolean, onDelete: Unit) {
+fun MessageOptions(currentMenu: SavedMessageType, onDelete: Unit) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         IconButton(onClick = { /*TODO*/ }) {
             Icon(
@@ -233,7 +223,7 @@ fun MessageOptions(currentMenu: Boolean, onDelete: Unit) {
                 contentDescription = "message share button",
             )
         }
-        if (currentMenu) {
+        if (currentMenu == SavedMessageType.RECEIVED) {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
@@ -249,7 +239,7 @@ fun MessageOptions(currentMenu: Boolean, onDelete: Unit) {
                 contentDescription = "message delete button",
             )
         }
-        if (currentMenu) {
+        if (currentMenu == SavedMessageType.RECEIVED) {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
                     imageVector = Icons.Filled.Block,
