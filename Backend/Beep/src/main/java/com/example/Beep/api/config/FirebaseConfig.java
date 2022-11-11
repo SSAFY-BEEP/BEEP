@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
 
 @Configuration
 public class FirebaseConfig {
@@ -16,13 +18,11 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         try {
-//            FileInputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
             FirebaseOptions options = new FirebaseOptions.Builder()
-//                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setCredentials(GoogleCredentials.getApplicationDefault())      //환경 변수 설정으로 변경
                     .build();
-            FirebaseApp.initializeApp(options);
-        }catch (Exception e){
+            firebaseApp = FirebaseApp.initializeApp(options);
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
