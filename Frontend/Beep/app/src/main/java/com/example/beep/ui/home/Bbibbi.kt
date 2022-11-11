@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -14,6 +15,7 @@ import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.util.collectAsStateLifecycleAware
 
+@ExperimentalComposeUiApi
 @Composable
 fun Bbibbi(
     homeViewModel: HomeViewModel = viewModel(),

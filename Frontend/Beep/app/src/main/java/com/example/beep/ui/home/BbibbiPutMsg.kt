@@ -1,6 +1,9 @@
 package com.example.beep.ui.home
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -8,40 +11,38 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@ExperimentalComposeUiApi
 @Composable
 fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
 
     ) {
-//    val viewModel = viewModel<KeyboardViewModel>()
-//    val state = viewModel.state.number1
+
+    val viewModel = viewModel<KeyboardViewModel>()
+
     var defaultNameString by remember { mutableStateOf("") }
 
-    Button(
-        // 다시 연락처 입력 페이지로
-        onClick = {
-            /* cancel 버튼 */
-            toPutAddress()
-        },
+
+    /* cancel 버튼 */
+    ResetButton(
         modifier = Modifier
-            .width(69.dp)
-            .offset(60.dp, 133.dp)
-            .height(45.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            disabledElevation = 0.dp
-        ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green.copy(0.2F)),
-        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
+        // 입력값 리셋 필요
+        viewModel.onAction(KeyboardAction.Clear)
+        // 다시 연락처 입력 페이지로
+        toPutAddress()
     }
+
     Button(
         onClick = {
             /* go버튼 */
@@ -60,7 +61,7 @@ fun BbibbiPutMsg(
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green.copy(0.3F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
     ) {
 
@@ -95,3 +96,31 @@ fun ViewMyText(
         fontFamily = galmurinineFont
     )
 }
+
+
+
+@ExperimentalComposeUiApi
+@Composable
+fun ResetButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+//    toPutAddress: () -> Unit,
+    ) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .offset(60.dp, 133.dp)
+            .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp))
+            .width(69.dp)
+            .height(45.dp)
+            .clickable {
+                onClick()
+            }
+            .background(color = Color.Green.copy(0.3F))
+    ) {
+    }
+}
+
+
+
+

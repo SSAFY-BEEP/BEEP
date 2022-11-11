@@ -7,35 +7,29 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@ExperimentalComposeUiApi
 @Composable
 fun BbibbiPutAddress(
     toPutMsg: () -> Unit
 ) {
+    val viewModel = viewModel<KeyboardViewModel>()
 
-    Button(
-        // 연락처 입력해놓은거 리셋시키기
-        onClick = {
-            /* cancel 버튼 */
-        },
+
+    /* cancel 버튼 */
+    ResetButton(
         modifier = Modifier
-            .width(69.dp)
-            .offset(60.dp, 133.dp)
-            .height(45.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            disabledElevation = 0.dp
-        ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.2F)),
-        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
+        // 연락처 입력해놓은거 리셋시키기
+        viewModel.onAction(KeyboardAction.Clear)
     }
+
     Button(
         // 메시지 입력 페이지로
         onClick = {
