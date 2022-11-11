@@ -3,13 +3,11 @@ package com.example.beep.ui.mypage
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 enum class MyPageState {
@@ -99,8 +97,6 @@ fun MyPageMain(onClickMenu: (String) -> Unit, changeMenuState: (MyPageState) -> 
         TextButton(onClick = { changeMenuState(MyPageState.Member) }) {
             Text("회원 설정")
         }
-        TextButton(onClick = { /*TODO*/ }) {
-            Text("뒤로 가기")
-        }
     }
 }
+

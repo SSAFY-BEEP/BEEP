@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="firebase_color">#FF0000</color>
+    <color name="background_white">#F5F8FF</color>
+    <color name="beep_blue">#7AA8FF</color>
+    <color name="beep_blue_light">#7AA8FF</color>
+    <color name="beep_pink">#FF8C8C</color>
 </resources>

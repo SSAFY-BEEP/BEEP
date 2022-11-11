@@ -22,6 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.data.BottomNavItem
 import com.example.beep.ui.navigation.BeepNavGraph
+import com.example.beep.ui.theme.BLUE100
+import com.example.beep.ui.theme.GRAY500
+import com.example.beep.ui.theme.PINK500
 
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -67,7 +70,7 @@ fun BeepApp() {
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
     TopAppBar(modifier = modifier.fillMaxWidth()) {
-        Text(text = "Beep", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center)
     }
 }
 
@@ -82,7 +85,7 @@ fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = Color.DarkGray,
+        backgroundColor = BLUE100,
         elevation = 5.dp
     ) {
         // items 배열에 담긴 모든 항목을 추가합니다.
@@ -92,8 +95,8 @@ fun BottomNavigationBar(
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
-                selectedContentColor = Color.Green,
-                unselectedContentColor = Color.Green,
+                selectedContentColor = PINK500,
+                unselectedContentColor = GRAY500,
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
@@ -101,13 +104,13 @@ fun BottomNavigationBar(
                             contentDescription = item.name
                         )
                         // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
-                        if (selected) {
-                            Text(
-                                text = item.name,
-                                textAlign = TextAlign.Center,
-                                fontSize = 10.sp
-                            )
-                        }
+//                        if (selected) {
+//                            Text(
+//                                text = item.name,
+//                                textAlign = TextAlign.Center,
+//                                fontSize = 10.sp
+//                            )
+//                        }
                     }
                 }
             )
