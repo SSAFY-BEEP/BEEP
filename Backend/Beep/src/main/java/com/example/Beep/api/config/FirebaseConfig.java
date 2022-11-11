@@ -16,20 +16,10 @@ public class FirebaseConfig {
     private FirebaseApp firebaseApp;
 
     @PostConstruct
-    public void init() throws IOException {
-        List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
-
-        if(firebaseApps != null && !firebaseApps.isEmpty()){
-
-            for(FirebaseApp app : firebaseApps){
-                if(app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)) {
-                    firebaseApp = app;
-                }
-            }
-
-        }else{
+    public void init() {
+        try {
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.getApplicationDefault())
+                    .setCredentials(GoogleCredentials.getApplicationDefault())      //환경 변수 설정으로 변경
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
         }
