@@ -23,19 +23,19 @@ class AddressPostSelfViewModel @Inject constructor(private val postUserAddressUs
 
     fun postAddress(phone: String, name: String){
         viewModelScope.launch(Dispatchers.IO) {
-            postUserAddressUseCase.execute(phone, name).collectLatest {
-                if (it is ResultType.Success) {
-                    Log.d("성공","$it")
-//                    addressPostStatus = ResultType.Success(it.data)
-                } else {
-                    Log.d("실패", "$it")
-//                    addressPostStatus = ResultType.Fail
-                }
-                Log.d("Phone", phone)
-                Log.d("Name", name)
-//                Log.d("POST ADDRESS", it)
-
-            }
+//            postUserAddressUseCase.execute(phone, name).collectLatest {
+//                if (it is ResultType.Success) {
+//                    Log.d("성공","$it")
+////                    addressPostStatus = ResultType.Success(it.data)
+//                } else {
+//                    Log.d("실패", "$it")
+////                    addressPostStatus = ResultType.Fail
+//                }
+//                Log.d("Phone", phone)
+//                Log.d("Name", name)
+////                Log.d("POST ADDRESS", it)
+//
+//            }
         }
     }
 }

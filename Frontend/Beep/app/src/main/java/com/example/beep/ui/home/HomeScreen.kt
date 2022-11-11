@@ -36,19 +36,15 @@ val galmurinineFont = FontFamily(
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
-    var sendText by remember { mutableStateOf(false) }
-    val image = painterResource(R.drawable.bbibbi_white)
+    val image = painterResource(R.drawable.bbibbi_blue)
 
     //프리셋가져오기
 //    val presetList = presetViewModel.getPresetByToken()
 
-    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
-        initial = emptyList<BaseResponse<Message24Response>>()
-    );
+
     val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
         initial = emptyList<BaseResponse<Message24Response>>()
     );
-    Log.d("Message24 Receive", receiveMsg.value.toString())
     Log.d("Message24 Send", sendMsg.value.toString())
 
     Column(
@@ -68,44 +64,8 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
                     .width(320.dp),
                 contentScale = ContentScale.FillWidth
             )
-            Button(
-                //임시로 메시지 보내기 넣음
-                onClick = { /*showMessage*/ homeViewModel.sendMsg(null, "5012", "01012345678") },
-                modifier = Modifier
-                    .width(70.dp)
-                    .offset(60.dp, 133.dp)
-                    .height(45.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.1F)),
-                shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 30.dp)
-            ) {
+            Bbibbi()
 
-            }
-            Button(
-                onClick = { sendText = !sendText },
-                modifier = Modifier
-                    .width(83.dp)
-                    .offset(252.dp, 110.dp)
-                    .height(67.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.0001F)),
-                shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
-            ) {
-
-            }
-            if (sendText) {
-                AskGoingToRecord()
-            } else {
-                ViewMyText()
-            }
         }
         KeyboardVsAddressChoice()
     }
@@ -115,22 +75,5 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
 
 
 
-
-@Preview
-@Composable
-fun ViewMyText() {
-    val viewModel = viewModel<KeyboardViewModel>()
-    val state = viewModel.state
-    Text(
-        text = state.number1,
-        modifier = Modifier
-
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(top = 45.dp),
-        fontSize = 19.sp,
-        fontFamily = galmurinineFont
-    )
-}
 
 

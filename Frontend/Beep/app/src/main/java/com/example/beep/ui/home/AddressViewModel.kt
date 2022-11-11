@@ -28,20 +28,20 @@ class AddressViewModel @Inject constructor(private val getUserAddressUseCase: Ge
     var addressUiState:AddressUiState<Any> by mutableStateOf(AddressUiState.Loading)
 
 
-    fun getAddress(){
-        viewModelScope.launch(Dispatchers.Main) {
-            addressUiState = AddressUiState.Loading
-            getUserAddressUseCase.execute().collectLatest {
-                addressUiState = if(it is ResultType.Success){
-                    Log.d("성공","$it")
-                    AddressUiState.Success(it.data.data)
-                }else{
-                    Log.d("실패", "$it")
-                    AddressUiState.Fail
-                }
-            }
-        }
-    }
+//    fun getAddress(){
+//        viewModelScope.launch(Dispatchers.Main) {
+//            addressUiState = AddressUiState.Loading
+//            getUserAddressUseCase.execute().collectLatest {
+//                addressUiState = if(it is ResultType.Success){
+//                    Log.d("성공","$it")
+//                    AddressUiState.Success(it.data.data)
+//                }else{
+//                    Log.d("실패", "$it")
+//                    AddressUiState.Fail
+//                }
+//            }
+//        }
+//    }
 
 //         val exampleEntities: Flow<List<AddressResponse>> = getUserAddressUseCase.execute()
 
@@ -61,6 +61,6 @@ class AddressViewModel @Inject constructor(private val getUserAddressUseCase: Ge
 //    }
 
     init {
-        getAddress()
+//        getAddress()
     }
 }
