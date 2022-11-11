@@ -20,6 +20,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,8 @@ public class Message24ServiceImpl implements  Message24Service{
     private final S3Service s3Service;
     private final SMSService smsService;
     private final BlockService blockService;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     //받은 메세지 조회(보관, 차단)
@@ -130,9 +134,12 @@ public class Message24ServiceImpl implements  Message24Service{
                     //성공
                     System.out.println("Send Success " + result);
                     saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
-                } catch (Exception e) {
+                } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
-
+                    logger.error("Send Fail---->", e);
+                    System.out.println("Send Fail");
+                    System.out.println(e.getMessagingErrorCode());
+                    System.out.println(e.getMessage());
                 }
             }
         }
