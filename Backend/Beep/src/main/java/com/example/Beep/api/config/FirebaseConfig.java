@@ -22,6 +22,8 @@ public class FirebaseConfig {
                     .setCredentials(GoogleCredentials.getApplicationDefault())      //환경 변수 설정으로 변경
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
