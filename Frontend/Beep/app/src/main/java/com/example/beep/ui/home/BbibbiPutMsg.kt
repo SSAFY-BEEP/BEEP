@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
-
+    toAskRecord: () -> Unit
     ) {
 
     val viewModel = viewModel<KeyboardViewModel>()
@@ -46,10 +46,11 @@ fun BbibbiPutMsg(
     Button(
         onClick = {
             /* go버튼 */
-                  if (defaultNameString.isEmpty()) {
+                  if (defaultNameString == "메시지를 입력해주세요") {
                       // 내용을 입력해주세요
                   } else if (defaultNameString.length < 12) {
                       // 음성을 녹음하시겠습니까
+                      toAskRecord()
                   }
         },
         modifier = Modifier
@@ -91,7 +92,7 @@ fun ViewMyText(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(top = 45.dp),
+            .padding(top = 48.dp),
         fontSize = 19.sp,
         fontFamily = galmurinineFont
     )

@@ -38,8 +38,16 @@ fun Bbibbi(
     } else if (currentPage == "PutMsg") {
         BbibbiPutMsg(
             toPutAddress = {currentPage = "PutAddress"},
+            toAskRecord = {currentPage = "AskRecord"}
 
             )
+    } else if (currentPage == "AskRecord") {
+        BbibbiAskToRecord (
+            toPutMsg = {currentPage = "PutMsg"},
+            toSendMsg = {currentPage = "SendMsg"}
+        )
+    } else if (currentPage == "SendMsg") {
+        BbibbiAskToSend()
     } else if (receiveMsg.value.toString().length > 10) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
@@ -48,7 +56,7 @@ fun Bbibbi(
         )
     } else {
         BbibbiPutAddress(
-            toPutMsg = {currentPage = "PutMsg"}
+            toPutMsg = {currentPage = "PutMsg"},
         )
     }
 }

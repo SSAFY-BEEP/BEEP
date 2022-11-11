@@ -68,7 +68,7 @@ fun BbibbiShowMessage(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(top = 45.dp),
+            .padding(top = 48.dp),
         fontSize = 19.sp,
         fontFamily = galmurinineFont
     )
