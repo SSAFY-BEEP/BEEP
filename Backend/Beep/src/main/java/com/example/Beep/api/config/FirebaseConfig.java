@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
 
 @Configuration
 public class FirebaseConfig {
@@ -19,9 +21,7 @@ public class FirebaseConfig {
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.getApplicationDefault())      //환경 변수 설정으로 변경
                     .build();
-            FirebaseApp.initializeApp(options, "BeepApp");
-        }catch (Exception e){
-            e.printStackTrace();
+            firebaseApp = FirebaseApp.initializeApp(options);
         }
     }
 }
