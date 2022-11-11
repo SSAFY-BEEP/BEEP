@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     protected ApiResult handleException(final Exception e) {
-        log.error("handleException: {}", e.getMessage());
+        log.error("handleException: {}", e);
         return new ApiResult(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

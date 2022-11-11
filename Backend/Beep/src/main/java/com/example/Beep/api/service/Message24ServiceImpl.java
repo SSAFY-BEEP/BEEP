@@ -115,6 +115,7 @@ public class Message24ServiceImpl implements  Message24Service{
         } else { //회원일 경우
             //차단 여부 확인
             boolean isBlocked = blockService.isBlocked(message.getReceiverNum());
+            logger.debug("Blocked!!!!-----------------" + isBlocked);
             if (!isBlocked) { //차단 안됐을 경우
                 //앱이 백그라운드일때 수신될 알림
                 Notification notification = Notification.builder()
@@ -132,14 +133,10 @@ public class Message24ServiceImpl implements  Message24Service{
                     //보내기
                     String result = FirebaseMessaging.getInstance().send(fcmMessage);
                     //성공
-                    System.out.println("Send Success " + result);
+                    logger.info("Send Success", result);
                     saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
                 } catch (FirebaseMessagingException e) {
-                    e.printStackTrace();
-                    logger.error("Send Fail---->", e);
-                    System.out.println("Send Fail");
-                    System.out.println(e.getMessagingErrorCode());
-                    System.out.println(e.getMessage());
+                    logger.error("Send Fail----");
                 }
             }
         }

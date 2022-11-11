@@ -21,7 +21,7 @@ public class FirebaseConfig {
 //                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setCredentials(GoogleCredentials.getApplicationDefault())      //환경 변수 설정으로 변경
                     .build();
-            FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options, "BeepApp");
         }catch (Exception e){
             e.printStackTrace();
         }
