@@ -2,6 +2,11 @@
 <resources>
 
     <style name="Theme.Beep" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+<<<<<<< Updated upstream
+        <item name="android:statusBarColor">@color/beep_blue_light</item>
+<!--        <item name="android:windowBackground">@color/background_white</item>-->
+=======
+        <item name="android:statusBarColor">@color/pink</item>
+>>>>>>> Stashed changes
     </style>
 </resources>
