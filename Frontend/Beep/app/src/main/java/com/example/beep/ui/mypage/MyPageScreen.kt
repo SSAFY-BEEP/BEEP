@@ -1,5 +1,6 @@
 package com.example.beep.ui.mypage
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.beep.ui.theme.BACKGROUND_WHITE
 
 
 enum class MyPageState {
@@ -18,7 +20,7 @@ enum class MyPageState {
 fun MyPageScreen(onClickMenu: (String) -> Unit) {
     var currentStage by remember { mutableStateOf(MyPageState.Main) }
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(BACKGROUND_WHITE),
         contentAlignment = Alignment.Center
     ) {
         when (currentStage) {

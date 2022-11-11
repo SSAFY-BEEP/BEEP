@@ -5,17 +5,25 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import com.example.beep.R
+
+
+val galmurinineFont = FontFamily(
+    Font(R.font.galmurinine)
+)
 
 private val DarkColorPalette = darkColors(
-    primary = BLUE500,
-    primaryVariant = BLUE200,
-    secondary = PINK500
+    primary = PINK500,
+    primaryVariant = BLUE500,
+    secondary = GRAY500
 )
 
 private val LightColorPalette = lightColors(
     primary = BLUE500,
-    primaryVariant = BLUE200,
-    secondary = PINK500
+    primaryVariant = PINK500,
+    secondary = GRAY500
 
     /* Other default colors to override
     background = Color.White,
@@ -42,3 +50,4 @@ fun BeepTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable (
         content = content
     )
 }
+

@@ -4,6 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -11,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.beep.R
 import com.example.beep.ui.home.*
 import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.home.HomeViewModel
@@ -21,6 +25,10 @@ import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen
 import com.example.beep.ui.message.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
+
+val galmurinineFont = FontFamily(
+    Font(R.font.galmurinine)
+)
 
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalComposeUiApi::class)
