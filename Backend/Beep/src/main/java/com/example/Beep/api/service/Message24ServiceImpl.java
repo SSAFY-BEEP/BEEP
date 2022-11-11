@@ -130,9 +130,11 @@ public class Message24ServiceImpl implements  Message24Service{
                     //성공
                     System.out.println("Send Success " + result);
                     saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
-                } catch (Exception e) {
+                } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
                     System.out.println("Send Fail");
+                    System.out.println(e.getMessagingErrorCode());
+                    System.out.println(e.getMessage());
                 }
             }
         }
