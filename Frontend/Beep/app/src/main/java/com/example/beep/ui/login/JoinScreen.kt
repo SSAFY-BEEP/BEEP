@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun JoinScreen() {
     val viewModel = viewModel<UserViewModel>()
-    val state = viewModel.state
+    val state = viewModel.authState
     val context = LocalContext.current
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->

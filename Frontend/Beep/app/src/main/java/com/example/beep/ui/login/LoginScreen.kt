@@ -103,7 +103,7 @@ fun LoginScreen() {
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Go
+                    imeAction = ImeAction.Send
                 ),
                 visualTransformation = PasswordVisualTransformation()
             )

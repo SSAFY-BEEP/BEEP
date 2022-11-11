@@ -35,7 +35,7 @@ class UserViewModel @Inject constructor(
 //    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    var state by mutableStateOf(AuthState())
+    var authState by mutableStateOf(AuthState())
 
     var loginState by mutableStateOf(LoginState())
 
@@ -45,16 +45,16 @@ class UserViewModel @Inject constructor(
     fun onEvent(event: AuthFormEvent) {
         when (event) {
             is AuthFormEvent.PhoneNumberChanged -> {
-                state = state.copy(phoneNumber = event.phoneNumber)
+                authState = authState.copy(phoneNumber = event.phoneNumber)
             }
             is AuthFormEvent.PasswordChanged -> {
-                state = state.copy(password = event.password)
+                authState = authState.copy(password = event.password)
             }
             is AuthFormEvent.PasswordCheckChanged -> {
-                state = state.copy(passwordCheck = event.passwordCheck)
+                authState = authState.copy(passwordCheck = event.passwordCheck)
             }
             is AuthFormEvent.AcceptTerms -> {
-                state = state.copy(acceptedTerms = event.isAccepted)
+                authState = authState.copy(acceptedTerms = event.isAccepted)
             }
             is AuthFormEvent.Submit -> {
                 submitData()
@@ -63,13 +63,13 @@ class UserViewModel @Inject constructor(
     }
 
     private fun submitData() {
-        val phoneNumberResult = validatePhoneNumber.execute(state.phoneNumber)
-        val passwordResult = validatePassword.execute(state.password)
+        val phoneNumberResult = validatePhoneNumber.execute(authState.phoneNumber)
+        val passwordResult = validatePassword.execute(authState.password)
         val passwordCheckResult = validatePasswordCheck.execute(
-            state.password,
-            state.passwordCheck
+            authState.password,
+            authState.passwordCheck
         )
-        val termsResult = validateTerms.execute(state.acceptedTerms)
+        val termsResult = validateTerms.execute(authState.acceptedTerms)
 
         val hasError = listOf(
             phoneNumberResult,
@@ -79,7 +79,7 @@ class UserViewModel @Inject constructor(
         ).any { !it.successful }
 
         if (hasError) {
-            state = state.copy(
+            authState = authState.copy(
                 phoneNumberError = phoneNumberResult.errorMessage,
                 passwordError = passwordResult.errorMessage,
                 passwordCheckError = passwordCheckResult.errorMessage,
@@ -91,21 +91,22 @@ class UserViewModel @Inject constructor(
 
         val request =
             SignUpRequest(
-                phoneNumber = state.phoneNumber,
-                password = state.password,
+                phoneNumber = authState.phoneNumber,
+                password = authState.password,
                 fcmToken = fcmToken!!
             )
+        Log.d("입력 값","$request")
 
         viewModelScope.launch(Dispatchers.IO) {
             signUpUseCase.execute(request).collectLatest {
                 if(it is ResultType.Success){
                     Log.d("성공 결과","$it")
-                    val request =
+                    val loginRequest =
                         LoginRequest(
-                            phoneNumber = state.phoneNumber,
-                            password = state.password
+                            phoneNumber = authState.phoneNumber,
+                            password = authState.password
                         )
-                    loginUseCase.execute(request).collectLatest { it ->
+                    loginUseCase.execute(loginRequest).collectLatest {it ->
                         if(it is ResultType.Success) {
                             Log.d("text log","$it")
                             MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
