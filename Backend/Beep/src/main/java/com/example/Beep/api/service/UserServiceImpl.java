@@ -43,8 +43,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseDto.UserDto signUp(UserRequestDto.SignUp signUp) {
+        //중복 번호
         if(userRepository.findByPhoneNumber(signUp.getPhoneNumber()).orElse(null) != null) {
-            throw new CustomException(ErrorCode.METHOD_NO_CONTENT);
+            throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
         }
 
         User user = User.builder()

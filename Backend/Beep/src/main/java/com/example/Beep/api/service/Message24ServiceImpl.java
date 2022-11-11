@@ -132,7 +132,7 @@ public class Message24ServiceImpl implements  Message24Service{
                     saveMessage24ForOwner(file, message, userNum, message.getReceiverNum());
                 } catch (Exception e) {
                     e.printStackTrace();
-
+                    System.out.println("Send Fail");
                 }
             }
         }
