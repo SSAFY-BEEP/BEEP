@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -13,12 +14,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun JoinScreen() {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel = viewModel<UserViewModel>()
     val state = viewModel.authState
     val context = LocalContext.current
@@ -42,6 +47,7 @@ fun JoinScreen() {
             .background(
                 color = Color(0XFFF5F8FF)
             )
+            .clickable { keyboardController?.hide() },
     ) {
 
         Column(

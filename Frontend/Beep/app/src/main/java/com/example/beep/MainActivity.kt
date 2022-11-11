@@ -15,11 +15,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.BeepApp
 import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.login.LoginMainScreen
 import com.example.beep.ui.login.LoginScreen
+import com.example.beep.ui.navigation.RootNavGraph
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
 import com.google.android.gms.tasks.OnCompleteListener
@@ -50,13 +52,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val checkToken = MainApplication.sharedPreferencesUtil.getToken()
-
-                    if (checkToken.isNullOrBlank()) {
-                        LoginScreen()
-                    } else {
-                        BeepApp()
-                    }
+                    val navController = rememberNavController()
+                    RootNavGraph(navController = navController)
                 }
             }
         }

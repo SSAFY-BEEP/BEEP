@@ -169,6 +169,7 @@ class UserViewModel @Inject constructor(
                     if(it is ResultType.Success) {
                         Log.d("text log","$it")
                         MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
+                        true.also { loginState.isLogged }
                     } else {
                         Log.d("error", "$it")
                     }
