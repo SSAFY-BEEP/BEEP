@@ -53,11 +53,13 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public boolean isBlocked(String targetNum) {
+        //현재 회원
         String ownerNum = SecurityUtil.getCurrentUsername().orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
-        User findUser = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
-        User findTarget = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        User findSender = userRepository.findByPhoneNumber(ownerNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        //보낼 대상 회원
+        User findReceiver = userRepository.findByPhoneNumber(targetNum).orElseThrow(()-> new CustomException(ErrorCode.METHOD_NO_CONTENT));
 
-        return blockRepository.existsByUserAndTarget(findUser, findTarget);
+        return blockRepository.existsByUserAndTarget(findReceiver, findSender);
     }
 
     //메세지24 id로 차단관계 저장
