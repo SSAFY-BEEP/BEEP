@@ -21,9 +21,9 @@ import retrofit2.Response
 @Composable
 fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel) {
     val scrollState = rememberScrollState()
-    val userMessagePresetList = viewModel.exampleEntities.collectAsStateLifecycleAware(
-        initial = Response.success(emptyList())
-    )
+//    val userMessagePresetList = viewModel.exampleEntities.collectAsStateLifecycleAware(
+//        initial = Response.success(emptyList())
+//    )
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -33,11 +33,11 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
                 .height(400.dp)
                 .verticalScroll(scrollState)
         ) {
-            for (preset in userMessagePresetList.value.body()!!) {
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "${preset.number} : ${preset.content ?: ""}")
-                }
-            }
+//            for (preset in userMessagePresetList.value.body()!!) {
+//                TextButton(onClick = { /*TODO*/ }) {
+//                    Text(text = "${preset.number} : ${preset.content ?: ""}")
+//                }
+//            }
 //            for (num in 0L..9L) {
 //                TextButton(onClick = { /*TODO*/ }) {
 //                    Text(text = "$num : ${messagePresetList[num]?.content ?: ""}")

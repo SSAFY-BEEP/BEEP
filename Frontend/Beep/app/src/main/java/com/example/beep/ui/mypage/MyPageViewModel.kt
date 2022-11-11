@@ -3,15 +3,15 @@ package com.example.beep.ui.mypage
 import androidx.lifecycle.ViewModel
 import com.example.beep.data.dto.mypage.PresetResponse
 import com.example.beep.domain.PresetUseCase
+import com.example.beep.domain.UserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
 
 @HiltViewModel
-class MyPageViewModel @Inject constructor(private val PresetUseCase: PresetUseCase) :
+class MyPageViewModel @Inject constructor(private val presetUseCase: PresetUseCase) :
     ViewModel() {
     private val uid = 5
     val testValue = "Test Value"
@@ -19,7 +19,7 @@ class MyPageViewModel @Inject constructor(private val PresetUseCase: PresetUseCa
         println(testValue)
     }
 
-    val exampleEntities: Flow<Response<List<PresetResponse>>> = PresetUseCase.getUserPresetByToken()
+//    val exampleEntities: Flow<Response<List<PresetResponse>>> = PresetUseCase.getUserPresetByToken()
 
     /*
         StateFlow를 사용하는 방식

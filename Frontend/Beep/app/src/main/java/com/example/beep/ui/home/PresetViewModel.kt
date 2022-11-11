@@ -3,9 +3,9 @@ package com.example.beep.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beep.domain.PresetUseCase;
-import javax.inject.Inject;
-import dagger.hilt.android.lifecycle.HiltViewModel;
+import com.example.beep.domain.PresetUseCase
+import javax.inject.Inject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseC
     }
 
     //프리셋 수정/추가
-    fun updatePreset(uid : Long, number : Int, part : Int, content : String) {
+    fun updatePreset(number : Int, part : Int, content : String) {
         viewModelScope.launch(Dispatchers.IO) {
             presetUseCase.updatePreset( number, part, content).collectLatest {
                 Log.d("updatePreset", it.toString())
