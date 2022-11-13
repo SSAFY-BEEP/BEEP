@@ -32,9 +32,11 @@ class SavedMessageViewModel @Inject constructor(
     val gson = Gson()
     var savedMessageUiState: UiState<List<MessageResponse>> by mutableStateOf(UiState.Loading)
     var currentSavedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
-    var savedmessageAudioState: SavedMessageAudioState by mutableStateOf(SavedMessageAudioState())
-    var showDialog by mutableStateOf(false)
-    var idToDelete by mutableStateOf(-1L)
+    var savedMessageAudioState: SavedMessageAudioState by mutableStateOf(SavedMessageAudioState())
+    var showDeleteDialog by mutableStateOf(false)
+    var showModifyDialog by mutableStateOf(false)
+    var showBlockDialog by mutableStateOf(false)
+    var messageToModify: MessageResponse? by mutableStateOf(null)
 
     fun getMessage() {
         savedMessageUiState = UiState.Loading
@@ -65,8 +67,8 @@ class SavedMessageViewModel @Inject constructor(
     fun deleteMessage() {
         savedMessageUiState = UiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            if (idToDelete == -1L) return@launch
-            when (messageUseCase.deleteMessage(idToDelete)) {
+            if (messageToModify == null) return@launch
+            when (messageUseCase.deleteMessage(messageToModify!!.id)) {
                 is ResultType.Success -> {
                     Log.d("SavedMessage", "Delete Success")
                     getMessage()
@@ -79,37 +81,47 @@ class SavedMessageViewModel @Inject constructor(
         }
     }
 
-    fun blockMessage(messageId: Long) {
+    fun blockMessage() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (messageUseCase.blockMessage(messageId)) {
+            when (messageUseCase.blockMessage(messageToModify!!.id)) {
                 is ResultType.Success -> {
                     Log.d("SavedMessage", "Block Success")
+                    getMessage()
                 }
                 else -> {
                     Log.d("SavedMessage", "Block Failed")
+                    savedMessageUiState = UiState.Error
                 }
             }
-            getMessage()
         }
     }
 
-    fun changeTag(id: Long, tag: String) {
+    fun changeTag(tag: String) {
         savedMessageUiState = UiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (messageUseCase.changeTag(id, tag)) {
+            when (messageUseCase.changeTag(messageToModify!!.id, tag)) {
                 is ResultType.Success -> {
                     Log.d("SavedMessage", "Success")
+                    getMessage()
                 }
                 else -> {
                     Log.d("SavedMessage", "Failed")
+                    savedMessageUiState = UiState.Error
                 }
             }
-            getMessage()
         }
     }
 
     fun toggleConfirmDeleteAlert() {
-        showDialog = !showDialog;
+        showDeleteDialog = !showDeleteDialog
+    }
+
+    fun toggleModifyTagAlert() {
+        showModifyDialog = !showModifyDialog
+    }
+
+    fun toggleBlockAlert() {
+        showBlockDialog = !showBlockDialog
     }
 
     fun changeCurrentSavedMessageType(type: SavedMessageType) {
@@ -127,15 +139,15 @@ class SavedMessageViewModel @Inject constructor(
             setDataSource(S3_CONSTANT_URI + message.audioUri)
             setOnPreparedListener {
                 it.start()
-                savedmessageAudioState =
-                    savedmessageAudioState.copy(isPlaying = true, message = message)
+                savedMessageAudioState =
+                    savedMessageAudioState.copy(isPlaying = true, message = message)
             }
             prepareAsync()
             setOnCompletionListener {
                 it.stop()
                 it.release()
-                savedmessageAudioState =
-                    savedmessageAudioState.copy(isPlaying = false, message = null)
+                savedMessageAudioState =
+                    savedMessageAudioState.copy(isPlaying = false, message = null)
             }
         }
     }
@@ -144,7 +156,7 @@ class SavedMessageViewModel @Inject constructor(
         VoicePlayer.getInstance().apply {
             stop()
             release()
-            savedmessageAudioState = savedmessageAudioState.copy(isPlaying = false, message = null)
+            savedMessageAudioState = savedMessageAudioState.copy(isPlaying = false, message = null)
         }
     }
 
