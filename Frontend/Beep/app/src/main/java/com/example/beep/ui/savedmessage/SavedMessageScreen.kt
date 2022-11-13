@@ -16,15 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
-import com.example.beep.util.collectAsStateLifecycleAware
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.message.UiState
-import retrofit2.Response
+import com.example.beep.ui.message.*
 
 @Composable
 fun SavedMessageScreen(
@@ -61,50 +59,63 @@ fun SavedMessageSuccessScreen(
         SwitchReceivedSent(
             currentMenu = viewModel.currentSavedMessageType,
             selectReceived = { viewModel.changeCurrentSavedMessageType(SavedMessageType.RECEIVED) },
-            selectSent = { viewModel.changeCurrentSavedMessageType(SavedMessageType.SEND) })
+            selectSent = { viewModel.changeCurrentSavedMessageType(SavedMessageType.SEND) },
+            selectBlocked = { viewModel.changeCurrentSavedMessageType(SavedMessageType.BLOCKED) }
+        )
         Column(modifier = Modifier.weight(4f)) {
             MessageList(
                 modifier = Modifier,
                 currentMenu = viewModel.currentSavedMessageType,
                 messageList = messageList,
                 onDelete = { id: Long ->
-                    viewModel.deleteMessage(id)
+                    viewModel.idToDelete = id
+                    viewModel.toggleConfirmDeleteAlert()
                 })
         }
     }
+    DeleteDialog(show = viewModel.showDialog, onConfirmDelete = { viewModel.deleteMessage() })
 }
 
 
 @Composable
-fun DeleteDialog(id: (Long) -> Unit) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(text = "삭제 하시겠습니까?") },
-        text = { Text(text = "메시지가 삭제됩니다.") },
-        confirmButton = {
-            TextButton(onClick = { /*onDelete(id)*/ }) {
-                Text("확인")
+fun DeleteDialog(
+    show: Boolean,
+    onConfirmDelete: () -> Unit,
+    viewModel: SavedMessageViewModel = viewModel()
+) {
+    if (show) {
+        AlertDialog(
+            onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
+            title = { Text(text = "삭제 하시겠습니까?") },
+            text = { Text(text = "메시지가 삭제됩니다.") },
+            confirmButton = {
+                TextButton(onClick = onConfirmDelete) {
+                    Text("확인")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.toggleConfirmDeleteAlert() }) {
+                    Text("취소")
+                }
             }
-        },
-        dismissButton = {
-            TextButton(onClick = {}) {
-                Text("취소")
-            }
-        }
-    )
+        )
+    }
 }
 
 @Composable
 fun SwitchReceivedSent(
     currentMenu: SavedMessageType,
     selectReceived: () -> Unit,
-    selectSent: () -> Unit
+    selectSent: () -> Unit,
+    selectBlocked: () -> Unit
 ) {
-    Row(horizontalArrangement = Arrangement.Center) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Button(
             onClick = selectReceived,
             colors =
-            if (currentMenu == SavedMessageType.RECEIVED) ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            if (currentMenu == SavedMessageType.RECEIVED) ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primary
+            )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
             Text(text = "수신")
@@ -117,6 +128,12 @@ fun SwitchReceivedSent(
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
             Text(text = "송신")
+        }
+        Button(
+            onClick = selectBlocked,
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+        ) {
+            Text(text = "차단목록")
         }
     }
 }
@@ -146,7 +163,8 @@ fun MessageItem(
     message: MessageResponse,
     modifier: Modifier = Modifier,
     currentMenu: SavedMessageType,
-    onDelete: (Long) -> Unit
+    onDelete: (Long) -> Unit,
+    viewModel: SavedMessageViewModel = viewModel()
 ) {
     var expanded by remember { mutableStateOf(false) }
     Card(elevation = 4.dp, modifier = modifier.padding(8.dp)) {
@@ -163,8 +181,13 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                AudioBtn(message.audioUri)
-                MessageInfo(
+                AudioBtn(
+                    onPlay = { viewModel.playSavedMessageAudio(message) },
+                    onStop = { viewModel.stopSavedMessageAudio() },
+                    isPlaying = viewModel.savedmessageAudioState.isPlaying
+                        && viewModel.savedmessageAudioState.message?.id == message.id
+                )
+                SavedMessageInfo(
                     modifier = modifier.weight(1f),
                     content = message.content,
                     tag = message.tag,
@@ -177,7 +200,10 @@ fun MessageItem(
                 )
             }
             if (expanded) {
-                MessageOptions(currentMenu = currentMenu, onDelete = onDelete(message.id))
+                MessageOptions(
+                    currentMenu = currentMenu,
+                    onDelete = { onDelete(message.id) },
+                    onShare = {})
             }
         }
     }
@@ -185,7 +211,7 @@ fun MessageItem(
 
 
 @Composable
-fun MessageInfo(
+fun SavedMessageInfo(
     modifier: Modifier = Modifier,
     content: String,
     tag: String?,
@@ -203,51 +229,42 @@ fun MessageInfo(
 }
 
 @Composable
-fun AudioBtn(audioUri: String?) {
-    IconButton(onClick = { /*TODO*/ }) {
+fun AudioBtn(onPlay: () -> Unit, onStop: () -> Unit, isPlaying: Boolean) {
+    IconButton(onClick = { if (isPlaying) onPlay() else onStop() }) {
         Icon(
             imageVector = Icons.Filled.Mic,
-            tint = MaterialTheme.colors.secondary,
+            tint = if (isPlaying) Color.Green else Color.Black,
             contentDescription = "message audio button",
         )
     }
 }
 
 @Composable
-fun MessageOptions(currentMenu: SavedMessageType, onDelete: Unit) {
+fun MessageOptions(currentMenu: SavedMessageType, onDelete: () -> Unit, onShare: () -> Unit) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onShare) {
             Icon(
                 imageVector = Icons.Filled.Share,
                 tint = MaterialTheme.colors.secondary,
                 contentDescription = "message share button",
             )
         }
-        if (currentMenu == SavedMessageType.RECEIVED) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.BookmarkAdd,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = "message save button",
-                )
-            }
-        }
-        IconButton(onClick = { onDelete }) {
+        IconButton(onClick = onDelete) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 tint = MaterialTheme.colors.secondary,
                 contentDescription = "message delete button",
             )
         }
-        if (currentMenu == SavedMessageType.RECEIVED) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.Block,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = "sender block button",
-                )
-            }
-        }
+//        if (currentMenu == SavedMessageType.RECEIVED) {
+//            IconButton(onClick = { /*TODO*/ }) {
+//                Icon(
+//                    imageVector = Icons.Filled.Block,
+//                    tint = MaterialTheme.colors.secondary,
+//                    contentDescription = "sender block button",
+//                )
+//            }
+//        }
     }
 }
 
