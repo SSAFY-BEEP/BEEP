@@ -70,7 +70,9 @@ public class PhoneBookServiceImpl implements PhoneBookService {
         PhoneBook target = phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(phone, user.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         target.update(update.getPhone(), update.getName());
-        if(phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(target.getTargetPhone(), user.getId()).isPresent()){
+        //번호를 바꾸고 바꾸려는 번호와 같은 번호가 있을때
+        if(!phone.equals(update.getPhone())
+                && phoneBookRepository.findPhoneBookByTargetPhoneAndUserId(target.getTargetPhone(), user.getId()).isPresent()){
             throw new CustomException(ErrorCode.METHOD_ALREADY_REPORTED);
         }
         phoneBookRepository.save(target);
