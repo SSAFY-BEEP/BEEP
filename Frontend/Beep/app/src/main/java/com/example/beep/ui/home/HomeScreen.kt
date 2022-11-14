@@ -41,11 +41,14 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
     //프리셋가져오기
 //    val presetList = presetViewModel.getPresetByToken()
 
-
-    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
-        initial = emptyList<BaseResponse<Message24Response>>()
-    );
-    Log.d("Message24 Send", sendMsg.value.toString())
+//    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
+//        initial = emptyList<BaseResponse<Message24Response>>()
+//    );
+//    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
+//        initial = emptyList<BaseResponse<Message24Response>>()
+//    );
+//    Log.d("Message24 Receive", receiveMsg.value.toString())
+//    Log.d("Message24 Send", sendMsg.value.toString())
 
     Column(
         modifier = Modifier

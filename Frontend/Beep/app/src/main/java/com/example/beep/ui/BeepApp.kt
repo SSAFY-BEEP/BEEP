@@ -6,23 +6,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Message
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.beep.R
 import com.example.beep.data.BottomNavItem
 import com.example.beep.ui.navigation.BeepNavGraph
+import com.example.beep.ui.theme.BACKGROUND_WHITE
+import com.example.beep.ui.theme.GRAY100
+import com.example.beep.ui.theme.GRAY500
+import com.example.beep.ui.theme.PINK500
 
+val galmurinineFont = FontFamily(
+    Font(R.font.galmurinine)
+)
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -35,23 +43,23 @@ fun BeepApp() {
                     BottomNavItem(
                         name = "Home",
                         route = "home",
-                        icon = Icons.Default.Home
+                        icon = Icons.Outlined.Home
                     ),
                     BottomNavItem(
                         name = "Message",
                         route = "message",
-                        icon = Icons.Default.Notifications,
+                        icon = Icons.Outlined.Message,
                         badgeCount = 24
                     ),
                     BottomNavItem(
                         name = "Settings",
                         route = "settings",
-                        icon = Icons.Default.Settings
+                        icon = Icons.Outlined.Settings
                     ),
                     BottomNavItem(
                         name = "LoginMain",
                         route = "login_main",
-                        icon = Icons.Default.Person
+                        icon = Icons.Outlined.Person
                     )
                 ),
                 navController = navController,
@@ -66,8 +74,10 @@ fun BeepApp() {
 
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth()) {
-        Text(text = "Beep", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
+        Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center, color= PINK500,
+            fontFamily = galmurinineFont
+        )
     }
 }
 
@@ -82,8 +92,8 @@ fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = Color.DarkGray,
-        elevation = 5.dp
+        backgroundColor = GRAY100,
+        elevation = 10.dp
     ) {
         // items 배열에 담긴 모든 항목을 추가합니다.
         items.forEach { item ->
@@ -92,8 +102,8 @@ fun BottomNavigationBar(
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
-                selectedContentColor = Color.Green,
-                unselectedContentColor = Color.Green,
+                selectedContentColor = PINK500,
+                unselectedContentColor = GRAY500,
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
@@ -101,13 +111,13 @@ fun BottomNavigationBar(
                             contentDescription = item.name
                         )
                         // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
-                        if (selected) {
-                            Text(
-                                text = item.name,
-                                textAlign = TextAlign.Center,
-                                fontSize = 10.sp
-                            )
-                        }
+//                        if (selected) {
+//                            Text(
+//                                text = item.name,
+//                                textAlign = TextAlign.Center,
+//                                fontSize = 10.sp
+//                            )
+//                        }
                     }
                 }
             )
