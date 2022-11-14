@@ -4,5 +4,6 @@ data class LoginState(
     val loginPhoneNumber: String = "",
     val loginPhoneNumberError: String? = null,
     val loginPassword: String = "",
-    val loginPasswordError: String? = null
+    val loginPasswordError: String? = null,
+    var isLogged: Boolean = false
 )

@@ -17,6 +17,7 @@ class KeyboardViewModel: ViewModel() {
     fun onAction(action: KeyboardAction) {
         when(action) {
             is KeyboardAction.Number -> enterNumber(action.number)
+            is KeyboardAction.Clear -> state = KeyboardState()
             is KeyboardAction.Change -> enterChange(action.number)
             is KeyboardAction.Delete -> delete()
         }

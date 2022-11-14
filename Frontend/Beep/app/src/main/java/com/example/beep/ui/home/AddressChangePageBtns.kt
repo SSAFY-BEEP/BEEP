@@ -10,6 +10,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.data.dto.mainpage.AddressResponse
+import com.example.beep.util.collectAsStateLifecycleAware
 import kotlinx.coroutines.runBlocking
 
 
@@ -87,14 +90,46 @@ fun AddSubmitBtn(
     name: String,
     phone: String,
     viewModel: AddressPostSelfViewModel = viewModel(),
+//    getViewModel: AddressViewModel = viewModel(),
     changeToAddAddress: () -> Unit,
 ) {
+    val openDialog = remember { mutableStateOf(false)  }
+//    var dialogTxt = ""
+    val dialogTxt = remember { mutableStateOf("")  }
+//    val userAddressList: List<AddressResponse> by getViewModel.exampleEntities.collectAsStateLifecycleAware(
+//        initial = emptyList()
+//    )
+
+
+
     Button(
         onClick = {
             Log.d("PHONE", phone)
             Log.d("NAME", name)
-            viewModel.postAddress(phone, name)
-            changeToAddAddress()
+
+            if (name.isEmpty()) {
+                openDialog.value = true
+                dialogTxt.value = "이름을 입력해주세요"
+            } else if (phone.isEmpty()) {
+                openDialog.value = true
+                dialogTxt.value = "핸드폰 번호를 입력해주세요"
+            } else if (phone.length != 11) {
+                openDialog.value = true
+                dialogTxt.value = "유효한 번호를 입력해주세요"
+            } else {
+                Log.d("POST 실행!!!!!!!!!!!", name)
+                postDo(
+                    name = name,
+                    phone = phone,
+                    changeToAddAddress = changeToAddAddress,
+                    postUsingViewModel = { phone: String, name: String ->
+                        viewModel.postAddress(
+                            phone,
+                            name
+                        )
+                    },
+                )
+            }
         },
         modifier = Modifier
             .height(40.dp),
@@ -120,7 +155,34 @@ fun AddSubmitBtn(
             color = Color.White
         )
     }
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            text = { Text(text = dialogTxt.value)},
+            confirmButton = {
+                Button(
+                    onClick = {
+                        openDialog.value = false
+                    }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 }
+
+fun postDo(
+    name: String,
+    phone: String,
+    changeToAddAddress: () -> Unit,
+    postUsingViewModel: (String, String) -> Unit,
+) {
+    runBlocking { postUsingViewModel(phone, name) }
+    changeToAddAddress()
+}
+
 
 @Composable
 fun PatchSubmitBtn(
@@ -193,7 +255,7 @@ fun PatchSubmitBtn(
                 openDialog.value = false
             },
 //            text = { dialogTxt.value },
-            text = { Text(text = "입력을 확인해주세요")},
+            text = { Text(text = dialogTxt.value)},
             confirmButton = {
                 Button(
                     onClick = {
@@ -216,6 +278,8 @@ fun patchDo(
     runBlocking { patchUsingViewModel(apiPhone, phone, name) }
     changeToPatchAddress()
 }
+
+
 
 //@Composable
 //fun showDialogue(
