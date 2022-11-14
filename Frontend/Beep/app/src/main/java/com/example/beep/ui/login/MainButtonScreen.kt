@@ -25,11 +25,11 @@ fun MainButtonScreen() {
             verticalArrangement = Arrangement.Center
         ) {
 
-            Button(onClick = { navController.navigate("login_graph") }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "로그인")
             }
 
-            Button(onClick = { navController.navigate("join_graph") }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "회원가입")
             }
 
@@ -41,7 +41,7 @@ fun MainButtonScreen() {
                 Text(text = "회원탈퇴")
             }
 
-            Button(onClick = {} ) {
+            Button(onClick = { } ) {
                 Text(text = "비밀번호 변경")
             }
         }

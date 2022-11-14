@@ -34,6 +34,17 @@ fun LoginMainScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Button(onClick = { MainApplication.sharedPreferencesUtil.deleteToken() }) {
+                Text(text = "로그아웃")
+            }
+
+            Button(onClick = { }) {
+                Text(text = "회원탈퇴")
+            }
+
+            Button(onClick = { } ) {
+                Text(text = "비밀번호 변경")
+            }
 
         }
     }

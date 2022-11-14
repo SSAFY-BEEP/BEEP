@@ -18,7 +18,7 @@ import com.example.beep.ui.login.*
 @Composable
 fun RootNavGraph(navController: NavHostController) {
     val token = MainApplication.sharedPreferencesUtil.getToken()
-    var isLoggedDestination = "login_main_graph"
+    var isLoggedDestination = "login_graph"
 
     if (token != null) {
         if (token.isNotBlank()) {
@@ -29,22 +29,32 @@ fun RootNavGraph(navController: NavHostController) {
         composable("beep_graph") {
             BeepApp()
         }
-        authNavGraph(navController)
-    }
-}
-
-fun NavGraphBuilder.authNavGraph(navController: NavController) {
-    navigation(startDestination = "login_main_graph", route="login_main_graph") {
-        composable("login_main_graph"){
+        composable("login_main_graph") {
             MainButtonScreen()
         }
-        composable("login_graph"){
-            val model: UserViewModel = hiltViewModel(it)
+        composable("login_graph") {
+            val model : UserViewModel = hiltViewModel(it)
             LoginScreen()
         }
-        composable("join_graph"){
-            val model: UserViewModel = hiltViewModel(it)
+        composable("join_graph") {
+            val model : UserViewModel = hiltViewModel(it)
             JoinScreen()
         }
     }
 }
+
+//fun NavGraphBuilder.authNavGraph(navController: NavController) {
+//    navigation(startDestination = "login_main_graph", route="login_main_graph") {
+//        composable("login_main_graph"){
+//            MainButtonScreen()
+//        }
+//        composable("login_graph"){
+//            val model: UserViewModel = hiltViewModel(it)
+//            LoginScreen()
+//        }
+//        composable("join_graph"){
+//            val model: UserViewModel = hiltViewModel(it)
+//            JoinScreen()
+//        }
+//    }
+//}
