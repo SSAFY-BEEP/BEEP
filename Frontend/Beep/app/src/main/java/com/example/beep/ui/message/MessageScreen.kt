@@ -23,65 +23,65 @@ import retrofit2.Response
 @Composable
 fun MessageScreen(
     messageViewModel: MessageViewModel = viewModel(),
-    onNextButtonClicked: () -> Unit
+    onClickMenu: (String) -> Unit
 ) {
-    var toggleMenu by remember { mutableStateOf(true) }
-    val receiveMessageList = messageViewModel.receiveMessages.collectAsStateLifecycleAware(
-        initial = Response.success(emptyList())
-    )
-    val sendMessageList = messageViewModel.sendMessages.collectAsStateLifecycleAware(
-//        initial = emptyList<MessageResponse>()
-        initial = Response.success(emptyList())
-
-    )
-    Log.d("RECEIVE", "receive ${receiveMessageList.value.body().toString()}")
-    Log.d("SEND", "send ${sendMessageList.value.body().toString()}")
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//            테스트용 버튼
-//            Button(onClick = { messageViewModel.changeTag(8, "test") }) {
+//    var toggleMenu by remember { mutableStateOf(true) }
+//    val receiveMessageList = messageViewModel.receiveMessages.collectAsStateLifecycleAware(
+//        initial = Response.success(emptyList())
+//    )
+//    val sendMessageList = messageViewModel.sendMessages.collectAsStateLifecycleAware(
+////        initial = emptyList<MessageResponse>()
+//        initial = Response.success(emptyList())
 //
+//    )
+//    Log.d("RECEIVE", "receive ${receiveMessageList.value.body().toString()}")
+//    Log.d("SEND", "send ${sendMessageList.value.body().toString()}")
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+////            테스트용 버튼
+////            Button(onClick = { messageViewModel.changeTag(8, "test") }) {
+////
+////            }
+//            SwitchReceivedSent(
+//                currentMenu = toggleMenu,
+//                selectReceived = { toggleMenu = true },
+//                selectSent = { toggleMenu = false })
+//            Column(modifier = Modifier.weight(4f)) {
+//                if (toggleMenu) {
+//                    if (sendMessageList.value.code() == 200) {
+//                        MessageList(
+//                            modifier = Modifier,
+//                            currentMenu = toggleMenu,
+//                            messageList = receiveMessageList.value.body()!!,
+//                            onDelete = { id: Long ->
+//                                messageViewModel.deleteMessage(
+//                                    id
+//                                )
+//                            })
+//                    } else {
+//                        Text(text = "오류가 발생했습니다.")
+//                    }
+//                } else {
+//                    if (sendMessageList.value.code() == 200) {
+//                        MessageList(
+//                            modifier = Modifier,
+//                            currentMenu = toggleMenu,
+//                            messageList = sendMessageList.value.body()!!,
+//                            onDelete = { id: Long ->
+//                                messageViewModel.deleteMessage(
+//                                    id
+//                                )
+//                            })
+//                    } else {
+//                        Text(text = "오류가 발생했습니다.")
+//                    }
+//                }
 //            }
-            SwitchReceivedSent(
-                currentMenu = toggleMenu,
-                selectReceived = { toggleMenu = true },
-                selectSent = { toggleMenu = false })
-            Column(modifier = Modifier.weight(4f)) {
-                if (toggleMenu) {
-                    if (sendMessageList.value.code() == 200) {
-                        MessageList(
-                            modifier = Modifier,
-                            currentMenu = toggleMenu,
-                            messageList = receiveMessageList.value.body()!!,
-                            onDelete = { id: Long ->
-                                messageViewModel.deleteMessage(
-                                    id
-                                )
-                            })
-                    } else {
-                        Text(text = "오류가 발생했습니다.")
-                    }
-                } else {
-                    if (sendMessageList.value.code() == 200) {
-                        MessageList(
-                            modifier = Modifier,
-                            currentMenu = toggleMenu,
-                            messageList = sendMessageList.value.body()!!,
-                            onDelete = { id: Long ->
-                                messageViewModel.deleteMessage(
-                                    id
-                                )
-                            })
-                    } else {
-                        Text(text = "오류가 발생했습니다.")
-                    }
-                }
-            }
-        }
-    }
+//        }
+//    }
 }
 
 @Composable

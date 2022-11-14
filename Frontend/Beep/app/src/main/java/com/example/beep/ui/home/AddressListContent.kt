@@ -48,6 +48,7 @@ fun AddressListContent(
 
     var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
     val scrollState = rememberScrollState()
+
     var phoneWeight = if (viewEditDelBtn) {
         7
     } else {
@@ -184,9 +185,4 @@ fun AddressListContent(
 //            BeepForTest()
 //        }
     }
-}
-
-@Composable
-fun AddressListSuccessScreen(data: Any) {
-
 }
