@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.os.Handler
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,13 +21,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 @ExperimentalComposeUiApi
 @Composable
 fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
     toAskRecord: () -> Unit
-    ) {
+) {
 
     val viewModel = viewModel<KeyboardViewModel>()
 
@@ -46,12 +49,15 @@ fun BbibbiPutMsg(
     Button(
         onClick = {
             /* go버튼 */
-                  if (defaultNameString == "메시지를 입력해주세요") {
-                      // 내용을 입력해주세요
-                  } else if (defaultNameString.length < 12) {
-                      // 음성을 녹음하시겠습니까
-                      toAskRecord()
-                  }
+            if (defaultNameString == "메시지를 입력해주세요") {
+                defaultNameString = "=(๑º ﾛ º๑)"
+                // 내용을 입력해주세요
+            } else if (defaultNameString == "=(๑º ﾛ º๑)") {
+                // 내용을 입력해주세요
+            } else if (defaultNameString.length < 12) {
+                // 음성을 녹음하시겠습니까
+                toAskRecord()
+            }
         },
         modifier = Modifier
             .width(83.dp)
@@ -69,23 +75,38 @@ fun BbibbiPutMsg(
     }
     ViewMyText(
         changeDefaultNameString = { defaultName: String -> defaultNameString = defaultName },
-        )
+        defaultNameString = defaultNameString
+    )
 }
 
 
 @Composable
 fun ViewMyText(
     changeDefaultNameString: (String) -> Unit,
-    ) {
+    defaultNameString: String
+) {
     val viewModel = viewModel<KeyboardViewModel>()
     val state = viewModel.state
     var show = if (state.number1.isNotEmpty()) {
         state.number1
+    } else if (defaultNameString == "=(๑º ﾛ º๑)") {
+        "=(๑º ﾛ º๑)"
     } else {
         "메시지를 입력해주세요"
     }
 
+
     changeDefaultNameString(show)
+
+
+    if (defaultNameString == "=(๑º ﾛ º๑)") {
+        Handler().postDelayed({
+            show = "메시지를 입력해주세요"
+            changeDefaultNameString(show)
+        }, 1000)
+
+
+    }
 
     Text(
         text = show,
@@ -99,14 +120,13 @@ fun ViewMyText(
 }
 
 
-
 @ExperimentalComposeUiApi
 @Composable
 fun ResetButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 //    toPutAddress: () -> Unit,
-    ) {
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

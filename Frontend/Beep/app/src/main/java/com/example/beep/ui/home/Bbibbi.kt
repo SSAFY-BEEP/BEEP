@@ -44,10 +44,17 @@ fun Bbibbi(
     } else if (currentPage == "AskRecord") {
         BbibbiAskToRecord (
             toPutMsg = {currentPage = "PutMsg"},
-            toSendMsg = {currentPage = "SendMsg"}
-        )
+            toSendMsg = {currentPage = "SendMsg"},
+            toFirstPage = {currentPage = "ReceivedMsg"},
+
+            )
     } else if (currentPage == "SendMsg") {
-        BbibbiAskToSend()
+        BbibbiAskToSend(
+            toPutMsg = {currentPage = "PutMsg"},
+            toAskRecord = {currentPage = "AskRecord"},
+            toFirstPage = {currentPage = "ReceivedMsg"},
+
+        )
     } else if (receiveMsg.value.toString().length > 10) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
