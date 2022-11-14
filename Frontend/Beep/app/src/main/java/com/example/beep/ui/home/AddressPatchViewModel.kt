@@ -18,10 +18,9 @@ class AddressPatchViewModel @Inject constructor(private val patchUserAddressUseC
 
     fun patchAddress(apiPhone: String, phone: String, name: String){
         viewModelScope.launch(Dispatchers.IO) {
-//            patchUserAddressUseCase.execute(apiPhone, phone, name).collectLatest {
-//
-//
-//            }
+            patchUserAddressUseCase.execute(apiPhone, phone, name).collectLatest {
+
+            }
         }
     }
 }

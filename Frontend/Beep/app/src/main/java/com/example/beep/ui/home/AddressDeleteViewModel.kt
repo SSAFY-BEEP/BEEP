@@ -19,10 +19,10 @@ class AddressDeleteViewModel @Inject constructor(private val deleteUserAddressUs
 
     fun deleteAddress(phone: String){
         viewModelScope.launch(Dispatchers.IO) {
-//            deleteUserAddressUseCase.execute(phone).collectLatest {
-//
-//
-//            }
+            deleteUserAddressUseCase.execute(phone).collectLatest {
+
+
+            }
         }
     }
 }

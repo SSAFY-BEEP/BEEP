@@ -25,8 +25,8 @@ fun Bbibbi(
     presetViewModel: PresetViewModel = viewModel()
 ) {
     var receiveMsg = ""
-    var senderPhoneNumber = ""
-    var receiverPhoneNumber = ""
+//    var senderPhoneNumber = ""
+//    var receiverPhoneNumber = ""
 
     when (val currentUiState = homeViewModel.receivedMessageUiState) {
         is UiState.Loading -> {
@@ -34,8 +34,8 @@ fun Bbibbi(
         }
         is UiState.Success -> {
             receiveMsg = currentUiState.data[0].content
-            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
-            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
+//            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
+//            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
             Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
         }
         is UiState.Error -> {
