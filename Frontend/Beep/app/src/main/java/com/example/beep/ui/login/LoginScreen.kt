@@ -3,6 +3,7 @@ package com.example.beep.ui.login
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
