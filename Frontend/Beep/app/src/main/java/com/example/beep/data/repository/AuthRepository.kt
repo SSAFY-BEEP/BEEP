@@ -17,16 +17,16 @@ class AuthRepository @Inject constructor(
 
     fun signUp(request: SignUpRequest): Flow<ResultType<BaseResponse<SignUpResponse>>> = flow {
         emit(ResultType.Loading)
-            authDataSource.signUp(request).collect {
-                if (it.status == "OK") {
-                    emit(ResultType.Success(it))
-                } else {
-                    emit(ResultType.Fail(it))
-                }
+        authDataSource.signUp(request).collect {
+            if (it.status == "OK") {
+                emit(ResultType.Success(it))
+            } else {
+                emit(ResultType.Fail(it))
             }
-        }. catch { e ->
-            emit(ResultType.Error(e))
         }
+    }.catch { e ->
+        emit(ResultType.Error(e))
+    }
 
     fun login(request: LoginRequest): Flow<ResultType<BaseResponse<LoginResponse>>> = flow {
         emit(ResultType.Loading)
@@ -37,20 +37,24 @@ class AuthRepository @Inject constructor(
                 emit(ResultType.Fail(it))
             }
         }
-    }. catch { e ->
+    }.catch { e ->
         emit(ResultType.Error(e))
     }
 
     fun newPassword(request: NewPasswordRequest): Flow<BaseResponse<String>> =
-        flow { authDataSource.newPassword(request).collect { emit(it)} }
+        flow { authDataSource.newPassword(request).collect { emit(it) } }
 
-    fun withdrawal(): Flow<BaseResponse<String>> =
-        flow { authDataSource.withdrawal().collect { emit(it)} }
+    fun withdrawal(): Flow<ResultType<BaseResponse<String>>> = flow {
+        emit(ResultType.Loading)
+        authDataSource.withdrawal().collect {
+            if (it.status == "OK") {
+                emit(ResultType.Success(it))
+            } else {
+                emit(ResultType.Fail(it))
+            }
+        }
+    }.catch { e ->
+        emit(ResultType.Error(e))
+    }
 
 }
-
-
-//interface AuthRepository {
-//    suspend fun signUp(phoneNumber: String, password: String, fcmToken: String): AuthResult<Unit>
-//    suspend fun login(phoneNumber: String, password: String): AuthResult<Unit>
-//}
