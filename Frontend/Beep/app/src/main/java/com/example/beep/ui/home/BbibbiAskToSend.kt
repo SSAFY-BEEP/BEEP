@@ -56,7 +56,6 @@ fun BbibbiAskToSend(
     Button(
         // <-
         onClick = {
-            /* cancel 버튼 */
             go = !go
         },
         modifier = Modifier
@@ -77,7 +76,6 @@ fun BbibbiAskToSend(
     Button(
         // ->
         onClick = {
-            /* cancel 버튼 */
             go = !go
         },
         modifier = Modifier
@@ -135,7 +133,7 @@ fun BbibbiAskToSend(
     Button(
         // 메시지 보내기
         onClick = {
-            /* go버튼 */
+            /* yes버튼 */
         },
         modifier = Modifier
             .width(60.dp)
@@ -163,7 +161,7 @@ fun BbibbiAskToSend(
     Button(
         // 첫 페이지로
         onClick = {
-            /* go버튼 */
+            /* no버튼 */
             toFirstPage()
         },
         modifier = Modifier

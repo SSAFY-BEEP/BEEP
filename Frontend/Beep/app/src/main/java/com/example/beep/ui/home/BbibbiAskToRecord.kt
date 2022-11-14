@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun BbibbiAskToRecord(
     toPutMsg: () -> Unit,
     toSendMsg: () -> Unit,
-    toFirstPage: () -> Unit
+    toRecord: () -> Unit
     ) {
     var go by remember { mutableStateOf(true) }
 
@@ -55,7 +55,6 @@ fun BbibbiAskToRecord(
     Button(
         // <-
         onClick = {
-            /* cancel 버튼 */
             go = !go
         },
         modifier = Modifier
@@ -76,7 +75,6 @@ fun BbibbiAskToRecord(
     Button(
         // ->
         onClick = {
-            /* cancel 버튼 */
             go = !go
         },
         modifier = Modifier
@@ -100,6 +98,7 @@ fun BbibbiAskToRecord(
             /* go버튼 */
                   if (go) {
                       // 녹음페이지
+                      toRecord()
                   } else {
                       toSendMsg()
                   }

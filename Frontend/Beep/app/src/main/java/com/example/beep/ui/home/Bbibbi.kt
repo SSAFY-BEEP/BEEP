@@ -71,16 +71,18 @@ fun Bbibbi(
         BbibbiAskToRecord (
             toPutMsg = {currentPage = "PutMsg"},
             toSendMsg = {currentPage = "SendMsg"},
-            toFirstPage = {currentPage = "ReceivedMsg"},
-
+            toRecord = {currentPage = "DoRecord"},
             )
     } else if (currentPage == "SendMsg") {
         BbibbiAskToSend(
             toPutMsg = {currentPage = "PutMsg"},
             toAskRecord = {currentPage = "AskRecord"},
             toFirstPage = {currentPage = "ReceivedMsg"},
-
         )
+    } else if (currentPage == "DoRecord") {
+        BbibbiDoRecord(
+            toSendMsg = {currentPage = "DoRecord"},
+            )
     } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
