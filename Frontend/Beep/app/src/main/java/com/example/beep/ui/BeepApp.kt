@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Person
@@ -60,7 +62,6 @@ fun BeepApp() {
                     BottomNavItem(
                         name = "LoginMain",
                         route = "login_main",
-                        icon = Icons.Outlined.Person
                         icon = Icons.Default.Person
                     ),
                     BottomNavItem(

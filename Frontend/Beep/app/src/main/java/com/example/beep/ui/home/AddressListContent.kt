@@ -48,9 +48,7 @@ fun AddressListContent(
 
     var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
     val scrollState = rememberScrollState()
-    val userAddressList: List<AddressResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
-        initial = emptyList()
-    )
+
     var phoneWeight = if (viewEditDelBtn) {
         7
     } else {
