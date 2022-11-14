@@ -109,6 +109,7 @@ class UserViewModel @Inject constructor(
                     loginUseCase.execute(loginRequest).collectLatest {it ->
                         if(it is ResultType.Success) {
                             Log.d("text log","$it")
+                            loginState = loginState.copy(isUserLoggedIn = true)
                             MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
                         } else {
                             Log.d("error", "$it")
@@ -168,8 +169,9 @@ class UserViewModel @Inject constructor(
                 loginUseCase.execute(request).collectLatest {
                     if(it is ResultType.Success) {
                         Log.d("text log","$it")
+                        loginState = loginState.copy(isUserLoggedIn = true)
                         MainApplication.sharedPreferencesUtil.saveToken(it.data.data.token)
-                        true.also { loginState.isLogged }
+                        Log.d("loginstate","$loginState")
                     } else {
                         Log.d("error", "$it")
                     }
