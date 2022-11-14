@@ -67,7 +67,7 @@ fun BeepNumKeyboard(
 //                symbol = "2",
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .weight(1f)
+                    .weight(1f),
             ) {
                 viewModel.onAction(KeyboardAction.Number("2"))
             }
