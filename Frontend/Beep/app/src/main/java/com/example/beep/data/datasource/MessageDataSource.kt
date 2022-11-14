@@ -1,6 +1,7 @@
 package com.example.beep.data.datasource
 
 import android.util.Log
+import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.MessageRequest
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.network.api.MessageApi
@@ -12,25 +13,18 @@ import javax.inject.Singleton
 
 @Singleton
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
-    fun getReceiveMessage(type: Int): Flow<Response<List<MessageResponse>>> = flow {
-        emit(messageApi.getReceiveMessage(type))
-    }
+    suspend fun getReceiveMessage(type: Int): BaseResponse<List<MessageResponse>> =
+        messageApi.getReceiveMessage(type)
 
-    fun getSendMessage(): Flow<Response<List<MessageResponse>>> = flow {
-        emit(messageApi.getSendMessage())
-    }
+    suspend fun getSendMessage(): BaseResponse<List<MessageResponse>> = messageApi.getSendMessage()
 
-    fun changeTag(id: Long, tag: String): Flow<Response<String>> = flow {
-        val response = messageApi.changeTag(MessageRequest(id, tag))
-        Log.d("Response", response.code().toString())
-        emit(response)
-    }
+    suspend fun changeTag(id: Long, tag: String): BaseResponse<String> =
+        messageApi.changeTag(MessageRequest(id, tag))
 
-    fun deleteMessage(messageId: Long): Flow<Response<String>> = flow {
-        emit(messageApi.deleteMessage(messageId))
-    }
+    suspend fun deleteMessage(messageId: Long): BaseResponse<String> =
+        messageApi.deleteMessage(messageId)
 
-    fun blockMessage(messageId: Long) : Flow<Response<String>> = flow {
-        emit(messageApi.blockMessage(messageId))
-    }
+    suspend fun blockMessage(messageId: Long): BaseResponse<String> =
+        messageApi.blockMessage(messageId)
+
 }

@@ -6,7 +6,8 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class S3UseCase @Inject constructor(private val s3Repository: S3Repository){
-    fun getIntroduceUseCase() = s3Repository.getIntroduce()
-    fun deleteIntroduceUseCase(request: S3Request) = s3Repository.deleteIntroduce(request)
-    fun postIntroduceUseCase(voice: MultipartBody.Part) = s3Repository.postIntroduce(voice)
+//    val introduceFlow = s3Repository.introduceFlow
+    suspend fun getIntroduceUseCase() = s3Repository.getIntroduce()
+    suspend fun deleteIntroduceUseCase(request: S3Request) = s3Repository.deleteIntroduce(request)
+    suspend fun postIntroduceUseCase(voice: MultipartBody.Part) = s3Repository.postIntroduce(voice)
 }

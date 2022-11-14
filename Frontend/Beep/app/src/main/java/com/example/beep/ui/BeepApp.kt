@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Person
@@ -17,6 +19,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -43,7 +46,7 @@ fun BeepApp() {
                     BottomNavItem(
                         name = "Home",
                         route = "home",
-                        icon = Icons.Outlined.Home
+                        icon = Icons.Default.Home
                     ),
                     BottomNavItem(
                         name = "Message",
@@ -59,7 +62,12 @@ fun BeepApp() {
                     BottomNavItem(
                         name = "LoginMain",
                         route = "login_main",
-                        icon = Icons.Outlined.Person
+                        icon = Icons.Default.Person
+                    ),
+                    BottomNavItem(
+                        name = "SavedMessage",
+                        route = "savedMessage",
+                        icon = Icons.Default.Person
                     )
                 ),
                 navController = navController,

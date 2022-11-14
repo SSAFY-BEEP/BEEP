@@ -25,6 +25,8 @@ import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.message.RecordVoiceScreen
 import com.example.beep.ui.message.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
+import com.example.beep.ui.savedmessage.SavedMessageScreen
+import com.example.beep.ui.savedmessage.SavedMessageViewModel
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -50,6 +52,10 @@ fun BeepNavGraph(navController: NavHostController) {
             val model: UserViewModel = hiltViewModel(it)
             LoginMainScreen()
         }
+        composable("savedMessage") {
+            val model: SavedMessageViewModel = hiltViewModel(it)
+            SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
+        }
     }
 }
 
@@ -58,10 +64,7 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
     navigation(startDestination = "messageList", route = "message") {
         composable("messageList") {
             val model: MessageViewModel = hiltViewModel(it)
-            MessageScreen(model) { navController.navigate("recordVoice") }
-        }
-        composable("recordVoice") {
-            RecordVoiceScreen()
+            MessageScreen(model) { route: String -> navController.navigate(route) }
         }
     }
 }
@@ -98,9 +101,6 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
-        }
-        composable("recordIntroduce") {
-            RecordVoiceScreen()
         }
     }
 }
