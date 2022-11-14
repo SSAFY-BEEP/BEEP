@@ -80,31 +80,40 @@ fun SavedMessageSuccessScreen(
     modifier: Modifier = Modifier,
     viewModel: SavedMessageViewModel = viewModel()
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         SwitchReceivedSent(
             currentMenu = viewModel.currentSavedMessageType,
             selectReceived = { viewModel.changeCurrentSavedMessageType(SavedMessageType.RECEIVED) },
             selectSent = { viewModel.changeCurrentSavedMessageType(SavedMessageType.SEND) },
             selectBlocked = { viewModel.changeCurrentSavedMessageType(SavedMessageType.BLOCKED) }
         )
-        Column(modifier = Modifier.weight(4f)) {
-            MessageList(
-                modifier = Modifier,
-                currentMenu = viewModel.currentSavedMessageType,
-                messageList = messageList,
-                onDelete = { message: MessageResponse ->
-                    viewModel.messageToModify = message
-                    viewModel.toggleConfirmDeleteAlert()
-                },
-                onChangeTag = { message: MessageResponse ->
-                    viewModel.messageToModify = message
-                    viewModel.toggleModifyTagAlert()
-                },
-                onBlock = { message: MessageResponse ->
-                    viewModel.messageToModify = message
-                    viewModel.toggleBlockAlert()
-                })
-        }
+        if (messageList.isEmpty())
+            Box(modifier = modifier.weight(1f), contentAlignment = Alignment.Center) {
+                Text(text = "메시지가 없습니다.")
+            }
+        else
+            Column(modifier = Modifier.weight(4f)) {
+                MessageList(
+                    modifier = Modifier,
+                    currentMenu = viewModel.currentSavedMessageType,
+                    messageList = messageList,
+                    onDelete = { message: MessageResponse ->
+                        viewModel.messageToModify = message
+                        viewModel.toggleConfirmDeleteAlert()
+                    },
+                    onChangeTag = { message: MessageResponse ->
+                        viewModel.messageToModify = message
+                        viewModel.toggleModifyTagAlert()
+                    },
+                    onBlock = { message: MessageResponse ->
+                        viewModel.messageToModify = message
+                        viewModel.toggleBlockAlert()
+                    })
+            }
     }
     DeleteBlockDialog(
         show = viewModel.showDeleteDialog || viewModel.showBlockDialog,
@@ -113,7 +122,8 @@ fun SavedMessageSuccessScreen(
     TagDialog(
         show = viewModel.showModifyDialog,
         onConfirmModify = { tag: String -> viewModel.changeTag(tag) },
-    previousTag = viewModel.messageToModify?.tag)
+        previousTag = viewModel.messageToModify?.tag
+    )
 }
 
 
@@ -130,13 +140,15 @@ fun DeleteBlockDialog(
                 onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
                 title = {
                     Text(text = "삭제하시겠습니까?")
-
                 },
                 text = {
                     Text(text = "메시지가 삭제됩니다.")
                 },
                 confirmButton = {
-                    TextButton(onClick = onConfirmDelete) {
+                    TextButton(onClick = {
+                        onConfirmDelete()
+                        viewModel.toggleConfirmDeleteAlert()
+                    }) {
                         Text("확인")
                     }
                 },
@@ -147,31 +159,59 @@ fun DeleteBlockDialog(
                 }
             )
         else
-            AlertDialog(
-                onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
-                title = {
-                    Text(
-                        text = "차단하시겠습니까?"
-                    )
-                },
-                text = {
-                    Text(
-                        text = "차단한 사람으로부터 메시지를 받을 수 없습니다."
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = onConfirmBlock) {
-                        Text("확인")
+            if (viewModel.currentSavedMessageType == SavedMessageType.RECEIVED)
+                AlertDialog(
+                    onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
+                    title = {
+                        Text(
+                            text = "차단하시겠습니까?"
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "차단한 사람으로부터 메시지를 받을 수 없습니다."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            onConfirmBlock()
+                            viewModel.toggleBlockAlert()
+                        }) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.toggleBlockAlert() }) {
+                            Text("취소")
+                        }
                     }
-                },
-                dismissButton = {
-                    TextButton(onClick = { viewModel.toggleBlockAlert() }) {
-                        Text("취소")
+                )
+            else
+                AlertDialog(
+                    onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
+                    title = {
+                            Text(text = "차단 해제하시겠습니까?")
+                    },
+                    text = {
+                            Text(text = "이 유저로부터 다시 메시지를 받을 수 있습니다.")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            onConfirmBlock()
+                            viewModel.toggleBlockAlert()
+                        }) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.toggleBlockAlert() }) {
+                            Text("취소")
+                        }
                     }
-                }
-            )
+                )
     }
 }
+
 @Composable
 fun TagDialog(
     show: Boolean,
@@ -179,9 +219,8 @@ fun TagDialog(
     previousTag: String?,
     viewModel: SavedMessageViewModel = viewModel()
 ) {
-    val txtFieldError = remember { mutableStateOf("") }
-    val txtField = remember { mutableStateOf(previousTag ?: "") }
-
+    val txtField = remember { mutableStateOf("") }
+    txtField.value = previousTag ?: ""
     if (show)
         Dialog(onDismissRequest = { viewModel.toggleModifyTagAlert() }) {
             Surface(
@@ -199,7 +238,7 @@ fun TagDialog(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Set value"
+                                text = "태그 설정"
                             )
                             Icon(
                                 imageVector = Icons.Filled.Cancel,
@@ -220,7 +259,7 @@ fun TagDialog(
                                 .border(
                                     BorderStroke(
                                         width = 2.dp,
-                                        color = if (txtFieldError.value.isEmpty()) Color.Green else Color.Red
+                                        color = colorResource(id = android.R.color.holo_purple)
                                     ),
                                     shape = RoundedCornerShape(50)
                                 ),
@@ -231,17 +270,17 @@ fun TagDialog(
                             ),
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Filled.Money,
+                                    imageVector = Icons.Filled.Tag,
                                     contentDescription = "",
-                                    tint = colorResource(android.R.color.holo_green_light),
+                                    tint = colorResource(android.R.color.holo_purple),
                                     modifier = Modifier
                                         .width(20.dp)
                                         .height(20.dp)
                                 )
                             },
-                            placeholder = { Text(text = "Enter value") },
+                            placeholder = { Text(text = "태그가 비어있어요!") },
                             value = txtField.value,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             onValueChange = {
                                 txtField.value = it.take(10)
                             })
@@ -377,7 +416,6 @@ fun MessageItem(
                     currentMenu = currentMenu,
                     onDelete = { onDelete(message) },
                     onChangeTag = {
-                        viewModel.toggleModifyTagAlert()
                         onChangeTag(message)
                     },
                     onShare = {}, onBlock = { onBlock(message) })
@@ -400,8 +438,11 @@ fun SavedMessageInfo(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Text(text = content, fontSize = 24.sp)
-        Text(text = tag ?: "")
-        Text(text = localDateTime)
+        Column() {
+            Text(text = tag ?: "")
+            Text(text = localDateTime, fontSize = 12.sp)
+        }
+
     }
 }
 
@@ -446,11 +487,14 @@ fun MessageOptions(
                 contentDescription = "message delete button",
             )
         }
-        if (currentMenu == SavedMessageType.RECEIVED) {
+        if (currentMenu == SavedMessageType.RECEIVED || currentMenu == SavedMessageType.BLOCKED) {
             IconButton(onClick = onBlock) {
                 Icon(
                     imageVector = Icons.Filled.Block,
-                    tint = MaterialTheme.colors.secondary,
+                    tint = if (currentMenu == SavedMessageType.RECEIVED)
+                        MaterialTheme.colors.secondary
+                    else
+                        Color.Red,
                     contentDescription = "sender block button",
                 )
             }
