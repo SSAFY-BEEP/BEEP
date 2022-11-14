@@ -37,12 +37,17 @@ fun AddressListContent(
     changeDefaultNameString: (String) -> Unit,
     changeDefaultPhoneString: (String) -> Unit
 ) {
+    val uiState = viewModel.addressUiState
+    var myList: List<AddressResponse> = listOf<AddressResponse>()
+    when (uiState) {
+        is AddressUiState.Loading -> { }
+        is AddressUiState.Success -> { myList = uiState.data as List<AddressResponse>
+        }
+        is AddressUiState.Fail -> {}
+    }
 
     var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
     val scrollState = rememberScrollState()
-    val userAddressList: List<AddressResponse> by viewModel.exampleEntities.collectAsStateLifecycleAware(
-        initial = emptyList()
-    )
     var phoneWeight = if (viewEditDelBtn) {
         7
     } else {
@@ -63,7 +68,7 @@ fun AddressListContent(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            for (address in userAddressList) {
+            for (address in myList) {
                 TextButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
@@ -179,4 +184,9 @@ fun AddressListContent(
 //            BeepForTest()
 //        }
     }
+}
+
+@Composable
+fun AddressListSuccessScreen(data: Any) {
+
 }

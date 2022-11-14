@@ -4,4 +4,5 @@ sealed class KeyboardAction {
     data class Number(val number: String): KeyboardAction()
     object Delete: KeyboardAction()
     data class Change(val number: String) : KeyboardAction()
+    object Clear: KeyboardAction()
 }

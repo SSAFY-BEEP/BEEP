@@ -7,22 +7,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-@Composable
-fun AskGoingToRecord() {
-    AskingText()
-}
 
-@Composable
-fun AskingText() {
-    Text(
-        text = "음성녹음을 하시겠습니까?",
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(top = 45.dp),
-        fontSize = 20.sp,
-    )
-}
+
