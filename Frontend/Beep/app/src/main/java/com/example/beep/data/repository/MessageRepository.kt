@@ -68,4 +68,15 @@ class MessageRepository @Inject constructor(private val messageDataSource: Messa
     } catch (e: Exception) {
         ResultType.Error(e)
     }
+
+    suspend fun cancelBlock(messageId: Long): ResultType<BaseResponse<String>> = try {
+        val response = messageDataSource.cancelBlock(messageId)
+        if (response.status == "OK") {
+            ResultType.Success(response)
+        } else {
+            ResultType.Fail(response)
+        }
+    } catch (e: Exception) {
+        ResultType.Error(e)
+    }
 }

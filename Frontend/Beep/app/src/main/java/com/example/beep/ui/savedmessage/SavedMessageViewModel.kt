@@ -55,7 +55,15 @@ class SavedMessageViewModel @Inject constructor(
             savedMessageUiState = when (result) {
                 is ResultType.Success -> {
                     val list = gson.fromJson<List<MessageResponse>>(gson.toJson(result.data.data))
-                    UiState.Success(list)
+
+                    UiState.Success(list.map { messageResponse ->
+                        messageResponse.copy(
+                            localDateTime = messageResponse.localDateTime
+                                .replace('-', '/')
+                                .replace('T', ' ')
+                                .split('.')[0], ownerPhoneNumber = ""
+                        )
+                    })
                 }
                 else -> {
                     UiState.Error
@@ -82,18 +90,32 @@ class SavedMessageViewModel @Inject constructor(
     }
 
     fun blockMessage() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (messageUseCase.blockMessage(messageToModify!!.id)) {
-                is ResultType.Success -> {
-                    Log.d("SavedMessage", "Block Success")
-                    getMessage()
-                }
-                else -> {
-                    Log.d("SavedMessage", "Block Failed")
-                    savedMessageUiState = UiState.Error
+        if (currentSavedMessageType == SavedMessageType.RECEIVED)
+            viewModelScope.launch(Dispatchers.IO) {
+                when (messageUseCase.blockMessage(messageToModify!!.id)) {
+                    is ResultType.Success -> {
+                        Log.d("SavedMessage", "Block Success")
+                        getMessage()
+                    }
+                    else -> {
+                        Log.d("SavedMessage", "Block Failed")
+                        savedMessageUiState = UiState.Error
+                    }
                 }
             }
-        }
+        else
+            viewModelScope.launch(Dispatchers.IO) {
+                when (messageUseCase.cancelBlock(messageToModify!!.id)) {
+                    is ResultType.Success -> {
+                        Log.d("SavedMessage", "Cancel Block Success")
+                        getMessage()
+                    }
+                    else -> {
+                        Log.d("SavedMessage", "Cancel Block Failed")
+                        savedMessageUiState = UiState.Error
+                    }
+                }
+            }
     }
 
     fun changeTag(tag: String) {

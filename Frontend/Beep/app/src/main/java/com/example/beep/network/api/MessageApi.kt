@@ -17,5 +17,6 @@ interface MessageApi {
     suspend fun deleteMessage(@Path("messageId") messageId: Long) : BaseResponse<String>
     @POST("message/block/{messageId}")
     suspend fun blockMessage(@Path("messageId") messageId: Long) : BaseResponse<String>
-
+    @DELETE
+    suspend fun cancelBlock(@Path("messageId") messageId: Long) : BaseResponse<String>
 }
