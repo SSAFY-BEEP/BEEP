@@ -19,14 +19,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.beep.di.MainApplication
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun JoinScreen() {
+fun JoinScreen(navController: NavController) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel = viewModel<UserViewModel>()
     val state = viewModel.authState
+    val loginState = viewModel.loginState
     val context = LocalContext.current
+    val token = MainApplication.sharedPreferencesUtil.getToken()
+
+    LaunchedEffect(loginState.isUserLoggedIn) {
+        Log.d("launchEffect 실행", "$loginState")
+        if (token != null) {
+            if (token.isNotBlank()) {
+                navController.navigate("beep_graph")
+            }
+        }
+    }
+
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
             when (event) {
