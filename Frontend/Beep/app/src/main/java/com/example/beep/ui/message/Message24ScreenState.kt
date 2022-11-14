@@ -1,6 +1,6 @@
 package com.example.beep.ui.message
 
-import com.example.beep.data.dto.message.MessageResponse
+import com.example.beep.data.dto.message.Message24Response
 
 enum class MessagePopupState {
     NORMAL, DELETE, BLOCK
@@ -17,7 +17,7 @@ enum class ReceiveSendState {
 data class Message24ScreenState(
     val resultState: ResultState = ResultState.Loading,
     val receiveSendState: ReceiveSendState = ReceiveSendState.Receive,
-    val msg24List: List<MessageResponse> = listOf(),
-    val messageToModify: MessageResponse? = null,
+    val msg24List: List<Message24Response> = listOf(),
+    val messageToModify: Message24Response? = null,
     val popupState: MessagePopupState = MessagePopupState.NORMAL
 )
