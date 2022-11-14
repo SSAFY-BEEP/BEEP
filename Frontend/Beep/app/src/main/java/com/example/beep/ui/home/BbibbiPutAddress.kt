@@ -17,7 +17,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @ExperimentalComposeUiApi
 @Composable
 fun BbibbiPutAddress(
-    toPutMsg: () -> Unit
+    toPutMsg: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
 

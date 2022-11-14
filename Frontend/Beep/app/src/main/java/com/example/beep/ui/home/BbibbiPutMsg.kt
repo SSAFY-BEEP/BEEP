@@ -30,7 +30,7 @@ fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
     toAskRecord: () -> Unit,
     changeContentString: (String) -> Unit,
-
+    homeViewModel: HomeViewModel = viewModel(),
     ) {
 
     val viewModel = viewModel<KeyboardViewModel>()

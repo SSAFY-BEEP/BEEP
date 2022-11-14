@@ -18,7 +18,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun BbibbiAskToRecord(
     toPutMsg: () -> Unit,
     toSendMsg: () -> Unit,
-    toRecord: () -> Unit
+    toRecord: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
     ) {
     var go by remember { mutableStateOf(true) }
 
