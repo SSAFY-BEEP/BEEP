@@ -1,5 +1,6 @@
 package com.example.beep.ui.message
 
+import android.media.AudioAttributes
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.domain.Message24UseCase
 import com.example.beep.util.ResultType
+import com.example.beep.util.S3_CONSTANT_URI
+import com.example.beep.util.VoicePlayer
 import com.example.beep.util.fromJson
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +28,6 @@ class MessageViewModel @Inject constructor(
     var msg24State by mutableStateOf(Message24ScreenState())
 
     val gson = Gson()
-
 
     private fun getMsg24() {
         msg24State = msg24State.copy(resultState = ResultState.Loading)
@@ -63,6 +65,7 @@ class MessageViewModel @Inject constructor(
                 when(it){
                     is ResultType.Success -> {
                         Log.d("SaveMessage", "Success!!")
+                        msg24State = msg24State.copy(popupState = MessagePopupState.NORMAL)
                         getMsg24()
                     }
                     else -> {
@@ -71,6 +74,77 @@ class MessageViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun deleteMsg24() {
+        msg24State = msg24State.copy(resultState = ResultState.Loading)
+        viewModelScope.launch(Dispatchers.IO) {
+            if(msg24State.messageToModify == null) return@launch
+            message24UseCase.deleteMsg(msg24State.messageToModify!!.id).collectLatest {
+                when(it){
+                    is ResultType.Success -> {
+                        Log.d("DeleteMessage", "Success!!")
+                        msg24State = msg24State.copy(popupState = MessagePopupState.NORMAL)
+                        getMsg24()
+                    }
+                    else -> {
+                        Log.d("DeleteMessage", "Error!!")
+                        msg24State = msg24State.copy(resultState = ResultState.Error)
+                    }
+                }
+            }
+        }
+    }
+
+    fun blockMsg24() {
+        msg24State = msg24State.copy(resultState = ResultState.Loading)
+        viewModelScope.launch(Dispatchers.IO) {
+            if(msg24State.messageToModify == null) return@launch
+            message24UseCase.blockMsg(msg24State.messageToModify!!.id).collectLatest {
+                when(it){
+                    is ResultType.Success -> {
+                        Log.d("BlockMessage", "Success!!")
+                        msg24State = msg24State.copy(popupState = MessagePopupState.NORMAL)
+                        getMsg24()
+                    }
+                    else -> {
+                        Log.d("BlockMessage", "Error!!")
+                        msg24State = msg24State.copy(resultState = ResultState.Error)
+                    }
+                }
+            }
+        }
+    }
+
+    fun playSavedMessageAudio(message: Message24Response) {
+        VoicePlayer.nullInstance()
+        VoicePlayer.getInstance().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setDataSource(S3_CONSTANT_URI + message.audioUri)
+            setOnPreparedListener {
+                it.start()
+                msg24State =
+                    msg24State.copy(messageAudioState = MessageAudioState(isPlaying = true, message = message))
+            }
+            prepareAsync()
+            setOnCompletionListener {
+                it.stop()
+                it.release()
+                msg24State =
+                    msg24State.copy(messageAudioState = MessageAudioState(isPlaying = false, message = null))
+            }
+        }
+    }
+
+    fun stopSavedMessageAudio() {
+        VoicePlayer.getInstance().apply {
+            stop()
+            release()
+            msg24State =
+                msg24State.copy(messageAudioState = MessageAudioState(isPlaying = false, message = null))
         }
     }
 
@@ -84,54 +158,6 @@ class MessageViewModel @Inject constructor(
         msg24State = msg24State.copy(popupState = type)
     }
 
-//    var message24UiState by mutableStateOf(Message24ScreenState())
-//
-//    fun getMessage24() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            if (message24UiState.receiveSendState == ReceiveSendState.Receive) {
-//                message24UseCase.getReceive24()
-//            } else {
-//                message24UseCase.getSend24()
-//            }
-//        }
-//    }
-//
-//    //message24를 보관 메시지로 저장
-//    fun saveMsg24(messageId: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            message24UseCase.saveMsg(messageId).collectLatest {
-//                if (it.code() == 200) {
-//                    Log.d("SAVE Message24", it.body()!!)
-//                } else {
-//                    Log.d("SAVE Message24", "Fail!!")
-//                }
-//            }
-//        }
-//    }
-//
-//    fun deleteMsg24(messageId: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            message24UseCase.deleteMsg(messageId).collectLatest {
-//                if (it.code() == 200) {
-//                    Log.d("Delete Msg24", it.body()!!)
-//                } else {
-//                    Log.d("Delete Msg24", "Fail!!")
-//                }
-//            }
-//        }
-//    }
-//
-//    fun blockMsg24(messageId: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            message24UseCase.blockMsg(messageId).collectLatest {
-//                if (it.code() == 200) {
-//                    Log.d("Block Msg24", it.body()!!)
-//                } else {
-//                    Log.d("Block Msg24", "Fail!!")
-//                }
-//            }
-//        }
-//    }
     init {
         getMsg24()
     }

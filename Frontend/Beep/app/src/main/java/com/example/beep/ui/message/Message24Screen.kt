@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,103 @@ fun MessageSuccessScreen(
                 onDelete = { message: Message24Response ->
                     viewModel.msg24State = viewModel.msg24State.copy(messageToModify = message)
                     viewModel.toggleConfirmAlert(MessagePopupState.DELETE)
-                })
+                },
+                onSave = { message: Message24Response ->
+                    viewModel.msg24State = viewModel.msg24State.copy(messageToModify = message)
+                    viewModel.toggleConfirmAlert(MessagePopupState.SAVE)
+                },
+                onBlock = { message: Message24Response ->
+                    viewModel.msg24State = viewModel.msg24State.copy(messageToModify = message)
+                    viewModel.toggleConfirmAlert(MessagePopupState.BLOCK)
+                }
+            )
+        }
+    }
+    ConfirmDialog(
+        show = viewModel.msg24State.popupState != MessagePopupState.NORMAL,
+        onConfirmDelete = { viewModel.deleteMsg24() },
+        onConfirmSave = { viewModel.saveMsg24() },
+        onConfirmBlock = { viewModel.blockMsg24() })
+}
+
+@Composable
+fun ConfirmDialog(
+    show: Boolean,
+    onConfirmDelete: () -> Unit,
+    onConfirmSave: () -> Unit,
+    onConfirmBlock: () -> Unit,
+    viewModel: MessageViewModel = viewModel()
+) {
+    if (show) {
+        when (viewModel.msg24State.popupState) {
+            MessagePopupState.DELETE ->
+                AlertDialog(
+                    onDismissRequest = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) },
+                    title = {
+                        Text(text = "삭제하시겠습니까?")
+                    },
+                    text = {
+                        Text(text = "메시지가 삭제됩니다.")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = onConfirmDelete) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) }) {
+                            Text("취소")
+                        }
+                    }
+                )
+            MessagePopupState.SAVE ->
+                AlertDialog(
+                    onDismissRequest = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) },
+                    title = {
+                        Text(
+                            text = "저장하시겠습니까?"
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "메시지가 영구 보관 됩니다."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = onConfirmSave) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) }) {
+                            Text("취소")
+                        }
+                    }
+                )
+            MessagePopupState.BLOCK ->
+                AlertDialog(
+                    onDismissRequest = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) },
+                    title = {
+                        Text(
+                            text = "차단하시겠습니까?"
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "상대에게서 메시지를 받을 수 없습니다."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = onConfirmBlock) {
+                            Text("확인")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { viewModel.toggleConfirmAlert(MessagePopupState.NORMAL) }) {
+                            Text("취소")
+                        }
+                    }
+                )
         }
     }
 }
@@ -79,6 +176,8 @@ fun MessageList(
     currentMenu: ReceiveSendState,
     messageList: List<Message24Response>,
     onDelete: (Message24Response) -> Unit,
+    onSave: (Message24Response) -> Unit,
+    onBlock: (Message24Response) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
         items(messageList) {
@@ -87,6 +186,8 @@ fun MessageList(
                 modifier = modifier,
                 currentMenu = currentMenu,
                 onDelete = onDelete,
+                onSave = onSave,
+                onBlock = onBlock
             )
         }
     }
@@ -98,6 +199,8 @@ fun MessageItem(
     modifier: Modifier = Modifier,
     currentMenu: ReceiveSendState,
     onDelete: (Message24Response) -> Unit,
+    onSave: (Message24Response) -> Unit,
+    onBlock: (Message24Response) -> Unit,
     viewModel: MessageViewModel = viewModel()
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -115,34 +218,30 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-//                AudioBtn(
-//                    enabled = message.audioUri != null,
-//                    onPlay = { viewModel.playSavedMessageAudio(message) },
-//                    onStop = { viewModel.stopSavedMessageAudio() },
-//                    isPlaying = viewModel.savedMessageAudioState.isPlaying
-//                            && viewModel.savedMessageAudioState.message?.id == message.id
-//                )
+                AudioBtn(
+                    enabled = message.audioUri != null,
+                    onPlay = { viewModel.playSavedMessageAudio(message) },
+                    onStop = { viewModel.stopSavedMessageAudio() },
+                    isPlaying = viewModel.msg24State.messageAudioState.isPlaying
+                            && viewModel.msg24State.messageAudioState.message?.id == message.id
+                )
                 MessageInfo(
                     modifier = modifier.weight(1f),
                     content = message.content,
                     localDateTime = message.time
                 )
-//                ExpandButton(
-//                    expanded = expanded,
-//                    onClick = { expanded = !expanded },
-//                    modifier = modifier.weight(1f)
-//                )
-//            }
-//            if (expanded) {
-//                MessageOptions(
-//                    currentMenu = currentMenu,
-//                    onDelete = { onDelete(message) },
-//                    onChangeTag = {
-//                        viewModel.toggleModifyTagAlert()
-//                        onChangeTag(message)
-//                    },
-//                    onShare = {}, onBlock = { onBlock(message) })
-//            }
+                ExpandButton(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded },
+                    modifier = modifier.weight(1f)
+                )
+            }
+            if (expanded) {
+                MessageOptions(
+                    currentMenu = currentMenu,
+                    onDelete = { onDelete(message) },
+                    onSave = { onSave(message) },
+                    onBlock = { onBlock(message) })
             }
         }
     }
@@ -191,49 +290,52 @@ fun MessageInfo(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Text(text = content, fontSize = 24.sp)
-        Text(text = localDateTime)
+        Text(text = localDateTime.substring(0,10))
     }
 }
 
 @Composable
-fun AudioBtn(audioUri: String?) {
-    IconButton(onClick = { /*TODO*/ }) {
+fun AudioBtn(enabled: Boolean, onPlay: () -> Unit, onStop: () -> Unit, isPlaying: Boolean) {
+    IconButton(enabled = enabled, onClick = { if (isPlaying) onPlay() else onStop() }) {
         Icon(
             imageVector = Icons.Filled.Mic,
-            tint = MaterialTheme.colors.secondary,
+            tint = if (isPlaying) Color.Green else Color.Black,
             contentDescription = "message audio button",
         )
     }
 }
 
 @Composable
-fun MessageOptions(currentMenu: Boolean) {
+fun MessageOptions(
+    currentMenu: ReceiveSendState,
+    onDelete: () -> Unit,
+    onSave: () -> Unit,
+    onBlock: () -> Unit
+) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        IconButton(onClick = { /*TODO*/ }) {
+//        IconButton(onClick = { /*TODO*/ }) {
+//            Icon(
+//                imageVector = Icons.Filled.Share,
+//                tint = MaterialTheme.colors.secondary,
+//                contentDescription = "message share button",
+//            )
+//        }
+        IconButton(onClick =  onSave ) {
             Icon(
-                imageVector = Icons.Filled.Share,
+                imageVector = Icons.Filled.BookmarkAdd,
                 tint = MaterialTheme.colors.secondary,
-                contentDescription = "message share button",
+                contentDescription = "message save button",
             )
         }
-        if (currentMenu) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Filled.BookmarkAdd,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = "message save button",
-                )
-            }
-        }
-        IconButton(onClick = {  }) {
+        IconButton(onClick =  onDelete ) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 tint = MaterialTheme.colors.secondary,
                 contentDescription = "message delete button",
             )
         }
-        if (currentMenu) {
-            IconButton(onClick = { /*TODO*/ }) {
+        if (currentMenu == ReceiveSendState.Receive) {
+            IconButton(onClick =  onBlock ) {
                 Icon(
                     imageVector = Icons.Filled.Block,
                     tint = MaterialTheme.colors.secondary,
