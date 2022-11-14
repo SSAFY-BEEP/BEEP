@@ -25,17 +25,24 @@ fun Bbibbi(
     presetViewModel: PresetViewModel = viewModel()
 ) {
     var receiveMsg = ""
-    var senderPhoneNumber = ""
-    var receiverPhoneNumber = ""
+//    var senderPhoneNumber = ""
+//    var receiverPhoneNumber = ""
+    var currentPage by remember { mutableStateOf("ReceivedMsg") }
 
     when (val currentUiState = homeViewModel.receivedMessageUiState) {
         is UiState.Loading -> {
             receiveMsg = "로딩중..."
         }
         is UiState.Success -> {
-            receiveMsg = currentUiState.data[0].content
-            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
-            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
+            if (currentUiState.data.isEmpty()) {
+                receiveMsg = "데이터가 없습니다"
+                currentPage = "PutAddress"
+            } else {
+                receiveMsg = currentUiState.data[0].content
+
+            }
+//            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
+//            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
             Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
         }
         is UiState.Error -> {
@@ -52,7 +59,6 @@ fun Bbibbi(
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())
 
 
-    var currentPage by remember { mutableStateOf("ReceivedMsg") }
 
 
 
@@ -71,16 +77,18 @@ fun Bbibbi(
         BbibbiAskToRecord (
             toPutMsg = {currentPage = "PutMsg"},
             toSendMsg = {currentPage = "SendMsg"},
-            toFirstPage = {currentPage = "ReceivedMsg"},
-
+            toRecord = {currentPage = "DoRecord"},
             )
     } else if (currentPage == "SendMsg") {
         BbibbiAskToSend(
             toPutMsg = {currentPage = "PutMsg"},
             toAskRecord = {currentPage = "AskRecord"},
             toFirstPage = {currentPage = "ReceivedMsg"},
-
         )
+    } else if (currentPage == "DoRecord") {
+        BbibbiDoRecord(
+            toSendMsg = {currentPage = "DoRecord"},
+            )
     } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
