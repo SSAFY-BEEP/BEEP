@@ -19,6 +19,7 @@ import com.example.beep.ui.home.*
 import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.LoginMainScreen
+import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
@@ -51,6 +52,9 @@ fun BeepNavGraph(navController: NavHostController) {
         composable("login_main") {
             val model: UserViewModel = hiltViewModel(it)
             LoginMainScreen()
+        }
+        composable("login_main_graph") {
+            MainButtonScreen(navController=navController)
         }
         composable("savedMessage") {
             val model: SavedMessageViewModel = hiltViewModel(it)

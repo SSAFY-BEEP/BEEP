@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
@@ -20,11 +21,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.beep.R
 import com.example.beep.data.BottomNavItem
+import com.example.beep.di.MainApplication
+import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
 import com.example.beep.ui.theme.BACKGROUND_WHITE
 import com.example.beep.ui.theme.GRAY100
@@ -39,6 +43,16 @@ val galmurinineFont = FontFamily(
 @Composable
 fun BeepApp() {
     val navController = rememberNavController()
+    val viewModel = viewModel<UserViewModel>()
+    var loginState = viewModel.loginState
+    val token = MainApplication.sharedPreferencesUtil.getToken()
+    LaunchedEffect(loginState.isUserLoggedIn) {
+        if (token != null) {
+            if (token.isEmpty()) {
+                navController.navigate("login_main_graph")
+            }
+        }
+    }
     Scaffold(topBar = { BeepAppBar() },
         bottomBar = {
             BottomNavigationBar(
