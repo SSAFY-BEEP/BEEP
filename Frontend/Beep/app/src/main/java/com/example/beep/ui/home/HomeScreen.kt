@@ -26,6 +26,10 @@ import com.example.beep.R
 import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.di.MainApplication
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.message.UiState
+import com.example.beep.ui.savedmessage.SavedMessageSuccessScreen
 import com.example.beep.util.collectAsStateLifecycleAware
 
 val galmurinineFont = FontFamily(
@@ -34,7 +38,9 @@ val galmurinineFont = FontFamily(
 
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: PresetViewModel = viewModel()) {
+fun HomeScreen(
+    presetViewModel: PresetViewModel = viewModel()
+) {
 //    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     val image = painterResource(R.drawable.bbibbi_blue)
 
@@ -49,6 +55,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), presetViewModel: Pres
 //    );
 //    Log.d("Message24 Receive", receiveMsg.value.toString())
 //    Log.d("Message24 Send", sendMsg.value.toString())
+
 
     Column(
         modifier = Modifier

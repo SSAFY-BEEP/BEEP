@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
 import com.example.beep.data.dto.mainpage.AddressResponse
+import com.example.beep.ui.message.UiState
 import com.example.beep.util.collectAsStateLifecycleAware
 
 
@@ -37,14 +39,7 @@ fun AddressListContent(
     changeDefaultNameString: (String) -> Unit,
     changeDefaultPhoneString: (String) -> Unit
 ) {
-    val uiState = viewModel.addressUiState
-    var myList: List<AddressResponse> = listOf<AddressResponse>()
-    when (uiState) {
-        is AddressUiState.Loading -> { }
-        is AddressUiState.Success -> { myList = uiState.data as List<AddressResponse>
-        }
-        is AddressUiState.Fail -> {}
-    }
+
 
     var themeColorBlue = Color(android.graphics.Color.parseColor("#7AA8FF"))
     val scrollState = rememberScrollState()
@@ -59,104 +54,130 @@ fun AddressListContent(
     Box(
         modifier = modifier
             .padding(10.dp, 5.dp, 10.dp, 5.dp)
-            .height(300.dp)
+            .height(232.dp)
             .width(320.dp)
             .fillMaxSize()
     ) {
         Column(
             modifier = modifier
-                .height(300.dp)
+                .height(232.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            for (address in myList) {
-                TextButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .height(40.dp)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        Text(
-                            text = address.name ?: "",
-                            fontSize = 14.sp,
-                            fontFamily = galmurinineFont,
-                            color = Color.Black,
+            when (val currentUiState = viewModel.addressListUiState) {
+                is UiState.Loading -> {
+                    Text(
+                        text = "로딩중...",
+                        fontSize = 14.sp,
+                        fontFamily = galmurinineFont,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .weight((phoneWeight as Number).toFloat()),
+                    )
+                }
+                is UiState.Success -> {
+                    for (address in currentUiState.data) {
+                        TextButton(
+                            onClick = { /*TODO*/ },
                             modifier = Modifier
-                                .weight(6f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        Text(
-                            text = address.phone ?: "",
-                            fontSize = 14.sp,
-                            fontFamily = galmurinineFont,
-                            color = Color.Black,
-                            modifier = Modifier
-                                .weight((phoneWeight as Number).toFloat()),
-                        )
-                        if (viewEditDelBtn) {
+                                .height(40.dp)
+                        ) {
                             Row(
-                                modifier = Modifier
-                                    .weight(2f)
-                                    .wrapContentHeight(Alignment.CenterVertically)
-                                    .fillMaxSize(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-                                Box(
-                                    contentAlignment = Alignment.Center,
+                                Text(
+                                    text = address.name ?: "",
+                                    fontSize = 14.sp,
+                                    fontFamily = galmurinineFont,
+                                    color = Color.Black,
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(16.dp))
-                                        .width(16.dp)
-                                        .height(16.dp)
-                                        .clickable {
-                                            changeDefaultNameString(address.name)
-                                            changeDefaultPhoneString(address.phone)
-                                            changeToPatchAddress()
-                                        }
-                                        .then(modifier)
-                                ) {
-                                    Image(
-                                        painter = painterResource(R.drawable.editicon),
-                                        contentDescription = "수정",
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .wrapContentHeight(Alignment.CenterVertically)
-                                            .width(16.dp),
-                                        contentScale = ContentScale.FillWidth
-                                    )
-                                }
-                                Box(
-                                    contentAlignment = Alignment.Center,
+                                        .weight(6f),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    text = address.phone ?: "",
+                                    fontSize = 14.sp,
+                                    fontFamily = galmurinineFont,
+                                    color = Color.Black,
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(18.dp))
-                                        .width(16.dp)
-                                        .height(16.dp)
-                                        .clickable {
-                                            viewModelDelete.deleteAddress(address.phone)
-                                        }
-                                        .then(modifier)
-                                ) {
-                                    Image(
-                                        painter = painterResource(R.drawable.deleteicon),
-                                        contentDescription = "삭제",
+                                        .weight((phoneWeight as Number).toFloat()),
+                                )
+                                if (viewEditDelBtn) {
+                                    Row(
                                         modifier = Modifier
-                                            .fillMaxWidth()
+                                            .weight(2f)
                                             .wrapContentHeight(Alignment.CenterVertically)
-                                            .width(16.dp),
-                                        contentScale = ContentScale.FillWidth
-                                    )
-                                }
-                            }
-                        } else {
-                            Box() {
+                                            .fillMaxSize(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .width(16.dp)
+                                                .height(16.dp)
+                                                .clickable {
+                                                    changeDefaultNameString(address.name)
+                                                    changeDefaultPhoneString(address.phone)
+                                                    changeToPatchAddress()
+                                                }
+                                                .then(modifier)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.drawable.editicon),
+                                                contentDescription = "수정",
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentHeight(Alignment.CenterVertically)
+                                                    .width(16.dp),
+                                                contentScale = ContentScale.FillWidth
+                                            )
+                                        }
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(18.dp))
+                                                .width(16.dp)
+                                                .height(16.dp)
+                                                .clickable {
+                                                    viewModelDelete.deleteAddress(address.phone)
+                                                }
+                                                .then(modifier)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.drawable.deleteicon),
+                                                contentDescription = "삭제",
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentHeight(Alignment.CenterVertically)
+                                                    .width(16.dp),
+                                                contentScale = ContentScale.FillWidth
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    Box() {
 
+                                    }
+                                }
                             }
                         }
                     }
+                    Log.d("데이터", currentUiState.data.toString())
+                }
+                is UiState.Error -> {
+                    Text(
+                        text = "ERROR",
+                        fontSize = 14.sp,
+                        fontFamily = galmurinineFont,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .weight((phoneWeight as Number).toFloat()),
+                    )
                 }
             }
+
         }
         Button(
             onClick = changeToAddAddress,

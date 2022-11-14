@@ -13,6 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.Message24Response
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.message.UiState
 import com.example.beep.util.collectAsStateLifecycleAware
 
 @ExperimentalComposeUiApi
@@ -21,24 +24,47 @@ fun Bbibbi(
     homeViewModel: HomeViewModel = viewModel(),
     presetViewModel: PresetViewModel = viewModel()
 ) {
+    var receiveMsg = ""
+    var senderPhoneNumber = ""
+    var receiverPhoneNumber = ""
+
+    when (val currentUiState = homeViewModel.receivedMessageUiState) {
+        is UiState.Loading -> {
+            receiveMsg = "로딩중..."
+        }
+        is UiState.Success -> {
+            receiveMsg = currentUiState.data[0].content
+            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
+            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
+            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
+        }
+        is UiState.Error -> {
+            receiveMsg = "ERROR"
+        }
+    }
+
+    var contentString = ""
+
+
+
     var sendText by remember { mutableStateOf(false) }
-    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
-        initial = emptyList<BaseResponse<Message24Response>>()
-    );
+
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())
 
+
     var currentPage by remember { mutableStateOf("ReceivedMsg") }
+
 
 
     if (currentPage == "PutAddress") {
         BbibbiPutAddress(
             toPutMsg = {currentPage = "PutMsg"}
         )
-        Log.d("currentPage 글씨",currentPage)
     } else if (currentPage == "PutMsg") {
         BbibbiPutMsg(
             toPutAddress = {currentPage = "PutAddress"},
-            toAskRecord = {currentPage = "AskRecord"}
+            toAskRecord = {currentPage = "AskRecord"},
+            changeContentString = { changedContentString: String -> contentString = changedContentString },
 
             )
     } else if (currentPage == "AskRecord") {
@@ -55,11 +81,12 @@ fun Bbibbi(
             toFirstPage = {currentPage = "ReceivedMsg"},
 
         )
-    } else if (receiveMsg.value.toString().length > 10) {
+    } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
         toPutAddress = {currentPage = "PutAddress"},
-            toPutMsg = {currentPage = "PutMsg"}
+            toPutMsg = {currentPage = "PutMsg"},
+            receivedMsg = receiveMsg
         )
     } else {
         BbibbiPutAddress(

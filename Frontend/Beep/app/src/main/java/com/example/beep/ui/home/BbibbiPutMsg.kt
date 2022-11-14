@@ -28,8 +28,10 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
-    toAskRecord: () -> Unit
-) {
+    toAskRecord: () -> Unit,
+    changeContentString: (String) -> Unit,
+
+    ) {
 
     val viewModel = viewModel<KeyboardViewModel>()
 
@@ -56,6 +58,7 @@ fun BbibbiPutMsg(
                 // 내용을 입력해주세요
             } else if (defaultNameString.length < 12) {
                 // 음성을 녹음하시겠습니까
+                changeContentString(defaultNameString)
                 toAskRecord()
             }
         },

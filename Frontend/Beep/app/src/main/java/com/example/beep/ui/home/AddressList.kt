@@ -94,7 +94,7 @@ fun ShowAddressList(
         Box(
             modifier = Modifier
                 .width(320.dp)
-                .height(240.dp)
+                .height(232.dp)
                 .padding(0.dp, 0.dp, 0.dp, 20.dp)
                 .background(
                     color = androidx.compose.ui.graphics.Color.White,
