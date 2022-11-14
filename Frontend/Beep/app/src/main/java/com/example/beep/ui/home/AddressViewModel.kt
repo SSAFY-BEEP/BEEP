@@ -7,9 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.mainpage.AddressResponse
+import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.domain.retrofit.GetUserAddressUseCase
+import com.example.beep.ui.message.UiState
+import com.example.beep.ui.savedmessage.SavedMessageType
 import com.example.beep.util.ResultType
+import com.example.beep.util.fromJson
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -23,25 +29,34 @@ sealed interface AddressUiState<out T : Any> {
 }
 
 @HiltViewModel
-class AddressViewModel @Inject constructor(private val getUserAddressUseCase: GetUserAddressUseCase) :
+class AddressViewModel @Inject constructor(
+    private val getUserAddressUseCase: GetUserAddressUseCase
+    ) :
     ViewModel() {
     var addressUiState:AddressUiState<Any> by mutableStateOf(AddressUiState.Loading)
 
 
-//    fun getAddress(){
-//        viewModelScope.launch(Dispatchers.Main) {
-//            addressUiState = AddressUiState.Loading
-//            getUserAddressUseCase.execute().collectLatest {
-//                addressUiState = if(it is ResultType.Success){
-//                    Log.d("성공","$it")
-//                    AddressUiState.Success(it.data.data)
-//                }else{
-//                    Log.d("실패", "$it")
-//                    AddressUiState.Fail
-//                }
-//            }
-//        }
-//    }
+    val gson = Gson()
+
+    //24시간 후에 사라지는 일반 메시지 리스트
+    var addressListUiState: UiState<List<AddressResponse>> by mutableStateOf(UiState.Loading)
+
+
+
+
+    fun getAddress() {
+        addressListUiState = UiState.Loading
+        viewModelScope.launch() {
+            getUserAddressUseCase.execute().collectLatest {
+                if (it is ResultType.Success) {
+                    val list = gson.fromJson<List<AddressResponse>>(gson.toJson(it.data.data))
+                    addressListUiState = UiState.Success(list)
+                } else {
+                    UiState.Error
+                }
+            }
+        }
+    }
 
 //         val exampleEntities: Flow<List<AddressResponse>> = getUserAddressUseCase.execute()
 
@@ -61,6 +76,6 @@ class AddressViewModel @Inject constructor(private val getUserAddressUseCase: Ge
 //    }
 
     init {
-//        getAddress()
+        getAddress()
     }
 }

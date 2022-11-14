@@ -17,8 +17,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun BbibbiAskToRecord(
     toPutMsg: () -> Unit,
-    toSendMsg: () -> Unit
+    toSendMsg: () -> Unit,
+    toFirstPage: () -> Unit
     ) {
+    var go by remember { mutableStateOf(true) }
+
+    var r = 0
+    var l = 0
+    if (go) {
+        r = 140
+        l = 0
+    } else {
+        r = 0
+        l = 60
+    }
 
     Button(
         // 메시지 입력 페이지로(메시지 내용 살아있음)
@@ -39,10 +51,58 @@ fun BbibbiAskToRecord(
         shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
     }
+
+    Button(
+        // <-
+        onClick = {
+            /* cancel 버튼 */
+            go = !go
+        },
+        modifier = Modifier
+            .width(60.dp)
+            .offset(130.dp, 133.dp)
+            .height(45.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        shape = RoundedCornerShape(5.dp)
+    ) {
+
+    }
+
+    Button(
+        // ->
+        onClick = {
+            /* cancel 버튼 */
+            go = !go
+        },
+        modifier = Modifier
+            .width(68.dp)
+            .offset(190.dp, 133.dp)
+            .height(45.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            disabledElevation = 0.dp
+        ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        shape = RoundedCornerShape(5.dp, 0.dp, 40.dp, 5.dp)
+    ) {
+
+    }
+
     Button(
         // 녹음페이지로
         onClick = {
             /* go버튼 */
+                  if (go) {
+                      // 녹음페이지
+                  } else {
+                      toSendMsg()
+                  }
         },
         modifier = Modifier
             .width(83.dp)
@@ -55,7 +115,8 @@ fun BbibbiAskToRecord(
         ),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
         contentPadding = PaddingValues(0.dp),
-        ) {
+        shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
+    ) {
 
     }
 
@@ -86,7 +147,6 @@ fun BbibbiAskToRecord(
             disabledElevation = 0.dp
         ),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
-//        shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
         contentPadding = PaddingValues(0.dp),
     ) {
         Text(
@@ -100,7 +160,7 @@ fun BbibbiAskToRecord(
         )
     }
     Button(
-        // 메시지 보내기 페이지로
+        // 메시지 보낼까 페이지로
         onClick = {
             /* go버튼 */
             toSendMsg()
@@ -115,11 +175,10 @@ fun BbibbiAskToRecord(
             disabledElevation = 0.dp
         ),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
-//        shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
         contentPadding = PaddingValues(0.dp),
         ) {
         Text(
-            text = "NO",
+            text = "NO ",
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.CenterHorizontally)
@@ -128,4 +187,13 @@ fun BbibbiAskToRecord(
             fontFamily = galmurinineFont
         )
     }
+    Text(
+        text = ">",
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .padding(l.dp, 66.dp, r.dp, 0.dp),
+        fontSize = 15.sp,
+        fontFamily = galmurinineFont
+    )
 }

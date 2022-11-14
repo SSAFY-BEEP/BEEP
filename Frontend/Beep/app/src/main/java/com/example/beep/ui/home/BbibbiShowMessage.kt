@@ -18,8 +18,8 @@ fun BbibbiShowMessage(
     /* 메시지1개내용 */
     /* 메시지1개발신인 */
     toPutAddress: () -> Unit,
-    toPutMsg: () -> Unit
-
+    toPutMsg: () -> Unit,
+    receivedMsg: String
 ) {
     Button(
         // 연락처 입력 페이지로
@@ -64,7 +64,7 @@ fun BbibbiShowMessage(
 
     }
     Text(
-        text = "메시지내용0345",
+        text = receivedMsg,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
