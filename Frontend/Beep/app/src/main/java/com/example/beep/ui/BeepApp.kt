@@ -2,8 +2,7 @@ package com.example.beep.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -53,7 +52,13 @@ fun BeepApp() {
             }
         }
     }
-    Scaffold(topBar = { BeepAppBar() },
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .padding(0.dp,25.dp)
+        ,
+        topBar = { BeepAppBar() },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(

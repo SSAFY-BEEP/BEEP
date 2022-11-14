@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -32,11 +33,12 @@ import com.example.beep.MainActivity
 import com.example.beep.di.MainApplication
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
 ) {
+    val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel = viewModel<UserViewModel>()
     val loginState = viewModel.loginState
@@ -80,6 +82,8 @@ fun LoginScreen(
             Modifier
                 .fillMaxSize()
                 .padding(48.dp)
+                .verticalScroll(scrollState)
+                .imePadding()
                 ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -89,7 +93,8 @@ fun LoginScreen(
                 contentDescription = "Login",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .blur(6.dp),
+                    .blur(6.dp)
+                    .imePadding(),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -99,7 +104,9 @@ fun LoginScreen(
                     viewModel.loginEvent(LoginFormEvent.LoginPhoneNumberChanged(it))
                 },
                 isError = loginState.loginPhoneNumberError != null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding(),
                 placeholder = {
                     Text(text = "phoneNumber")
                 },
@@ -124,7 +131,9 @@ fun LoginScreen(
                     viewModel.loginEvent(LoginFormEvent.LoginPasswordChanged(it))
                 },
                 isError = loginState.loginPasswordError != null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding(),
                 placeholder = {
                     Text(text = "password")
                 },
