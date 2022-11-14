@@ -30,7 +30,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d("Firebase", "From: ${remoteMessage.from}")
-        // Check if message contains a data payload.
+        // Data가 담겨있는지 확인하고 담겨있으면 데이터를 읽어 지정한 알림을 보냄
         if (remoteMessage.data.isNotEmpty()) {
             Log.d("Firebase", "Message data payload: ${remoteMessage.data}")
             sendNotification(remoteMessage)
@@ -38,7 +38,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             Log.e("Firebase", "data가 비어있습니다. 메시지를 수신하지 못했습니다.")
         }
 
-        // Check if message contains a notification payload.
+        // 알림 정보가 들어있으면 알림을 보냄
         remoteMessage.notification?.let {
             Log.d("Firebase", "Message Notification Body: ${it.body}")
         }
