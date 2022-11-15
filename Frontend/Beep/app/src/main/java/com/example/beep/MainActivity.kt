@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,12 +14,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
+import androidx.core.view.WindowCompat
 import com.example.beep.di.MainApplication
-import com.example.beep.ui.BeepApp
-import com.example.beep.ui.login.JoinScreen
-import com.example.beep.ui.login.LoginMainScreen
-import com.example.beep.ui.login.LoginScreen
 import com.example.beep.ui.navigation.RootNavGraph
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
@@ -37,6 +32,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         try {
             getFirebaseToken()
             createFirebaseChannel()
@@ -49,7 +46,8 @@ class MainActivity : ComponentActivity() {
             BeepTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
                     RootNavGraph()

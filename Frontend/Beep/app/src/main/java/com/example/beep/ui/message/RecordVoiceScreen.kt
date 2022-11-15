@@ -5,17 +5,13 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -23,7 +19,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.mypage.BeepForTest
+import com.google.accompanist.permissions.isGranted
 import java.io.File
 
 enum class RecordState {
@@ -82,10 +78,10 @@ fun RecordSuccessScreen(
         RecordButton(state = currentState) {
             when (currentState) {
                 RecordState.BEFORE_RECORDING -> {
-                    if (!voicePermissionState.hasPermission) {
+                    if (!voicePermissionState.status.isGranted) {
                         voicePermissionState.launchPermissionRequest()
                     }
-                    if (voicePermissionState.hasPermission) {
+                    if (voicePermissionState.status.isGranted) {
                         if (File(filepath).exists()) {
                             File(filepath).delete()
                         }

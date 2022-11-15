@@ -27,6 +27,12 @@ fun RootNavGraph(viewModel: UserViewModel = viewModel()) {
     val loginState = viewModel.loginState
     Log.d("실행되고 있는 곳","$loginState")
 
+    if (token != null) {
+        if (token.isNotBlank()) {
+            isLoggedDestination = "beep_graph"
+        }
+    }
+
 
     NavHost(navController = navController, startDestination = isLoggedDestination) {
         composable("beep_graph") {

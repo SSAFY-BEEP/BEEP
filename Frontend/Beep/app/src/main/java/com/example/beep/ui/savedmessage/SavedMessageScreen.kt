@@ -323,7 +323,7 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "수신")
+            Text(text = "수신", color = if (currentMenu == SavedMessageType.RECEIVED) Color.Black else Color.White)
         }
         Button(
             onClick = selectSent, colors =
@@ -332,7 +332,7 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "송신")
+            Text(text = "송신", color = if (currentMenu == SavedMessageType.SEND) Color.Black else Color.White)
         }
         Button(
             onClick = selectBlocked,
@@ -392,13 +392,14 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                AudioBtn(
-                    enabled = message.audioUri != null,
-                    onPlay = { viewModel.playSavedMessageAudio(message) },
-                    onStop = { viewModel.stopSavedMessageAudio() },
-                    isPlaying = viewModel.savedMessageAudioState.isPlaying
-                            && viewModel.savedMessageAudioState.message?.id == message.id
-                )
+                if(message.audioUri != null)
+                    AudioBtn(
+                        enabled = message.audioUri != null,
+                        onPlay = { viewModel.playSavedMessageAudio(message) },
+                        onStop = { viewModel.stopSavedMessageAudio() },
+                        isPlaying = viewModel.savedMessageAudioState.isPlaying
+                                && viewModel.savedMessageAudioState.message?.id == message.id
+                    )
                 SavedMessageInfo(
                     modifier = modifier.weight(1f),
                     content = message.content,
@@ -437,10 +438,10 @@ fun SavedMessageInfo(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Text(text = content, fontSize = 24.sp)
+        Text(text = content, fontSize = 18.sp)
         Column() {
-            Text(text = tag ?: "")
-            Text(text = localDateTime, fontSize = 12.sp)
+            Text(text = tag ?: "", fontSize = 12.sp)
+            Text(text = localDateTime.substring(0,10), fontSize = 12.sp)
         }
 
     }

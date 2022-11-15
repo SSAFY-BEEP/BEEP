@@ -11,5 +11,5 @@ public interface PresetService {
 
     void PresetDelete(Long id);
 
-    List<PresetResponseDto> PresetFind(Long id);
+    List<PresetResponseDto> PresetFind(Long id, Integer part);
 }

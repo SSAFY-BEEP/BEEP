@@ -27,16 +27,23 @@ fun Bbibbi(
     var receiveMsg = ""
 //    var senderPhoneNumber = ""
 //    var receiverPhoneNumber = ""
+    var currentPage by remember { mutableStateOf("ReceivedMsg") }
 
     when (val currentUiState = homeViewModel.receivedMessageUiState) {
         is UiState.Loading -> {
             receiveMsg = "로딩중..."
         }
         is UiState.Success -> {
-            receiveMsg = currentUiState.data[0].content
+            if (currentUiState.data.isEmpty()) {
+                receiveMsg = "데이터가 없습니다"
+                currentPage = "PutAddress"
+            } else {
+                receiveMsg = currentUiState.data[0].content
+
+            }
 //            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
 //            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
-            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
+//            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
         }
         is UiState.Error -> {
             receiveMsg = "ERROR"
@@ -51,7 +58,6 @@ fun Bbibbi(
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())
 
 
-    var currentPage by remember { mutableStateOf("ReceivedMsg") }
 
 
 

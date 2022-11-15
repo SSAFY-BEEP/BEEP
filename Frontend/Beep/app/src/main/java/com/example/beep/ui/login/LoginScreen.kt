@@ -3,6 +3,7 @@ package com.example.beep.ui.login
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,15 +28,15 @@ import androidx.compose.ui.unit.dp
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.beep.MainActivity
 import com.example.beep.di.MainApplication
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
 ) {
+    val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val viewModel = viewModel<UserViewModel>()
     val loginState = viewModel.loginState
@@ -68,6 +69,9 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .background(
                 color = Color(0XFFF5F8FF)
             )
@@ -79,6 +83,8 @@ fun LoginScreen(
             Modifier
                 .fillMaxSize()
                 .padding(48.dp)
+                .verticalScroll(scrollState)
+                .imePadding()
                 ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -88,7 +94,8 @@ fun LoginScreen(
                 contentDescription = "Login",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .blur(6.dp),
+                    .blur(6.dp)
+                    .imePadding(),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -98,7 +105,9 @@ fun LoginScreen(
                     viewModel.loginEvent(LoginFormEvent.LoginPhoneNumberChanged(it))
                 },
                 isError = loginState.loginPhoneNumberError != null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding(),
                 placeholder = {
                     Text(text = "phoneNumber")
                 },
@@ -123,7 +132,9 @@ fun LoginScreen(
                     viewModel.loginEvent(LoginFormEvent.LoginPasswordChanged(it))
                 },
                 isError = loginState.loginPasswordError != null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding(),
                 placeholder = {
                     Text(text = "password")
                 },
@@ -150,14 +161,28 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    viewModel.loginEvent(LoginFormEvent.Submit)
-                },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(text = "Submit")
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                Button(
+                    onClick = { navController.navigate("join_graph") },
+                    modifier = Modifier
+                ) {
+                    Text(text = "회원가입")
+                }
+
+                Button(
+                    onClick = {
+                        viewModel.loginEvent(LoginFormEvent.Submit)
+                    },
+                    modifier = Modifier
+                ) {
+                    Text(text = "Submit")
+                }
             }
+
 
         }
 
