@@ -20,11 +20,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.message.startPlaying
+import com.example.beep.ui.message.startRecording
 import com.example.beep.ui.message.stopPlaying
+import com.example.beep.ui.message.stopRecording
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import java.io.File
 
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
@@ -35,12 +40,12 @@ fun BbibbiDoRecord(
     homeViewModel: HomeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val voicePermissionState = rememberPermissionState(
         Manifest.permission.RECORD_AUDIO
     )
+    val context = LocalContext.current
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
-    val currentState = homeViewModel.recordScreenState
+    val currentState = homeViewModel.recordMessageState
 
     DisposableEffect(key1 = Unit) {
         Log.d("DisposableEffect", "Disposable Effect Called!!")
@@ -64,34 +69,103 @@ fun BbibbiDoRecord(
         DoRecordScreen(currentState = currentState)
         Spacer(modifier = modifier.height(35.dp))
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
-            CancelBtn(currentState = currentState)
-            LeftBtn(currentState = currentState)
-            RightBtn(currentState = currentState)
-            ConfirmBtn(currentState = currentState)
+            CancelBtn(onClick = {
+                when (currentState) {
+                    RecordMessageState.Before -> {
+                        toAskRecord()
+                        homeViewModel.recordMessageState = RecordMessageState.Recording
+                    }
+                    RecordMessageState.Recording -> {
+                        stopRecording(context)
+                        homeViewModel.recordMessageState = RecordMessageState.Finished
+                    }
+                    RecordMessageState.Finished -> {
+                        resetRecording()
+                        homeViewModel.recordMessageState = RecordMessageState.Before
+                    }
+                    RecordMessageState.Playing -> {
+                        stopPlaying()
+                        homeViewModel.recordMessageState = RecordMessageState.Finished
+                    }
+                    else -> {}
+                }
+            })
+            LeftBtn(onClick = {
+                when (currentState) {
+                    RecordMessageState.Before -> {}
+                    RecordMessageState.Recording -> {}
+                    RecordMessageState.Finished -> {}
+                    RecordMessageState.Playing -> {}
+                    else -> {}
+                }
+            })
+            RightBtn(onClick = {
+                when (currentState) {
+                    RecordMessageState.Before -> {}
+                    RecordMessageState.Recording -> {}
+                    RecordMessageState.Finished -> {
+                        startPlaying(
+                            filepath = filepath,
+                            changeCurrentState = {
+                                homeViewModel.recordMessageState = RecordMessageState.Finished
+                            })
+                        homeViewModel.recordMessageState = RecordMessageState.Playing
+                    }
+                    RecordMessageState.Playing -> {}
+                    else -> {}
+                }
+            })
+            ConfirmBtn(onClick = {
+                when (currentState) {
+                    RecordMessageState.Before -> {
+                        if (!voicePermissionState.status.isGranted) {
+                            voicePermissionState.launchPermissionRequest()
+                        }
+                        if (voicePermissionState.status.isGranted) {
+                            if (File(filepath).exists()) {
+                                File(filepath).delete()
+                            }
+                            startRecording(context, filepath)
+                            homeViewModel.recordMessageState = RecordMessageState.Recording
+                        }
+                    }
+                    RecordMessageState.Recording -> {
+                        stopRecording(context)
+                        homeViewModel.recordMessageState = RecordMessageState.Finished
+                    }
+                    RecordMessageState.Finished -> {
+                        toSendMsg()
+                        homeViewModel.recordMessageState = RecordMessageState.Before
+                    }
+                    RecordMessageState.Playing -> {
+                        stopPlaying()
+                        homeViewModel.recordMessageState = RecordMessageState.Finished
+                    }
+                    else -> {}
+                }
+            })
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun ConfirmBtn(
     modifier: Modifier = Modifier,
-    currentState: RecordMessageState
+    onClick: () -> Unit
 ) {
-    when (currentState) {
-        RecordMessageState.Before -> {}
-    }
     Button(
         modifier = modifier.height(67.dp),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        onClick = event
+        onClick = onClick
     ) {
     }
 }
 
 @Composable
 fun RightBtn(
-    modifier: Modifier = Modifier, currentState: RecordMessageState
+    modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(onClick = onClick) {
 
@@ -100,7 +174,7 @@ fun RightBtn(
 
 @Composable
 fun LeftBtn(
-    modifier: Modifier = Modifier, currentState: RecordMessageState
+    modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(onClick = onClick) {
 
@@ -109,7 +183,7 @@ fun LeftBtn(
 
 @Composable
 fun CancelBtn(
-    modifier: Modifier = Modifier, currentState: RecordMessageState
+    modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(onClick = onClick) {
 
@@ -120,56 +194,62 @@ fun CancelBtn(
 fun DoRecordScreen(
     modifier: Modifier = Modifier, currentState: RecordMessageState
 ) {
-//    when (currentState) {
-//        RecordScreenState.Before -> {
-//            Text(text = "● : 녹음 시작 | / : 취소", fontSize = 19.sp)
-//        }
-//        RecordScreenState.Recording -> {
-//            Text(text = "녹음중 $recordingTime/00:30", fontSize = 19.sp)
-//        }
-//        RecordScreenState.Finished -> {
-//            Text(text = "● : 재생 | / : 다시 녹음", fontSize = 19.sp)
-//        }
-//        RecordScreenState.Playing -> {
-//
-//        }
-//    }
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-fun startRecording(context: Context, filepath: String) {
-    VoiceRecorder.nullInstance()
-    VoiceRecorder.getInstance(context).apply {
-        setAudioSource(MediaRecorder.AudioSource.MIC)
-        setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-        setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        setOutputFile(filepath)
-        prepare()
-    }.start()
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-fun stopRecording(context: Context) {
-    VoiceRecorder.getInstance(context).run {
-        stop()
-        release()
-    }
-    VoiceRecorder.nullInstance()
-}
-
-fun startPlaying(filepath: String, changeCurrentState: () -> Unit) {
-    VoicePlayer.nullInstance()
-    VoicePlayer.getInstance().apply {
-        setDataSource(filepath)
-        prepare()
-        setOnCompletionListener {
-            stopPlaying()
-            changeCurrentState()
+    val recordingTime = "00:00"
+    val playingTime = "00:00"
+    when (currentState) {
+        RecordMessageState.Before -> {
+            Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
         }
-    }.start()
+        RecordMessageState.Recording -> {
+            Text(text = "녹음중 $recordingTime/00:30", fontSize = 19.sp)
+        }
+        RecordMessageState.Finished -> {
+            Text(text = "/ : 다시 녹음 | > : 재생 | ● : 전송", fontSize = 19.sp)
+        }
+        RecordMessageState.Playing -> {
+            Text(text = "재생중 $playingTime/00:30", fontSize = 19.sp)
+        }
+    }
 }
 
-fun stopPlaying() {
-    VoicePlayer.getInstance().release()
-    VoicePlayer.nullInstance()
+//@RequiresApi(Build.VERSION_CODES.S)
+//fun startRecording(context: Context, filepath: String) {
+//    VoiceRecorder.nullInstance()
+//    VoiceRecorder.getInstance(context).apply {
+//        setAudioSource(MediaRecorder.AudioSource.MIC)
+//        setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+//        setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+//        setOutputFile(filepath)
+//        prepare()
+//    }.start()
+//}
+//
+//@RequiresApi(Build.VERSION_CODES.S)
+//fun stopRecording(context: Context) {
+//    VoiceRecorder.getInstance(context).run {
+//        stop()
+//        release()
+//    }
+//    VoiceRecorder.nullInstance()
+//}
+//
+//fun startPlaying(filepath: String, changeCurrentState: () -> Unit) {
+//    VoicePlayer.nullInstance()
+//    VoicePlayer.getInstance().apply {
+//        setDataSource(filepath)
+//        prepare()
+//        setOnCompletionListener {
+//            stopPlaying()
+//            changeCurrentState()
+//        }
+//    }.start()
+//}
+//
+//fun stopPlaying() {
+//    VoicePlayer.getInstance().release()
+//    VoicePlayer.nullInstance()
+//}
+
+fun resetRecording() {
+    VoiceRecorder.nullInstance()
 }

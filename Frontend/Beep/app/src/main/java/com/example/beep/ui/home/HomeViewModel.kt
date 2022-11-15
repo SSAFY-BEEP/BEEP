@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
-    var recordScreenState by mutableStateOf(RecordMessageState.Before)
+    var recordMessageState by mutableStateOf(RecordMessageState.Before)
     var timer by mutableStateOf(0)
 
 
