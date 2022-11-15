@@ -3,7 +3,7 @@ package com.example.beep.ui.message
 import com.example.beep.data.dto.message.Message24Response
 
 enum class MessagePopupState {
-    NORMAL, DELETE, BLOCK, SAVE
+    NORMAL, DELETE, BLOCK, SAVE, DUPLICATE
 }
 
 enum class ResultState {
