@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.beep.ui.home.getKeyboard
+import com.example.beep.ui.theme.BeepImage
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -22,7 +23,7 @@ fun ColorSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
         verticalArrangement = Arrangement.SpaceAround
     ) {
         Column(modifier = modifier) {
-            BeepForTest()
+            BeepImage(modifier = Modifier,"",model.themeNum)
             Row(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -45,8 +46,8 @@ fun ColorSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
             }
         }
         Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "취소")
+            Button(onClick = {  }) {
+                Text(text = "뒤로가기")
             }
             Button(onClick = { model.changeTheme() }) {
                 Text(text = "설정")

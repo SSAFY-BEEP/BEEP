@@ -6,8 +6,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.beep.ui.theme.*
 
 @Composable
 fun FontSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
@@ -23,27 +23,29 @@ fun FontSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
                 model.fontNum = 1
                 model.changeFont()
             }) {
-                Text(text = "라나픽셀")
+                Text(text = "갈무리", fontFamily = galmurinineFont)
             }
+
             TextButton(onClick = {
                 model.fontNum = 2
                 model.changeFont()
             }) {
-                Text(text = "둥근모")
+                Text(text = "둥근모", fontFamily = dunggeunmmoFont)
             }
+
             TextButton(onClick = {
                 model.fontNum = 3
                 model.changeFont()
             }) {
-                Text(text = "검은 고딕")
+                Text(text = "랩디지털", fontFamily = labDigitalFont)
             }
             TextButton(onClick = {
                 model.fontNum = 4
                 model.changeFont()
             }) {
-                Text(text = "랩디지털")
+                Text(text = "라나픽셀", fontFamily = lanaPixelFont)
             }
         }
-        BeepForTest(text = "0123456789ㄱㄴㄷ")
+        BeepImage(modifier = Modifier,"폰트 테스트",model.fontNum)
     }
 }
