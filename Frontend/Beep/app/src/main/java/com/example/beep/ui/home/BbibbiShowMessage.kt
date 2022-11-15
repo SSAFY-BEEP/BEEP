@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun BbibbiShowMessage(
@@ -19,8 +20,11 @@ fun BbibbiShowMessage(
     /* 메시지1개발신인 */
     toPutAddress: () -> Unit,
     toPutMsg: () -> Unit,
-    receivedMsg: String
+    receivedMsg: String,
+    homeViewModel: HomeViewModel = viewModel(),
 ) {
+    Log.d("PageMove", "Moved to ShowMessage")
+
     Button(
         // 연락처 입력 페이지로
         onClick = {

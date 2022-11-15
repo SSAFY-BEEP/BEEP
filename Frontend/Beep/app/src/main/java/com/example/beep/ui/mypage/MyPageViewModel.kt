@@ -1,22 +1,99 @@
 package com.example.beep.ui.mypage
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.beep.data.dto.mypage.PresetResponse
-import com.example.beep.domain.PresetUseCase
+import androidx.lifecycle.viewModelScope
+import com.example.beep.data.dto.mypage.UserInfoResponse
 import com.example.beep.domain.UserUseCase
+import com.example.beep.ui.message.UiState
+import com.example.beep.util.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import retrofit2.Response
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class MyPageViewModel @Inject constructor(private val presetUseCase: PresetUseCase) :
+class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) :
     ViewModel() {
-    private val uid = 5
-    val testValue = "Test Value"
-    fun printTestValue() {
-        println(testValue)
+
+    var userDataScreenState: UiState<UserInfoResponse> by mutableStateOf(UiState.Loading)
+    var engraveText: String by mutableStateOf("")
+    var themeNum: Int by mutableStateOf(1)
+    var fontNum: Int by mutableStateOf(1)
+
+    private fun getUserInfo() {
+        userDataScreenState = UiState.Loading
+        viewModelScope.launch {
+            val result = userUseCase.getUserInfo()
+            result.collectLatest {
+                userDataScreenState = when(it) {
+                    is ResultType.Success -> {
+                        engraveText = it.data.data.engrave ?: ""
+                        themeNum = it.data.data.theme
+                        fontNum = it.data.data.font
+                        UiState.Success(it.data.data)
+                    }
+                    else -> {
+                        UiState.Error
+                    }
+                }
+            }
+        }
+    }
+
+    fun writeEngrave() {
+        userDataScreenState = UiState.Loading
+        viewModelScope.launch {
+            if(engraveText == null) return@launch
+            val result = userUseCase.setEngrave(engraveText)
+            result.collectLatest {
+                when (it) {
+                    is ResultType.Success -> {
+                        getUserInfo()
+                    }
+                    else -> {
+                        UiState.Error
+                    }
+                }
+            }
+        }
+    }
+
+    fun changeTheme() {
+        userDataScreenState = UiState.Loading
+        viewModelScope.launch {
+            val result = userUseCase.setTheme(themeNum)
+            result.collectLatest {
+                when (it) {
+                    is ResultType.Success -> {
+                        getUserInfo()
+                    }
+                    else -> {
+                        UiState.Error
+                    }
+                }
+            }
+        }
+    }
+
+    fun changeFont() {
+        userDataScreenState = UiState.Loading
+        viewModelScope.launch {
+            val result = userUseCase.setFont(fontNum)
+            result.collectLatest {
+                when (it) {
+                    is ResultType.Success -> {
+                        getUserInfo()
+                    }
+                    else -> {
+                        UiState.Error
+                    }
+                }
+            }
+        }
     }
 
 //    val exampleEntities: Flow<Response<List<PresetResponse>>> = PresetUseCase.getUserPresetByToken()
@@ -33,7 +110,7 @@ class MyPageViewModel @Inject constructor(private val presetUseCase: PresetUseCa
 //                .collectLatest { _userMessagePresetList.value = it }
 //        }
 //    }
-//    init {
-//        getUserMessagePreset()
-//    }
+    init {
+        getUserInfo()
+    }
 }

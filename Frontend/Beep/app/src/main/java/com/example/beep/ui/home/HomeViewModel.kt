@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.BaseResponse
+import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.Message24UseCase
@@ -44,7 +45,7 @@ ViewModel() {
     val sendMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getSend24()
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
-
+    var messageToSend:Message24Request by mutableStateOf(Message24Request())
 
 
 
@@ -62,10 +63,10 @@ ViewModel() {
         }
     }
 
-    fun sendMsg(file: MultipartBody.Part?, content: String, receiverNum: String) {
-        Log.d("Send REQUEST", "content : $content, receiverNum : $receiverNum")
+    fun sendMsg(file: MultipartBody.Part? = null) {
+        Log.d("Send REQUEST", "$file $messageToSend")
         viewModelScope.launch(Dispatchers.IO) {
-            message24UseCase.sendMsg(file, content, receiverNum).collectLatest {
+            message24UseCase.sendMsg(file, messageToSend).collectLatest {
                 if(it is ResultType.Success) {
                     Log.d("Send Message", it.data.toString())
                 } else {
@@ -109,6 +110,18 @@ ViewModel() {
                 }
             }
         }
+    }
+
+    fun resetMessageToSend() {
+        messageToSend = Message24Request()
+    }
+
+    fun setMessageContent(content: String) {
+        messageToSend = messageToSend.copy(content = content)
+    }
+
+    fun setMessageReceiverNum(receiverNum: String) {
+        messageToSend = messageToSend.copy(receiverNum = receiverNum)
     }
 
     init {

@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -17,15 +18,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @ExperimentalComposeUiApi
 @Composable
 fun BbibbiPutAddress(
-    toPutMsg: () -> Unit
+    toPutMsg: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
-
+    Log.d("PageMove", "Moved to PutAddress")
 
     /* cancel 버튼 */
     ResetButton(
         modifier = Modifier
     ) {
+        homeViewModel.resetMessageToSend()
         // 연락처 입력해놓은거 리셋시키기
         viewModel.onAction(KeyboardAction.Clear)
     }
@@ -33,6 +36,8 @@ fun BbibbiPutAddress(
     Button(
         // 메시지 입력 페이지로
         onClick = {
+            homeViewModel.setMessageReceiverNum(viewModel.state.number1)
+            viewModel.onAction(KeyboardAction.Clear)
             /* go버튼 */
             toPutMsg(
                 /* 입력한 연락처 */
@@ -69,7 +74,6 @@ fun ViewAskOrInputNum() {
     Text(
         text = show,
         modifier = Modifier
-
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(top = 48.dp),

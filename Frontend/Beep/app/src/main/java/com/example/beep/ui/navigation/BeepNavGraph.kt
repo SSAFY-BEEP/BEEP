@@ -2,8 +2,13 @@ package com.example.beep.ui.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,6 +21,8 @@ import androidx.navigation.compose.navigation
 import com.example.beep.R
 import com.example.beep.ui.home.*
 import com.example.beep.ui.login.LoginMainScreen
+import com.example.beep.ui.login.JoinScreen
+import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
@@ -32,8 +39,10 @@ val galmurinineFont = FontFamily(
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun BeepNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "home") {
+fun BeepNavGraph(
+    navController: NavHostController
+) {
+    NavHost(navController = navController, startDestination = "home", modifier = Modifier.imePadding()) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
@@ -45,10 +54,6 @@ fun BeepNavGraph(navController: NavHostController) {
         }
         messageGraph(navController)
         myPageGraph(navController)
-        composable("login_main") {
-            val model: UserViewModel = hiltViewModel(it)
-            LoginMainScreen()
-        }
         composable("login_main_graph") {
             MainButtonScreen(navController=navController)
         }
@@ -92,13 +97,16 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             IntroduceScreen(viewModel = model)
         }
         composable("colorSetting") {
-            ColorSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            ColorSettingScreen(model = model)
         }
         composable("engravingSetting") {
-            EngravingSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            EngravingSettingScreen(model = model)
         }
         composable("fontSetting") {
-            FontSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            FontSettingScreen(model = model)
         }
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
