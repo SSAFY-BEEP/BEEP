@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -13,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ShowAddressList(
+fun ShowAddressList(viewModel: AddressViewModel = viewModel()
 ) {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
@@ -34,6 +37,10 @@ fun ShowAddressList(
         "주소록"
     }
 
+    LaunchedEffect(key1 = goAddAddress, key2 = goPatchAddress) {
+        Log.d("LaunchedEffect", goAddAddress.toString())
+        viewModel.getAddress()
+    }
 
 
     var goEditDelBtnTxt = if (viewEditDelBtn) {

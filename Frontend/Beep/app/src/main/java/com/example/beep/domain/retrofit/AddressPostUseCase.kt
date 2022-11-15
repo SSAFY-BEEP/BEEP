@@ -8,6 +8,6 @@ import javax.inject.Singleton
 
 @Singleton
 class PostUserAddressUseCase @Inject constructor(private val addressRepository: AddressRepository) {
-//    fun execute(phone: String, name: String) = addressRepository.postUserAddress(phone, name)
+    fun execute(phone: String, name: String) = addressRepository.postUserAddress(phone, name)
 }
 

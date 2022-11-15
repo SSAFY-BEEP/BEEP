@@ -52,7 +52,13 @@ fun BeepApp() {
             }
         }
     }
-    Scaffold(topBar = { BeepAppBar() },
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .padding(0.dp,25.dp)
+        ,
+        topBar = { BeepAppBar() },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(

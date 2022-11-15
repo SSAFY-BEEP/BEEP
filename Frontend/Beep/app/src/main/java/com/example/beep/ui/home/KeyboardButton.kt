@@ -1,9 +1,6 @@
 package com.example.beep.ui.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -21,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalComposeUiApi
 @Composable
 fun KeyboardButton(
@@ -42,6 +40,10 @@ fun KeyboardButton(
 //                width = 1.dp,
 //                color = Color.Black,
 //                shape = RoundedCornerShape(18.dp)
+//            )
+//            .combinedClickable (
+//                onClick = {},
+//                onLongClick = {}
 //            )
             .clickable {
                 onClick()
