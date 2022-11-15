@@ -41,23 +41,6 @@ enum class RecordMessageState {
     Before, Recording, Finished, Playing, Error, Loading
 }
 
-sealed class ButtonAction {
-    object StartRecording : ButtonAction()
-    object StopRecording : ButtonAction()
-    object StartPlaying : ButtonAction()
-    object StopPlaying : ButtonAction()
-    object ResetRecording : ButtonAction()
-}
-
-data class RecordScreenUiState(
-    val recordState: RecordMessageState = RecordMessageState.Before,
-    val textForScreen: String = "● : 녹음 시작 | / : 취소",
-    val confirmFunc: ButtonAction? = ButtonAction.StartRecording,
-    val cancelFunc: ButtonAction? = null,
-    val leftFunc: ButtonAction? = null,
-    val rightFunc: ButtonAction? = null
-)
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val message24UseCase: Message24UseCase
@@ -74,7 +57,7 @@ class HomeViewModel @Inject constructor(
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
-    var recordScreenState by mutableStateOf(RecordScreenUiState())
+    var recordScreenState by mutableStateOf(RecordMessageState.Before)
     var timer by mutableStateOf(0)
 
 
@@ -151,80 +134,6 @@ class HomeViewModel @Inject constructor(
 
     fun setMessageReceiverNum(receiverNum: String) {
         messageToSend = messageToSend.copy(receiverNum = receiverNum)
-    }
-
-
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun onAction(action: ButtonAction) {
-        when (action) {
-            is ButtonAction.StartRecording -> {
-                startRecording()
-            }
-            is ButtonAction.StopRecording -> {
-                stopRecording()
-            }
-            is ButtonAction.StartPlaying -> {
-                startPlaying()
-            }
-            is ButtonAction.StopPlaying -> {
-                stopPlaying()
-            }
-            is ButtonAction.ResetRecording -> {
-                resetRecording()
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun startRecording() {
-        Log.d("HomeViewModel", "StartRecording()")
-        recordScreenState = RecordScreenUiState(
-            recordState = RecordMessageState.Recording,
-            textForScreen = "녹음중 ",
-            confirmFunc = ButtonAction.StopRecording,
-            cancelFunc = ButtonAction.StopRecording,
-        )
-    }
-
-    private fun stopRecording() {
-        Log.d("HomeViewModel", "StopRecording()")
-        recordScreenState = RecordScreenUiState(
-            recordState = RecordMessageState.Finished,
-            textForScreen = "● : 재생 | / : 다시 녹음",
-            confirmFunc = ButtonAction.StartPlaying,
-            cancelFunc = ButtonAction.ResetRecording,
-        )
-    }
-
-    private fun startPlaying() {
-        Log.d("HomeViewModel", "StartPlaying()")
-        recordScreenState = RecordScreenUiState(
-            recordState = RecordMessageState.Playing,
-            textForScreen = "재생중 ",
-            confirmFunc = ButtonAction.StopPlaying,
-            cancelFunc = ButtonAction.StopPlaying,
-        )
-    }
-
-    private fun stopPlaying() {
-        Log.d("HomeViewModel", "StopPlaying()")
-        recordScreenState = RecordScreenUiState(
-            recordState = RecordMessageState.Finished,
-            textForScreen = "● : 전송 | / : 다시 녹음",
-            confirmFunc = null,
-            cancelFunc = ButtonAction.ResetRecording,
-        )
-    }
-
-    private fun resetRecording() {
-        VoicePlayer.nullInstance()
-        VoiceRecorder.nullInstance()
-        recordScreenState = RecordScreenUiState(
-            recordState = RecordMessageState.Before,
-            textForScreen = "● : 녹음 시작 | / : 취소",
-            confirmFunc = ButtonAction.StartRecording,
-        )
     }
 
     init {

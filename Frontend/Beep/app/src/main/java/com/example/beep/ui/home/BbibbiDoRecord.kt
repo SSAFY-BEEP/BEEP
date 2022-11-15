@@ -1,5 +1,8 @@
 package com.example.beep.ui.home
 
+import android.Manifest
+import android.content.Context
+import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -17,9 +20,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.message.stopPlaying
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BbibbiDoRecord(
@@ -28,8 +35,13 @@ fun BbibbiDoRecord(
     homeViewModel: HomeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val currentState = homeViewModel.recordScreenState
     val context = LocalContext.current
+    val voicePermissionState = rememberPermissionState(
+        Manifest.permission.RECORD_AUDIO
+    )
+    var filepath = context.cacheDir.absolutePath + "/temp.3gp"
+    val currentState = homeViewModel.recordScreenState
+
     DisposableEffect(key1 = Unit) {
         Log.d("DisposableEffect", "Disposable Effect Called!!")
         VoiceRecorder.nullInstance()
@@ -45,7 +57,6 @@ fun BbibbiDoRecord(
     }
     Column(
         modifier = modifier
-//            .background(Color.Cyan)
             .width(320.dp)
             .wrapContentWidth(Alignment.CenterHorizontally),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -53,61 +64,62 @@ fun BbibbiDoRecord(
         DoRecordScreen(currentState = currentState)
         Spacer(modifier = modifier.height(35.dp))
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
-            CancelBtn(onClick = {
-                if (currentState.cancelFunc != null)
-                    homeViewModel.onAction(currentState.cancelFunc)
-                else
-                    toAskRecord()
-            })
-            LeftBtn(onClick = {})
-            RightBtn(onClick = {})
-            ConfirmBtn(onClick = {
-                if (currentState.confirmFunc != null)
-                    homeViewModel.onAction(currentState.confirmFunc)
-                else
-                    toSendMsg()
-            })
+            CancelBtn(currentState = currentState)
+            LeftBtn(currentState = currentState)
+            RightBtn(currentState = currentState)
+            ConfirmBtn(currentState = currentState)
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun ConfirmBtn(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    currentState: RecordMessageState
 ) {
+    when (currentState) {
+        RecordMessageState.Before -> {}
+    }
     Button(
         modifier = modifier.height(67.dp),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        onClick = onClick
+        onClick = event
     ) {
     }
 }
 
 @Composable
-fun RightBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun RightBtn(
+    modifier: Modifier = Modifier, currentState: RecordMessageState
+) {
     Button(onClick = onClick) {
 
     }
 }
 
 @Composable
-fun LeftBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun LeftBtn(
+    modifier: Modifier = Modifier, currentState: RecordMessageState
+) {
     Button(onClick = onClick) {
 
     }
 }
 
 @Composable
-fun CancelBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun CancelBtn(
+    modifier: Modifier = Modifier, currentState: RecordMessageState
+) {
     Button(onClick = onClick) {
 
     }
 }
 
 @Composable
-fun DoRecordScreen(modifier: Modifier = Modifier, currentState: RecordScreenUiState) {
-    Text(text = currentState.textForScreen)
+fun DoRecordScreen(
+    modifier: Modifier = Modifier, currentState: RecordMessageState
+) {
 //    when (currentState) {
 //        RecordScreenState.Before -> {
 //            Text(text = "● : 녹음 시작 | / : 취소", fontSize = 19.sp)
@@ -122,4 +134,42 @@ fun DoRecordScreen(modifier: Modifier = Modifier, currentState: RecordScreenUiSt
 //
 //        }
 //    }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun startRecording(context: Context, filepath: String) {
+    VoiceRecorder.nullInstance()
+    VoiceRecorder.getInstance(context).apply {
+        setAudioSource(MediaRecorder.AudioSource.MIC)
+        setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        setOutputFile(filepath)
+        prepare()
+    }.start()
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun stopRecording(context: Context) {
+    VoiceRecorder.getInstance(context).run {
+        stop()
+        release()
+    }
+    VoiceRecorder.nullInstance()
+}
+
+fun startPlaying(filepath: String, changeCurrentState: () -> Unit) {
+    VoicePlayer.nullInstance()
+    VoicePlayer.getInstance().apply {
+        setDataSource(filepath)
+        prepare()
+        setOnCompletionListener {
+            stopPlaying()
+            changeCurrentState()
+        }
+    }.start()
+}
+
+fun stopPlaying() {
+    VoicePlayer.getInstance().release()
+    VoicePlayer.nullInstance()
 }
