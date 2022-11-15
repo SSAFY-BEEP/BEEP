@@ -71,6 +71,9 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .background(
                 color = Color(0XFFF5F8FF)
             )
