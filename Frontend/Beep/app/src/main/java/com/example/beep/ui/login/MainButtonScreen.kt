@@ -11,9 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.beep.di.MainApplication
-import kotlinx.coroutines.delay
 
 @Composable
 fun MainButtonScreen(navController: NavController) {
@@ -21,7 +18,6 @@ fun MainButtonScreen(navController: NavController) {
     LaunchedEffect(visible) {
         Log.d("launchEffect 실행", "$visible")
         if (!visible) {
-            delay(1000)
             visible = true
         }
     }
@@ -46,7 +42,7 @@ fun MainButtonScreen(navController: NavController) {
             visible = visible,
             enter = fadeIn() + expandVertically(
                     expandFrom = Alignment.Top,
-                animationSpec = tween(2000,2000),
+                animationSpec = tween(2000,1000),
                 clip = false
                 )
             ,
