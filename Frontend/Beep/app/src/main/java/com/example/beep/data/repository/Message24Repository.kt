@@ -3,6 +3,7 @@ package com.example.beep.data.repository
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.data.datasource.Message24DataSource
 import com.example.beep.data.dto.BaseResponse
+import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.util.ResultType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -46,11 +47,10 @@ class Message24Repository @Inject constructor(private val message24DataSource: M
 
     fun sendMsg(
         file: MultipartBody.Part?,
-        content: String,
-        receiverNum: String
+        message: Message24Request
     ): Flow<ResultType<BaseResponse<String>>> =
         flow {
-            message24DataSource.sendMsg(file, content, receiverNum).collect {
+            message24DataSource.sendMsg(file, message).collect {
                 if (it.status == "OK")
                     emit(ResultType.Success(it))
                 else emit(
