@@ -3,6 +3,7 @@ package com.example.beep.ui.home
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModel
@@ -12,10 +13,13 @@ import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.Message24UseCase
+import com.example.beep.ui.message.RecordState
 import com.example.beep.ui.message.ResultState
 import com.example.beep.ui.message.UiState
 import com.example.beep.ui.savedmessage.SavedMessageType
 import com.example.beep.util.ResultType
+import com.example.beep.util.VoicePlayer
+import com.example.beep.util.VoiceRecorder
 import com.example.beep.util.fromJson
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +35,9 @@ enum class ReceivedMessageType {
     SEND, RECEIVED, BLOCKED
 }
 
+enum class RecordScreenState {
+    Before, Recording, Finished, Playing
+}
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -46,7 +53,7 @@ ViewModel() {
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend:Message24Request by mutableStateOf(Message24Request())
-
+    var recordScreenState by mutableStateOf(RecordScreenState.Before)
 
 
     fun getOne24() {
@@ -122,6 +129,16 @@ ViewModel() {
 
     fun setMessageReceiverNum(receiverNum: String) {
         messageToSend = messageToSend.copy(receiverNum = receiverNum)
+    }
+
+    fun resetRecord() {
+        VoicePlayer.nullInstance()
+        VoiceRecorder.nullInstance()
+        updateRecordState(RecordScreenState.Before)
+    }
+
+    fun updateRecordState(newState: RecordScreenState) {
+        recordScreenState = newState
     }
 
     init {

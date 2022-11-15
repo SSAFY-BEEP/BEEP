@@ -82,6 +82,7 @@ fun Bbibbi(
     } else if (currentPage == "DoRecord") {
         BbibbiDoRecord(
             toSendMsg = {currentPage = "DoRecord"},
+            toAskRecord = {currentPage = "AskRecord"}
             )
     } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
