@@ -19,8 +19,7 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) :
     ViewModel() {
 
-    private var userDataScreenState: UiState<UserInfoResponse> by mutableStateOf(UiState.Loading)
-    var engraveScreenUiState: UiState<String> by mutableStateOf(UiState.Success(""))
+    var userDataScreenState: UiState<UserInfoResponse> by mutableStateOf(UiState.Loading)
     var engraveText: String by mutableStateOf("")
     var themeNum: Int by mutableStateOf(1)
     var fontNum: Int by mutableStateOf(1)
@@ -32,7 +31,9 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
             result.collectLatest {
                 userDataScreenState = when(it) {
                     is ResultType.Success -> {
-                        engraveText = it.data.data.engrave
+                        engraveText = it.data.data.engrave ?: ""
+                        themeNum = it.data.data.theme
+                        fontNum = it.data.data.font
                         UiState.Success(it.data.data)
                     }
                     else -> {
@@ -44,15 +45,14 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
     }
 
     fun writeEngrave() {
-        engraveScreenUiState = UiState.Loading
+        userDataScreenState = UiState.Loading
         viewModelScope.launch {
             if(engraveText == null) return@launch
             val result = userUseCase.setEngrave(engraveText)
             result.collectLatest {
-                engraveScreenUiState = when (it) {
+                when (it) {
                     is ResultType.Success -> {
                         getUserInfo()
-                        UiState.Success("")
                     }
                     else -> {
                         UiState.Error
@@ -63,14 +63,13 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
     }
 
     fun changeTheme() {
-        engraveScreenUiState = UiState.Loading
+        userDataScreenState = UiState.Loading
         viewModelScope.launch {
-            if(engraveText == null) return@launch
             val result = userUseCase.setTheme(themeNum)
             result.collectLatest {
-                engraveScreenUiState = when (it) {
+                when (it) {
                     is ResultType.Success -> {
-                        UiState.Success("")
+                        getUserInfo()
                     }
                     else -> {
                         UiState.Error
@@ -81,14 +80,13 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
     }
 
     fun changeFont() {
-        engraveScreenUiState = UiState.Loading
+        userDataScreenState = UiState.Loading
         viewModelScope.launch {
-            if(engraveText == null) return@launch
             val result = userUseCase.setFont(fontNum)
             result.collectLatest {
-                engraveScreenUiState = when (it) {
+                when (it) {
                     is ResultType.Success -> {
-                        UiState.Success("")
+                        getUserInfo()
                     }
                     else -> {
                         UiState.Error

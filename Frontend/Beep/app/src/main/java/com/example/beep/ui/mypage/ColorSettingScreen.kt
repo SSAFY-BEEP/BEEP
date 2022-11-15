@@ -23,7 +23,6 @@ fun ColorSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
     ) {
         Column(modifier = modifier) {
             BeepForTest()
-            getKeyboard()
             Row(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly

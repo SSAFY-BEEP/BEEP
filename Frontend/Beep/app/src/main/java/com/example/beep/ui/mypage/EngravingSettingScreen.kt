@@ -18,12 +18,11 @@ import com.example.beep.ui.message.UiState
 //@Preview
 @Composable
 fun EngravingSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
-    var engravingText by remember { mutableStateOf("KTH") }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        when (val currentUiState = model.engraveScreenUiState) {
+        when (val currentUiState = model.userDataScreenState) {
             is UiState.Loading -> {
                 LoadingScreen()
             }
