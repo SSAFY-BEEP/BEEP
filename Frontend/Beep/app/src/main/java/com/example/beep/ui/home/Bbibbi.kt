@@ -46,7 +46,6 @@ fun Bbibbi(
     var contentString = ""
 
 
-
     var sendText by remember { mutableStateOf(false) }
 
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())
@@ -58,42 +57,45 @@ fun Bbibbi(
 
     if (currentPage == "PutAddress") {
         BbibbiPutAddress(
-            toPutMsg = {currentPage = "PutMsg"}
+            toPutMsg = { currentPage = "PutMsg" }
         )
     } else if (currentPage == "PutMsg") {
         BbibbiPutMsg(
-            toPutAddress = {currentPage = "PutAddress"},
-            toAskRecord = {currentPage = "AskRecord"},
-            changeContentString = { changedContentString: String -> contentString = changedContentString },
+            toPutAddress = { currentPage = "PutAddress" },
+            toAskRecord = { currentPage = "AskRecord" },
+            changeContentString = { changedContentString: String ->
+                contentString = changedContentString
+            },
 
             )
     } else if (currentPage == "AskRecord") {
-        BbibbiAskToRecord (
-            toPutMsg = {currentPage = "PutMsg"},
-            toSendMsg = {currentPage = "SendMsg"},
-            toRecord = {currentPage = "DoRecord"},
-            )
+        BbibbiAskToRecord(
+            toPutMsg = { currentPage = "PutMsg" },
+            toSendMsg = { currentPage = "SendMsg" },
+            toRecord = { currentPage = "DoRecord" },
+        )
     } else if (currentPage == "SendMsg") {
         BbibbiAskToSend(
-            toPutMsg = {currentPage = "PutMsg"},
-            toAskRecord = {currentPage = "AskRecord"},
-            toFirstPage = {currentPage = "ReceivedMsg"},
+            toPutMsg = { currentPage = "PutMsg" },
+            toAskRecord = { currentPage = "AskRecord" },
+            toFirstPage = { currentPage = "ReceivedMsg" },
         )
     } else if (currentPage == "DoRecord") {
         BbibbiDoRecord(
-            toSendMsg = {currentPage = "DoRecord"},
-            toAskRecord = {currentPage = "AskRecord"}
-            )
+            modifier = Modifier.offset(40.dp, 50.dp),
+            toSendMsg = { currentPage = "DoRecord" },
+            toAskRecord = { currentPage = "AskRecord" }
+        )
     } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
-        /* 메시지 내용 String, 발신인 */
-        toPutAddress = {currentPage = "PutAddress"},
-            toPutMsg = {currentPage = "PutMsg"},
+            /* 메시지 내용 String, 발신인 */
+            toPutAddress = { currentPage = "PutAddress" },
+            toPutMsg = { currentPage = "PutMsg" },
             receivedMsg = receiveMsg
         )
     } else {
         BbibbiPutAddress(
-            toPutMsg = {currentPage = "PutMsg"},
+            toPutMsg = { currentPage = "PutMsg" },
         )
     }
 }
