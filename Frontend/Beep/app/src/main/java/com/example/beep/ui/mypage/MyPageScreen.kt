@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.beep.di.MainApplication
 import com.example.beep.ui.theme.BACKGROUND_WHITE
 
 
@@ -48,7 +49,9 @@ fun MyPageMember(onClickMenu: (String) -> Unit) {
         TextButton(onClick = { onClickMenu("passwordChange") }) {
             Text("비밀번호 변경")
         }
-        TextButton(onClick = { /* 로그아웃 메서드 */ }) {
+        TextButton(onClick = {
+            MainApplication.sharedPreferencesUtil.deleteToken()
+        }) {
             Text("로그아웃")
         }
         TextButton(onClick = { /* 회원 탈퇴 메서드 */ }) {
