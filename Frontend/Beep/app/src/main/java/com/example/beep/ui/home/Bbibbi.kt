@@ -83,7 +83,7 @@ fun Bbibbi(
     } else if (currentPage == "DoRecord") {
         BbibbiDoRecord(
             modifier = Modifier.offset(40.dp, 50.dp),
-            toSendMsg = { currentPage = "DoRecord" },
+            toSendMsg = { currentPage = "SendMsg" },
             toAskRecord = { currentPage = "AskRecord" }
         )
     } else if (receiveMsg.isNotEmpty()) {

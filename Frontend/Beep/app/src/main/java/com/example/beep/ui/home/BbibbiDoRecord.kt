@@ -1,18 +1,26 @@
 package com.example.beep.ui.home
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.util.VoicePlayer
+import com.example.beep.util.VoiceRecorder
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BbibbiDoRecord(
     toSendMsg: () -> Unit,
@@ -21,6 +29,20 @@ fun BbibbiDoRecord(
     modifier: Modifier = Modifier
 ) {
     val currentState = homeViewModel.recordScreenState
+    val context = LocalContext.current
+    DisposableEffect(key1 = Unit) {
+        Log.d("DisposableEffect", "Disposable Effect Called!!")
+        VoiceRecorder.nullInstance()
+        VoiceRecorder.getInstance(context)
+        VoicePlayer.nullInstance()
+        VoicePlayer.getInstance()
+
+        onDispose {
+            Log.d("DisposableEffect", "onDispose Called!!")
+            VoiceRecorder.nullInstance()
+            VoicePlayer.nullInstance()
+        }
+    }
     Column(
         modifier = modifier
 //            .background(Color.Cyan)
@@ -31,10 +53,20 @@ fun BbibbiDoRecord(
         DoRecordScreen(currentState = currentState)
         Spacer(modifier = modifier.height(35.dp))
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
-            CancelBtn(currentState = currentState)
-            LeftBtn(currentState = currentState)
-            RightBtn(currentState = currentState)
-            ConfirmBtn(currentState = currentState, toSendMsg = toSendMsg)
+            CancelBtn(onClick = {
+                if (currentState.cancelFunc != null)
+                    homeViewModel.onAction(currentState.cancelFunc)
+                else
+                    toAskRecord()
+            })
+            LeftBtn(onClick = {})
+            RightBtn(onClick = {})
+            ConfirmBtn(onClick = {
+                if (currentState.confirmFunc != null)
+                    homeViewModel.onAction(currentState.confirmFunc)
+                else
+                    toSendMsg()
+            })
         }
     }
 }
@@ -42,73 +74,52 @@ fun BbibbiDoRecord(
 @Composable
 fun ConfirmBtn(
     modifier: Modifier = Modifier,
-    currentState: RecordScreenState,
-    toSendMsg: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier.height(67.dp),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        onClick = {
-            // 메시지 보내기 묻기 화면으로 가는 버튼
-            toSendMsg()
-        }) {
-
-    }
-    when (currentState) {
-        RecordScreenState.Before -> {}
-        RecordScreenState.Recording -> {}
-        RecordScreenState.Finished -> {}
-        RecordScreenState.Playing -> {}
-    }
-
-
-}
-
-@Composable
-fun RightBtn(modifier: Modifier = Modifier, currentState: RecordScreenState) {
-    Button(onClick = { /*TODO*/ }, modifier = modifier.background(Color.Red)) {
-
-    }
-    when (currentState) {
-        RecordScreenState.Before -> {}
-        RecordScreenState.Recording -> {}
-        RecordScreenState.Finished -> {}
-        RecordScreenState.Playing -> {}
+        onClick = onClick
+    ) {
     }
 }
 
 @Composable
-fun LeftBtn(modifier: Modifier = Modifier, currentState: RecordScreenState) {
-    Button(onClick = { /*TODO*/ }, modifier = modifier.background(Color.Blue)) {
+fun RightBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(onClick = onClick) {
 
-    }
-    when (currentState) {
-        RecordScreenState.Before -> {}
-        RecordScreenState.Recording -> {}
-        RecordScreenState.Finished -> {}
-        RecordScreenState.Playing -> {}
     }
 }
 
 @Composable
-fun CancelBtn(modifier: Modifier = Modifier, currentState: RecordScreenState) {
-    Button(onClick = { /*TODO*/ }, modifier = modifier.background(Color.Green)) {
-    }
-    when (currentState) {
-        RecordScreenState.Before -> {}
-        RecordScreenState.Recording -> {}
-        RecordScreenState.Finished -> {}
-        RecordScreenState.Playing -> {}
+fun LeftBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(onClick = onClick) {
+
     }
 }
 
 @Composable
-fun DoRecordScreen(modifier: Modifier = Modifier, currentState: RecordScreenState) {
-    Text(text = "BBIBBI Screen", modifier = modifier.background(Color.Black), fontSize = 19.sp)
-    when (currentState) {
-        RecordScreenState.Before -> {}
-        RecordScreenState.Recording -> {}
-        RecordScreenState.Finished -> {}
-        RecordScreenState.Playing -> {}
+fun CancelBtn(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(onClick = onClick) {
+
     }
+}
+
+@Composable
+fun DoRecordScreen(modifier: Modifier = Modifier, currentState: RecordScreenUiState) {
+    Text(text = currentState.textForScreen)
+//    when (currentState) {
+//        RecordScreenState.Before -> {
+//            Text(text = "● : 녹음 시작 | / : 취소", fontSize = 19.sp)
+//        }
+//        RecordScreenState.Recording -> {
+//            Text(text = "녹음중 $recordingTime/00:30", fontSize = 19.sp)
+//        }
+//        RecordScreenState.Finished -> {
+//            Text(text = "● : 재생 | / : 다시 녹음", fontSize = 19.sp)
+//        }
+//        RecordScreenState.Playing -> {
+//
+//        }
+//    }
 }

@@ -22,7 +22,6 @@ class VoiceRecorder {
         @JvmStatic
         fun nullInstance() {
             instance?.apply {
-                stop()
                 release()
             }
             instance = null

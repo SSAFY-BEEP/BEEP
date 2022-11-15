@@ -1,6 +1,8 @@
 package com.example.beep.ui.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,25 +37,45 @@ enum class ReceivedMessageType {
     SEND, RECEIVED, BLOCKED
 }
 
-enum class RecordScreenState {
-    Before, Recording, Finished, Playing
+enum class RecordMessageState {
+    Before, Recording, Finished, Playing, Error, Loading
 }
+
+sealed class ButtonAction {
+    object StartRecording : ButtonAction()
+    object StopRecording : ButtonAction()
+    object StartPlaying : ButtonAction()
+    object StopPlaying : ButtonAction()
+    object ResetRecording : ButtonAction()
+}
+
+data class RecordScreenUiState(
+    val recordState: RecordMessageState = RecordMessageState.Before,
+    val textForScreen: String = "● : 녹음 시작 | / : 취소",
+    val confirmFunc: ButtonAction? = ButtonAction.StartRecording,
+    val cancelFunc: ButtonAction? = null,
+    val leftFunc: ButtonAction? = null,
+    val rightFunc: ButtonAction? = null
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val message24UseCase: Message24UseCase
-    ) :
-ViewModel() {
+) :
+    ViewModel() {
 
     val gson = Gson()
 
     //24시간 후에 사라지는 일반 메시지 리스트
-    val receiveMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getReceive24()
-    val sendMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getSend24()
+    val receiveMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> =
+        message24UseCase.getReceive24()
+    val sendMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> =
+        message24UseCase.getSend24()
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
-    var messageToSend:Message24Request by mutableStateOf(Message24Request())
-    var recordScreenState by mutableStateOf(RecordScreenState.Before)
+    var messageToSend: Message24Request by mutableStateOf(Message24Request())
+    var recordScreenState by mutableStateOf(RecordScreenUiState())
+    var timer by mutableStateOf(0)
 
 
     fun getOne24() {
@@ -74,7 +96,7 @@ ViewModel() {
         Log.d("Send REQUEST", "$file $messageToSend")
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.sendMsg(file, messageToSend).collectLatest {
-                if(it is ResultType.Success) {
+                if (it is ResultType.Success) {
                     Log.d("Send Message", it.data.toString())
                 } else {
                     Log.d("Send Message", "Fail!!")
@@ -86,7 +108,7 @@ ViewModel() {
     fun saveMessage(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.saveMsg(messageId).collectLatest {
-                if(it is ResultType.Success) {
+                if (it is ResultType.Success) {
                     Log.d("Save Message24", it.data.toString())
                 } else {
                     Log.d("Save Message24", "Fail!!")
@@ -98,7 +120,7 @@ ViewModel() {
     fun deleteMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.deleteMsg(messageId).collectLatest {
-                if(it is ResultType.Success) {
+                if (it is ResultType.Success) {
                     Log.d("Delete Message24", it.data.toString())
                 } else {
                     Log.d("Delete Message24", "Fail!!")
@@ -110,7 +132,7 @@ ViewModel() {
     fun blockMsg24(messageId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             message24UseCase.blockMsg(messageId).collectLatest {
-                if(it is ResultType.Success) {
+                if (it is ResultType.Success) {
                     Log.d("Block Message24", it.data.toString())
                 } else {
                     Log.d("Block Message24", "Fail!!")
@@ -131,14 +153,78 @@ ViewModel() {
         messageToSend = messageToSend.copy(receiverNum = receiverNum)
     }
 
-    fun resetRecord() {
-        VoicePlayer.nullInstance()
-        VoiceRecorder.nullInstance()
-        updateRecordState(RecordScreenState.Before)
+
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun onAction(action: ButtonAction) {
+        when (action) {
+            is ButtonAction.StartRecording -> {
+                startRecording()
+            }
+            is ButtonAction.StopRecording -> {
+                stopRecording()
+            }
+            is ButtonAction.StartPlaying -> {
+                startPlaying()
+            }
+            is ButtonAction.StopPlaying -> {
+                stopPlaying()
+            }
+            is ButtonAction.ResetRecording -> {
+                resetRecording()
+            }
+        }
     }
 
-    fun updateRecordState(newState: RecordScreenState) {
-        recordScreenState = newState
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun startRecording() {
+        Log.d("HomeViewModel", "StartRecording()")
+        recordScreenState = RecordScreenUiState(
+            recordState = RecordMessageState.Recording,
+            textForScreen = "녹음중 ",
+            confirmFunc = ButtonAction.StopRecording,
+            cancelFunc = ButtonAction.StopRecording,
+        )
+    }
+
+    private fun stopRecording() {
+        Log.d("HomeViewModel", "StopRecording()")
+        recordScreenState = RecordScreenUiState(
+            recordState = RecordMessageState.Finished,
+            textForScreen = "● : 재생 | / : 다시 녹음",
+            confirmFunc = ButtonAction.StartPlaying,
+            cancelFunc = ButtonAction.ResetRecording,
+        )
+    }
+
+    private fun startPlaying() {
+        Log.d("HomeViewModel", "StartPlaying()")
+        recordScreenState = RecordScreenUiState(
+            recordState = RecordMessageState.Playing,
+            textForScreen = "재생중 ",
+            confirmFunc = ButtonAction.StopPlaying,
+            cancelFunc = ButtonAction.StopPlaying,
+        )
+    }
+
+    private fun stopPlaying() {
+        Log.d("HomeViewModel", "StopPlaying()")
+        recordScreenState = RecordScreenUiState(
+            recordState = RecordMessageState.Finished,
+            textForScreen = "● : 전송 | / : 다시 녹음",
+            confirmFunc = null,
+            cancelFunc = ButtonAction.ResetRecording,
+        )
+    }
+
+    private fun resetRecording() {
+        VoicePlayer.nullInstance()
+        VoiceRecorder.nullInstance()
+        recordScreenState = RecordScreenUiState(
+            recordState = RecordMessageState.Before,
+            textForScreen = "● : 녹음 시작 | / : 취소",
+            confirmFunc = ButtonAction.StartRecording,
+        )
     }
 
     init {

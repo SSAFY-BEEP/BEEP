@@ -35,7 +35,6 @@ enum class RecordState {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RecordVoiceScreen(
     modifier: Modifier = Modifier,
