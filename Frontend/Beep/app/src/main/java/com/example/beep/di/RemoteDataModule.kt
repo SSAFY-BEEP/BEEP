@@ -50,6 +50,12 @@ object RemoteDataModule {
 
     @Provides
     @Singleton
+    fun provideUserApi(@Named("retrofit") retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideAddressApi(@Named("retrofit") retrofit: Retrofit): AddressApi {
         return retrofit.create(AddressApi::class.java)
     }
