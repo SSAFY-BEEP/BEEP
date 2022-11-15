@@ -42,7 +42,7 @@ enum class ReceivedMessageType {
 }
 
 enum class RecordMessageState {
-    Before, Recording, Finished, Playing, Error, Loading
+    Greeting, Before, Recording, Finished, Playing, Error, Loading
 }
 
 @HiltViewModel
@@ -61,9 +61,10 @@ class HomeViewModel @Inject constructor(
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
-    var recordMessageState by mutableStateOf(RecordMessageState.Before)
+    var recordMessageState by mutableStateOf(RecordMessageState.Greeting)
     var timer by mutableStateOf(0)
     var currentPage by mutableStateOf("ReceivedMsg")
+    var opponentGreetingUri: String? by mutableStateOf(null)
 
     fun getOne24() {
         receivedMessageUiState = UiState.Loading
@@ -156,6 +157,28 @@ class HomeViewModel @Inject constructor(
 
     fun setMessageReceiverNum(receiverNum: String) {
         messageToSend = messageToSend.copy(receiverNum = receiverNum)
+    }
+
+    fun stopGreeting() {
+        try {
+            VoicePlayer.getInstance().apply {
+                if (this.isPlaying)
+                    stop()
+                release()
+            }
+        } catch (e: Exception) {
+            Log.e(
+                "VoicePlayer",
+                "stopGreeting",
+                e
+            )
+        }
+    }
+
+    fun playGreeting() {
+        /* API에서 상대 인사말 주소를 가져온 뒤 null이 아니라면 MediaPlayer로 재생,
+            null이면 상태를 바로 Before로 바꾸기 */
+        /* onComplete -> stopGreeting() && 상태 Before로 바꾸기 */
     }
 
     init {

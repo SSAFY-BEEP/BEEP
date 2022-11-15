@@ -48,6 +48,7 @@ fun BbibbiDoRecord(
     val currentState = homeViewModel.recordMessageState
 
     DisposableEffect(key1 = Unit) {
+        homeViewModel.playGreeting()
         Log.d("DisposableEffect", "Disposable Effect Called!!")
         VoiceRecorder.nullInstance()
         VoiceRecorder.getInstance(context)
@@ -72,9 +73,8 @@ fun BbibbiDoRecord(
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
             CancelBtn(onClick = {
                 when (currentState) {
-                    RecordMessageState.Before -> {
+                    RecordMessageState.Before, RecordMessageState.Greeting -> {
                         toAskRecord()
-                        homeViewModel.recordMessageState = RecordMessageState.Recording
                     }
                     RecordMessageState.Recording -> {
                         stopRecording(context)
@@ -118,6 +118,10 @@ fun BbibbiDoRecord(
             })
             ConfirmBtn(onClick = {
                 when (currentState) {
+                    RecordMessageState.Greeting -> {
+                        homeViewModel.stopGreeting()
+                        homeViewModel.recordMessageState = RecordMessageState.Before
+                    }
                     RecordMessageState.Before -> {
                         if (!voicePermissionState.status.isGranted) {
                             voicePermissionState.launchPermissionRequest()
@@ -148,6 +152,8 @@ fun BbibbiDoRecord(
         }
     }
 }
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -198,6 +204,9 @@ fun DoRecordScreen(
     val recordingTime = "00:00"
     val playingTime = "00:00"
     when (currentState) {
+        RecordMessageState.Greeting -> {
+            Text(text = "인사말 재생중...")
+        }
         RecordMessageState.Before -> {
             Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
         }
