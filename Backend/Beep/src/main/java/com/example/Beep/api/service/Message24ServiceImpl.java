@@ -1,9 +1,6 @@
 package com.example.Beep.api.service;
 
-import com.example.Beep.api.domain.dto.Message24RequestDto;
 import com.example.Beep.api.domain.dto.S3RequestDto;
-import com.example.Beep.api.domain.dto.SMSRequestDto;
-import com.example.Beep.api.domain.entity.Block;
 import com.example.Beep.api.domain.entity.Message;
 import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
@@ -28,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +47,6 @@ public class Message24ServiceImpl implements  Message24Service{
     public List<Message24> getReceiveMessage() {
         String receiverNum = SecurityUtil.getCurrentUsername().get();
         List<Message24> list = repository.findAllByReceiverNumAndOwnerNum(receiverNum, receiverNum);
-
         List<Message24> result = new ArrayList<>();
 
         //차단이 아닌 메세지 조회(일반, 보관)
@@ -59,6 +55,12 @@ public class Message24ServiceImpl implements  Message24Service{
                 result.add(cur);
             }
         }
+        Collections.sort(result, (a, b) -> {
+            if(a.getTime().isBefore(b.getTime())) return -1;
+            else if(a.getTime().isEqual(b.getTime())) return 0;
+            else return 1;
+        });
+
         return result;
     }
 
@@ -66,7 +68,13 @@ public class Message24ServiceImpl implements  Message24Service{
     @Override
     public List<Message24> getSendMessage() {
         String senderNum = SecurityUtil.getCurrentUsername().get();
-        return repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
+        List<Message24> list = repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
+        Collections.sort(list, (a, b) -> {
+            if(a.getTime().isBefore(b.getTime())) return -1;
+            else if(a.getTime().isEqual(b.getTime())) return 0;
+            else return 1;
+        });
+        return list;
     }
 
 //    //메세지 24에 메세지 저장

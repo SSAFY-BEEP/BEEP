@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -56,7 +55,7 @@ public class PresetServiceImpl implements PresetService{
     }
 
     @Override
-    public List<PresetResponseDto> PresetFind(Long id) {
+    public List<PresetResponseDto> PresetFind(Long id, Integer part) {
         User user;
         if(id==null){
             String ownerNum = SecurityUtil.getCurrentUsername().get();
@@ -71,6 +70,7 @@ public class PresetServiceImpl implements PresetService{
         }
 
         List<PresetResponseDto> presetResponseDtoList = user.getPresetList().stream()
+                .filter(p -> p.getPart()==part)
                 .map(Preset -> PresetResponseDto.builder()
                         .pid(Preset.getId())
                         .uid(user.getId())
@@ -78,6 +78,7 @@ public class PresetServiceImpl implements PresetService{
                         .part(Preset.getPart())
                         .content(Preset.getContent())
                         .build()).collect(Collectors.toList());
+        Collections.sort(presetResponseDtoList, Comparator.comparingInt(PresetResponseDto::getNumber));
         return presetResponseDtoList;
     }
 }

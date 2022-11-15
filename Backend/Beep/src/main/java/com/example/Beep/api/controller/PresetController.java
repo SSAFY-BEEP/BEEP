@@ -44,17 +44,17 @@ public class PresetController {
         return new ApiResult<>("Success", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "유저 프리셋 찾기(유저토큰)", notes = "유저 프리셋 찾기")
-    @GetMapping("/find")
+    @ApiOperation(value = "유저 프리셋 찾기(유저토큰)", notes = "유저 프리셋 찾기/ 메세지=1, 연락처=2")
+    @GetMapping("/findToken/{part}")
     @PreAuthorize("hasAnyRole('USER')")
-    public ApiResult<?> PresetFindByToken(){
-        return new ApiResult<List<PresetResponseDto>>(presetService.PresetFind(null),HttpStatus.OK);
+    public ApiResult<?> PresetFindByToken(@PathVariable Integer part){
+        return new ApiResult<List<PresetResponseDto>>(presetService.PresetFind(null, part),HttpStatus.OK);
     }
 
     @ApiOperation(value = "유저 프리셋 찾기(관리자)", notes = "유저 프리셋 찾기")
-    @GetMapping("/find/{uid}")
+    @GetMapping("/find/{uid}/{part}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ApiResult<?> PresetFind(@PathVariable("uid") Long uid){
-        return new ApiResult<List<PresetResponseDto>>(presetService.PresetFind(uid),HttpStatus.OK);
+    public ApiResult<?> PresetFind(@PathVariable Long uid, @PathVariable Integer part){
+        return new ApiResult<List<PresetResponseDto>>(presetService.PresetFind(uid, part),HttpStatus.OK);
     }
 }
