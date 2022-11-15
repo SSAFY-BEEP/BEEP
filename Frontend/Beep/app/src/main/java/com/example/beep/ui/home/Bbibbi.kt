@@ -43,7 +43,7 @@ fun Bbibbi(
             }
 //            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
 //            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
-            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
+//            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
         }
         is UiState.Error -> {
             receiveMsg = "ERROR"

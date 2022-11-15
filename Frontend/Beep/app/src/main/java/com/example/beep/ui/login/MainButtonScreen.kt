@@ -45,29 +45,27 @@ fun MainButtonScreen(navController: NavController) {
         AnimatedVisibility(
             visible = visible,
             enter = fadeIn() + expandVertically(
-                animationSpec = tween(1000, 1000)
-            ),
+                    expandFrom = Alignment.Top,
+                animationSpec = tween(2000,2000),
+                clip = false
+                )
+            ,
         ) {
             Column(
                 Modifier
                     .fillMaxSize()
                     .padding(48.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
+                verticalArrangement = Arrangement.Bottom,
             ) {
                 Button(
                     onClick = { navController.navigate("login_graph") },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "로그인")
+                    Text(text = "시작하기")
                 }
-
-                Button(
-                    onClick = { navController.navigate("join_graph") },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "회원가입")
-                }
+                
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
