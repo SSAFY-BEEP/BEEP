@@ -21,6 +21,8 @@ fun BbibbiAskToRecord(
     toRecord: () -> Unit,
     homeViewModel: HomeViewModel = viewModel(),
     ) {
+    Log.d("PageMove", "Moved to AskToRecord")
+
     var go by remember { mutableStateOf(true) }
 
     var r = 0

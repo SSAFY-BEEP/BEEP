@@ -63,10 +63,10 @@ ViewModel() {
         }
     }
 
-    fun sendMsg(file: MultipartBody.Part?, content: String, receiverNum: String) {
-        Log.d("Send REQUEST", "content : $content, receiverNum : $receiverNum")
+    fun sendMsg(file: MultipartBody.Part? = null) {
+        Log.d("Send REQUEST", "$file $messageToSend")
         viewModelScope.launch(Dispatchers.IO) {
-            message24UseCase.sendMsg(file, content, receiverNum).collectLatest {
+            message24UseCase.sendMsg(file, messageToSend).collectLatest {
                 if(it is ResultType.Success) {
                     Log.d("Send Message", it.data.toString())
                 } else {

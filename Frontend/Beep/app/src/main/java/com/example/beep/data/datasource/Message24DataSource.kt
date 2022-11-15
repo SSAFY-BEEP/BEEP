@@ -24,9 +24,9 @@ class Message24DataSource @Inject constructor(private val message24Api: Message2
         emit(message24Api.getMsg24(id))
     }
 
-    fun sendMsg(file : MultipartBody.Part?, content: String, receiverNum: String): Flow<BaseResponse<String>>
+    fun sendMsg(file : MultipartBody.Part?, message:Message24Request): Flow<BaseResponse<String>>
     = flow {
-        emit(message24Api.sendMessage(file, Message24Request(content, receiverNum)))
+        emit(message24Api.sendMessage(file, message))
     }
 
     fun saveMsg(messageId: String) : Flow<BaseResponse<String>> = flow {
