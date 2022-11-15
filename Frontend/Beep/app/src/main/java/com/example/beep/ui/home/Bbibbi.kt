@@ -39,11 +39,10 @@ fun Bbibbi(
                 currentPage = "PutAddress"
             } else {
                 receiveMsg = currentUiState.data[0].content
-
+                Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
             }
 //            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
 //            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
-            Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
         }
         is UiState.Error -> {
             receiveMsg = "ERROR"

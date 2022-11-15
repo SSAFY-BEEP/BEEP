@@ -22,32 +22,24 @@ import androidx.compose.ui.unit.sp
 @ExperimentalComposeUiApi
 @Composable
 fun KeyboardButton(
-//    symbol: String,
     modifier: Modifier = Modifier,
-//    description: String,
     paint: Painter,
-    textStyle: TextStyle = TextStyle(),
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(18.dp))
-            .width(110.dp)
-            .height(55.dp)
-//            .background(Color.White)
-//            .border(
-//                width = 1.dp,
-//                color = Color.Black,
-//                shape = RoundedCornerShape(18.dp)
-//            )
-//            .combinedClickable (
-//                onClick = {},
-//                onLongClick = {}
-//            )
-            .clickable {
-                onClick()
-            }
+            .clip(RoundedCornerShape(14.dp))
+            .width(96.dp)
+            .height(48.dp)
+            .combinedClickable (
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+//            .clickable {
+//                onClick()
+//            }
             .then(modifier)
     ) {
         Image(
@@ -55,12 +47,6 @@ fun KeyboardButton(
             contentDescription = "description",
             modifier = Modifier
                 .fillMaxSize()
-        )
-        Text(
-            text = "",
-            style = textStyle,
-            fontSize = 20.sp,
-            color = Color.Black
         )
     }
 }
