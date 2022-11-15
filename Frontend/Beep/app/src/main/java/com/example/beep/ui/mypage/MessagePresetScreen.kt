@@ -37,7 +37,6 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
         }
         Column(modifier = modifier.height(200.dp)) {
             BeepForTest()
-            TestComposable()
         }
     }
 
