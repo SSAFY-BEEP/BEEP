@@ -2,14 +2,14 @@ package com.example.beep.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -101,9 +101,9 @@ fun BeepApp() {
 
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
+    TopAppBar(modifier = modifier.fillMaxWidth().height(80.dp), backgroundColor = BACKGROUND_WHITE) {
         Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center, color= PINK500,
-            fontFamily = galmurinineFont
+            fontFamily = galmurinineFont, fontSize = 25.sp
         )
     }
 }

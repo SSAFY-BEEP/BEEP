@@ -12,11 +12,11 @@ import com.example.beep.ui.message.UiState
 import com.example.beep.util.ResultType
 import com.example.beep.util.fromJson
 import com.google.gson.Gson
-import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseCase) :
@@ -85,6 +85,7 @@ class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseC
     }
 
     init{
-
+        getPresetByToken(1)
+        getPresetByToken(2)
     }
 }
