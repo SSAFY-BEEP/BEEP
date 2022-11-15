@@ -21,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.ui.message.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -30,10 +31,10 @@ fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
     toAskRecord: () -> Unit,
     changeContentString: (String) -> Unit,
-
+    resetKeyboard: () -> Unit
     ) {
 
-    val viewModel = viewModel<KeyboardViewModel>()
+    val keyboardViewModel = viewModel<KeyboardViewModel>()
 
     var defaultNameString by remember { mutableStateOf("") }
 
@@ -43,7 +44,7 @@ fun BbibbiPutMsg(
         modifier = Modifier
     ) {
         // 입력값 리셋 필요
-        viewModel.onAction(KeyboardAction.Clear)
+        keyboardViewModel.onAction(KeyboardAction.Clear)
         // 다시 연락처 입력 페이지로
         toPutAddress()
     }
@@ -86,8 +87,26 @@ fun BbibbiPutMsg(
 @Composable
 fun ViewMyText(
     changeDefaultNameString: (String) -> Unit,
-    defaultNameString: String
+    defaultNameString: String,
+
 ) {
+    val presetViewModel = viewModel<PresetViewModel>()
+    when (val currentUiState = presetViewModel.contactPreset) {
+        is UiState.Loading -> {
+            changeDefaultNameString("로딩중...")
+        }
+        is UiState.Success -> {
+            if (currentUiState.data.isEmpty()) {
+            } else {
+//                receiveMsg = currentUiState.data[0].content
+                Log.d("데이터0::::::", currentUiState.data.toString())
+            }
+        }
+        is UiState.Error -> {
+            changeDefaultNameString("ERROR")
+        }
+    }
+
     val viewModel = viewModel<KeyboardViewModel>()
     val state = viewModel.state
     var show = if (state.number1.isNotEmpty()) {

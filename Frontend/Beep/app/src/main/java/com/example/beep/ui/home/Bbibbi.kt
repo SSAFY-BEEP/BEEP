@@ -22,7 +22,8 @@ import com.example.beep.util.collectAsStateLifecycleAware
 @Composable
 fun Bbibbi(
     homeViewModel: HomeViewModel = viewModel(),
-    presetViewModel: PresetViewModel = viewModel()
+    presetViewModel: PresetViewModel = viewModel(),
+    keyboardViewModel: KeyboardViewModel = viewModel()
 ) {
     var receiveMsg = ""
 //    var senderPhoneNumber = ""
@@ -70,7 +71,7 @@ fun Bbibbi(
             toPutAddress = {currentPage = "PutAddress"},
             toAskRecord = {currentPage = "AskRecord"},
             changeContentString = { changedContentString: String -> contentString = changedContentString },
-
+            resetKeyboard = {keyboardViewModel.onAction(KeyboardAction.Clear)}
             )
     } else if (currentPage == "AskRecord") {
         BbibbiAskToRecord (
@@ -102,9 +103,3 @@ fun Bbibbi(
     }
 }
 
-
-//        //임시로 메시지 보내기 넣음
-//        onClick = {
-//            /* cancel 버튼 */
-//            homeViewModel.sendMsg(null, "5012", "01012345678")
-//        },
