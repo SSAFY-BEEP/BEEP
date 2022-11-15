@@ -53,6 +53,7 @@ fun BbibbiDoRecord(
         VoiceRecorder.getInstance(context)
         VoicePlayer.nullInstance()
         VoicePlayer.getInstance()
+        File(filepath)
 
         onDispose {
             Log.d("DisposableEffect", "onDispose Called!!")

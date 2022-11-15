@@ -37,6 +37,7 @@ class SavedMessageViewModel @Inject constructor(
     var showModifyDialog by mutableStateOf(false)
     var showBlockDialog by mutableStateOf(false)
     var messageToModify: MessageResponse? by mutableStateOf(null)
+    var messageAudioState by mutableStateOf(SavedMessageAudioState())
 
     fun getMessage() {
         savedMessageUiState = UiState.Loading
@@ -166,7 +167,8 @@ class SavedMessageViewModel @Inject constructor(
             }
             prepareAsync()
             setOnCompletionListener {
-                it.stop()
+                if (it.isPlaying)
+                    it.stop()
                 it.release()
                 savedMessageAudioState =
                     savedMessageAudioState.copy(isPlaying = false, message = null)
@@ -175,11 +177,21 @@ class SavedMessageViewModel @Inject constructor(
     }
 
     fun stopSavedMessageAudio() {
-        VoicePlayer.getInstance().apply {
-            stop()
-            release()
-            savedMessageAudioState = savedMessageAudioState.copy(isPlaying = false, message = null)
+        try {
+            VoicePlayer.getInstance().apply {
+                if (this.isPlaying)
+                    stop()
+                release()
+                savedMessageAudioState = savedMessageAudioState.copy(isPlaying = false, message = null)
+            }
+        } catch (e: Exception) {
+            Log.e(
+                "VoicePlayer",
+                "stopSavedMessageAudio",
+                e
+            )
         }
+
     }
 
     init {

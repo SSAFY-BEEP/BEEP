@@ -29,7 +29,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.io.FileInputStream
 import javax.inject.Inject
 
 
@@ -59,7 +63,7 @@ class HomeViewModel @Inject constructor(
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
     var recordMessageState by mutableStateOf(RecordMessageState.Before)
     var timer by mutableStateOf(0)
-
+    var currentPage by mutableStateOf("ReceivedMsg")
 
     fun getOne24() {
         receivedMessageUiState = UiState.Loading
@@ -75,15 +79,33 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun sendMsg(file: MultipartBody.Part? = null) {
-        Log.d("Send REQUEST", "$file $messageToSend")
+    fun sendMsg(filepath: String) {
+        Log.d("Send REQUEST", "$filepath $messageToSend")
         viewModelScope.launch(Dispatchers.IO) {
-            message24UseCase.sendMsg(file, messageToSend).collectLatest {
+            val file = File(filepath)
+            val partFile: MultipartBody.Part? = if (file.exists()) {
+                val fis = FileInputStream(file)
+                val byteArray = fis.readBytes()
+                Log.d("SENDMSG", byteArray.size.toString())
+                MultipartBody.Part.createFormData(
+                    "file",
+                    "${System.currentTimeMillis()}record.mp3",
+                    byteArray.toRequestBody(contentType = "multipart/form-data".toMediaTypeOrNull())
+                )
+            } else null
+
+            if (partFile == null)
+                Log.d("SENDMSG", "Partfile is null")
+
+            message24UseCase.sendMsg(partFile, messageToSend).collectLatest {
                 if (it is ResultType.Success) {
                     Log.d("Send Message", it.data.toString())
+                    if (file.exists())
+                        file.delete()
                 } else {
                     Log.d("Send Message", "Fail!!")
                 }
+                currentPage = "ReceivedMsg"
             }
         }
     }

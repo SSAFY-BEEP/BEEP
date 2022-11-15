@@ -10,9 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.io.File
 
 @Composable
 fun BbibbiAskToSend(
@@ -21,6 +23,8 @@ fun BbibbiAskToSend(
     toFirstPage: () -> Unit,
     homeViewModel: HomeViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
+    var filepath = context.cacheDir.absolutePath + "/temp.3gp"
     Log.d("PageMove", "Moved to AskToSend")
 
     var go by remember { mutableStateOf(true) }
@@ -101,7 +105,7 @@ fun BbibbiAskToSend(
             /* go버튼 */
             if (go) {
                 // 메시지보내기 action
-                homeViewModel.sendMsg()
+                homeViewModel.sendMsg(filepath)
             } else {
                 //  첫 페이지로
                 homeViewModel.resetMessageToSend()
@@ -137,8 +141,9 @@ fun BbibbiAskToSend(
     Button(
         // 메시지 보내기
         onClick = {
+
             /* yes버튼 */
-            homeViewModel.sendMsg()
+            homeViewModel.sendMsg(filepath)
         },
         modifier = Modifier
             .width(60.dp)
