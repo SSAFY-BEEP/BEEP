@@ -3,11 +3,13 @@ package com.example.beep.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -17,7 +19,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.beep.R
 import com.example.beep.ui.home.*
-import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
@@ -38,7 +39,7 @@ val galmurinineFont = FontFamily(
 fun BeepNavGraph(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "home", modifier = Modifier.imePadding()) {
+    NavHost(navController = navController, startDestination = "home", modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,60.dp)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)

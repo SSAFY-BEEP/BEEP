@@ -1,11 +1,17 @@
 package com.example.beep.ui.savedmessage
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -17,19 +23,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.message.UiState
 import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
@@ -391,9 +399,13 @@ fun MessageItem(
             Row(
                 modifier = modifier
                     .padding(8.dp)
-                    .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (message.audioUri != null)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
                     AudioBtn(
                         enabled = message.audioUri != null,
                         onPlay = {
@@ -406,8 +418,11 @@ fun MessageItem(
                         isPlaying = viewModel.savedMessageAudioState.isPlaying
                                 && viewModel.savedMessageAudioState.message?.id == message.id
                     )
+                }
+                if (message.audioUri != null)
+
                 SavedMessageInfo(
-                    modifier = modifier.weight(1f),
+                    modifier = modifier.weight(5f),
                     content = message.content,
                     tag = message.tag,
                     localDateTime = message.localDateTime
@@ -415,7 +430,7 @@ fun MessageItem(
                 ExpandButton(
                     expanded = expanded,
                     onClick = { expanded = !expanded },
-                    modifier = modifier.weight(1f)
+                    modifier = modifier.weight(2f)
                 )
             }
             if (expanded) {
@@ -440,14 +455,14 @@ fun SavedMessageInfo(
     localDateTime: String
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceAround
+        modifier = modifier.fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = content, fontSize = 18.sp)
         Column() {
-            Text(text = tag ?: "", fontSize = 12.sp)
-            Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
+            Text(text = tag ?: "", fontSize = 13.sp)
+            Text(text = localDateTime.substring(0, 10), fontSize = 11.sp)
         }
 
     }

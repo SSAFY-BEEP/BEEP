@@ -237,51 +237,57 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                if (message.audioUri != null) {
-                    Log.d("DataSource", "$S3_REDIS_URI${message.audioUri}")
-                    Message24AudioBtn(
-                        enabled = message.audioUri != null,
-                        onPlay = {
-                            stopMessage24Audio()
-                            viewModel.msg24State = viewModel.msg24State.copy(
-                                messageAudioState = MessageAudioState(
-                                    isPlaying = false,
-                                    message = null
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    if (message.audioUri != null) {
+                        Log.d("DataSource", "$S3_REDIS_URI${message.audioUri}")
+                        Message24AudioBtn(
+                            enabled = message.audioUri != null,
+                            onPlay = {
+                                stopMessage24Audio()
+                                viewModel.msg24State = viewModel.msg24State.copy(
+                                    messageAudioState = MessageAudioState(
+                                        isPlaying = false,
+                                        message = null
+                                    )
                                 )
-                            )
-                        },
-                        onStop = {
-                            playMessage24Audio(
-                                message,
-                                onPrepared = {
-                                    viewModel.msg24State = viewModel.msg24State.copy(
-                                        messageAudioState = MessageAudioState(
-                                            isPlaying = true,
-                                            message = message
+                            },
+                            onStop = {
+                                playMessage24Audio(
+                                    message,
+                                    onPrepared = {
+                                        viewModel.msg24State = viewModel.msg24State.copy(
+                                            messageAudioState = MessageAudioState(
+                                                isPlaying = true,
+                                                message = message
+                                            )
                                         )
-                                    )
-                                },
-                                onComplete = {
-                                    viewModel.msg24State = viewModel.msg24State.copy(
-                                        messageAudioState = MessageAudioState(
-                                            isPlaying = false,
-                                            message = null
+                                    },
+                                    onComplete = {
+                                        viewModel.msg24State = viewModel.msg24State.copy(
+                                            messageAudioState = MessageAudioState(
+                                                isPlaying = false,
+                                                message = null
+                                            )
                                         )
-                                    )
-                                })
-                        },
-                        isPlaying = viewModel.msg24State.messageAudioState.isPlaying && viewModel.msg24State.messageAudioState.message?.id == message.id
-                    )
+                                    })
+                            },
+                            isPlaying = viewModel.msg24State.messageAudioState.isPlaying && viewModel.msg24State.messageAudioState.message?.id == message.id
+                        )
+                    }
                 }
+
                 MessageInfo(
-                    modifier = modifier.weight(1f),
+                    modifier = modifier.weight(5f),
                     content = message.content,
                     localDateTime = message.time
                 )
                 ExpandButton(
                     expanded = expanded,
                     onClick = { expanded = !expanded },
-                    modifier = modifier.weight(1f)
+                    modifier = modifier.weight(2f)
                 )
             }
             if (expanded) {
@@ -341,8 +347,8 @@ fun MessageInfo(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceAround
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = content, fontSize = 18.sp)
         Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)

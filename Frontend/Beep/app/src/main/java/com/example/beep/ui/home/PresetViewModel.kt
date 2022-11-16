@@ -22,13 +22,15 @@ import javax.inject.Inject
 class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseCase) :
     ViewModel() {
 
-    var contactPreset: UiState<Array<String?>> by mutableStateOf(UiState.Loading)
     var messagePreset: UiState<Array<String?>> by mutableStateOf(UiState.Loading)
+    var contactPreset: UiState<Array<String?>> by mutableStateOf(UiState.Loading)
 
     val gson = Gson()
 
     //유저의 프리셋 리스트 가져오기(토큰 / 1=메세지, 2=연락처)
-    fun getPresetByToken(part : Int) {
+    suspend fun getPresetByToken(part : Int) {
+        if(part == 1) messagePreset = UiState.Loading
+        else contactPreset = UiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             presetUseCase.getUserPresetByToken(part).collectLatest {
                 when(it){
@@ -84,8 +86,8 @@ class PresetViewModel @Inject constructor(private val presetUseCase : PresetUseC
         }
     }
 
-    init{
-        getPresetByToken(1)
-        getPresetByToken(2)
-    }
+//    init{
+//        getPresetByToken(1)
+//        getPresetByToken(2)
+//    }
 }
