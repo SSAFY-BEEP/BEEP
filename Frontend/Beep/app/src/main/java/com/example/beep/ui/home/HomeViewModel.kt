@@ -18,6 +18,7 @@ import com.example.beep.domain.Message24UseCase
 import com.example.beep.ui.message.RecordState
 import com.example.beep.ui.message.ResultState
 import com.example.beep.ui.message.UiState
+import com.example.beep.ui.message.stopRecording
 import com.example.beep.ui.savedmessage.SavedMessageType
 import com.example.beep.util.ResultType
 import com.example.beep.util.VoicePlayer
@@ -34,6 +35,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileInputStream
+import java.util.*
 import javax.inject.Inject
 
 
@@ -62,9 +64,12 @@ class HomeViewModel @Inject constructor(
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
     var recordMessageState by mutableStateOf(RecordMessageState.Greeting)
-    var timer by mutableStateOf(0)
     var currentPage by mutableStateOf("ReceivedMsg")
     var opponentGreetingUri: String? by mutableStateOf(null)
+    var timerTask: Timer? = null
+    var time by mutableStateOf(0)
+    var isRunning by mutableStateOf(false)
+    var fileLength by mutableStateOf(0)
 
     fun getOne24() {
         receivedMessageUiState = UiState.Loading
@@ -179,6 +184,38 @@ class HomeViewModel @Inject constructor(
         /* API에서 상대 인사말 주소를 가져온 뒤 null이 아니라면 MediaPlayer로 재생,
             null이면 상태를 바로 Before로 바꾸기 */
         /* onComplete -> stopGreeting() && 상태 Before로 바꾸기 */
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun startTimer() {
+        isRunning = true
+        timerTask = kotlin.concurrent.timer(period = 1000) {
+            time++
+            if (time >= fileLength) {
+                stopTimer()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun stopTimer() {
+        timerTask?.cancel()
+
+        time = 0
+        isRunning = false
+        if (recordMessageState == RecordMessageState.Recording) {
+            VoiceRecorder.getInstanceWithoutContext()?.run {
+                stop()
+                release()
+            }
+            recordMessageState = RecordMessageState.Finished
+        } else if (recordMessageState == RecordMessageState.Playing) {
+            VoicePlayer.getInstance().run {
+                stop()
+                release()
+            }
+            recordMessageState = RecordMessageState.Finished
+        }
     }
 
     init {

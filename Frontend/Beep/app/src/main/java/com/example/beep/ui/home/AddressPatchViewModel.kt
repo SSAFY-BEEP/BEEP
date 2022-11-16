@@ -1,6 +1,6 @@
 package com.example.beep.ui.home
 
-import com.example.beep.domain.retrofit.PatchUserAddressUseCase
+import com.example.beep.domain.PatchUserAddressUseCase
 
 
 import androidx.lifecycle.ViewModel

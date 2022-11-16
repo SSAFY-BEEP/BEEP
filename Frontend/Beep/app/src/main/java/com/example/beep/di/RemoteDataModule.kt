@@ -35,13 +35,6 @@ object RemoteDataModule {
         return GsonBuilder().setLenient().create()
     }
 
-    // RetrofitApi DI
-    @Provides
-    @Singleton
-    fun provideRetrofitApi(@Named("retrofit") retrofit: Retrofit): RetrofitApi {
-        return retrofit.create(RetrofitApi::class.java)
-    }
-
     @Provides
     @Singleton
     fun providePresetApi(@Named("retrofit") retrofit: Retrofit): PresetApi {

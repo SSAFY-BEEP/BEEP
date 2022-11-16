@@ -1,4 +1,4 @@
-package com.example.beep.domain.retrofit
+package com.example.beep.domain
 
 import com.example.beep.data.repository.AddressRepository
 import javax.inject.Inject

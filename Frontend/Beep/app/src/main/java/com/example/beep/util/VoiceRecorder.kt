@@ -10,6 +10,8 @@ class VoiceRecorder {
         @Volatile
         private var instance: MediaRecorder? = null
 
+        fun getInstanceWithoutContext() = instance
+
         @RequiresApi(Build.VERSION_CODES.S)
         @JvmStatic
         fun getInstance(context: Context): MediaRecorder =
