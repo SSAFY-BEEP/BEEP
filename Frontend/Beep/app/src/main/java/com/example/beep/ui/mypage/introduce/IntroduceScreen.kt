@@ -124,7 +124,7 @@ fun IntroduceSuccessScreen(
         LaunchedEffect(key1 = isPlaying) {
             Log.d("LaunchedEffect", "IntroducePlay")
             cursor = 0
-            voiceLength = VoicePlayer.getInstance().duration
+//            voiceLength = VoicePlayer.getInstance().duration
             while (isPlaying && cursor < voiceLength) {
                 cursor += 100
                 if (cursor >= voiceLength) {
@@ -141,7 +141,7 @@ fun IntroduceSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = viewModel.introduceUrl)
+//            Text(text = viewModel.introduceUrl)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
                     if (!isPlaying) {
