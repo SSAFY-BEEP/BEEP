@@ -104,11 +104,12 @@ fun RecordSuccessScreen(
                     }
                 }
                 RecordState.ON_RECORDING -> {
-                    stopRecordingIntroduce(context, filepath,
+                    stopRecordingIntroduce(filepath,
                         onComplete = {
                             stopPlaying()
                             viewModel.stopTimer()
-                            viewModel.currentState = RecordState.ASK_POST },
+                            viewModel.currentState = RecordState.ASK_POST
+                        },
                         onPrepared = { duration: Int ->
                             viewModel.fileLength = duration
                         })
@@ -145,12 +146,22 @@ fun RecordSuccessScreen(
                 onClick = {
                     viewModel.postIntroduce(
                         filepath = filepath,
-                        togglePopup = togglePopup
+                        togglePopup = {togglePopup()}
                     )
                 }) {
                 Text(text = "바꾸기")
             }
-            Button(onClick = togglePopup) {
+            Button(onClick = {
+                when (viewModel.currentState) {
+                    RecordState.ON_RECORDING -> {
+                        stopRecording()
+                    }
+                    RecordState.ON_PLAYING -> {
+                        stopPlaying()
+                    }
+                }
+                togglePopup()
+            }) {
                 Text(text = "취소")
             }
         }
@@ -171,8 +182,8 @@ fun startRecording(context: Context, filepath: String) {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-fun stopRecording(context: Context) {
-    VoiceRecorder.getInstance(context).run {
+fun stopRecording() {
+    VoiceRecorder.getInstanceWithoutContext()?.run {
         stop()
         release()
     }
@@ -180,8 +191,12 @@ fun stopRecording(context: Context) {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-fun stopRecordingIntroduce(context: Context, filepath: String, onComplete: () -> Unit, onPrepared: (Int) -> Unit) {
-    VoiceRecorder.getInstance(context).run {
+fun stopRecordingIntroduce(
+    filepath: String,
+    onComplete: () -> Unit,
+    onPrepared: (Int) -> Unit
+) {
+    VoiceRecorder.getInstanceWithoutContext()?.run {
         stop()
         release()
     }

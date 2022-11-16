@@ -78,7 +78,7 @@ fun BbibbiDoRecord(
                         homeViewModel.recordMessageState = RecordMessageState.Greeting
                     }
                     RecordMessageState.Recording -> {
-                        stopRecording(context)
+                        stopRecording()
                         homeViewModel.stopTimer()
                         homeViewModel.recordMessageState = RecordMessageState.Finished
                     }
@@ -144,7 +144,7 @@ fun BbibbiDoRecord(
                         }
                     }
                     RecordMessageState.Recording -> {
-                        stopRecording(context)
+                        stopRecording()
                         homeViewModel.stopTimer()
                         homeViewModel.recordMessageState = RecordMessageState.Finished
                     }
