@@ -79,4 +79,15 @@ class MessageRepository @Inject constructor(private val messageDataSource: Messa
     } catch (e: Exception) {
         ResultType.Error(e)
     }
+
+    suspend fun cancelSave(messageId: Long): ResultType<BaseResponse<String>> = try {
+        val response = messageDataSource.cancelSave(messageId)
+        if (response.status == "OK") {
+            ResultType.Success(response)
+        } else {
+            ResultType.Fail(response)
+        }
+    } catch (e: Exception) {
+        ResultType.Error(e)
+    }
 }

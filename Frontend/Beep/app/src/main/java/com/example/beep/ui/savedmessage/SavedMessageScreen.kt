@@ -407,6 +407,7 @@ fun MessageItem(
                     modifier = Modifier
                         .weight(1f)
                 ) {
+                if (message.audioUri != null)
                     AudioBtn(
                         enabled = message.audioUri != null,
                         onPlay = {
@@ -420,7 +421,6 @@ fun MessageItem(
                                 && viewModel.savedMessageAudioState.message?.id == message.id
                     )
                 }
-                if (message.audioUri != null)
 
                 SavedMessageInfo(
                     modifier = modifier.weight(5f),

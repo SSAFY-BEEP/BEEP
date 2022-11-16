@@ -30,4 +30,7 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
     suspend fun cancelBlock(messageId: Long): BaseResponse<String> =
         messageApi.cancelBlock(messageId)
 
+    suspend fun cancelSave(messageId: Long): BaseResponse<String> =
+        messageApi.cancelSave(messageId)
+
 }
