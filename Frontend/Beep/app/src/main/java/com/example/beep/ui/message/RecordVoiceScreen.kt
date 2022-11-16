@@ -31,7 +31,6 @@ enum class RecordState {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RecordVoiceScreen(
     modifier: Modifier = Modifier,
@@ -71,6 +70,25 @@ fun RecordSuccessScreen(
     )
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
     var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
+
+    DisposableEffect(key1 = Unit) {
+        Log.d("DisposableEffect", "Disposable Effect Called!!")
+        VoiceRecorder.nullInstance()
+        VoiceRecorder.getInstance(context)
+        VoicePlayer.nullInstance()
+        VoicePlayer.getInstance()
+        File(filepath)
+
+        onDispose {
+            Log.d("DisposableEffect", "onDispose Called!!")
+            VoiceRecorder.nullInstance()
+            VoicePlayer.nullInstance()
+            val file = File(filepath)
+            if (file.exists())
+                file.delete()
+        }
+    }
+
     Column(
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -83,9 +101,6 @@ fun RecordSuccessScreen(
                         voicePermissionState.launchPermissionRequest()
                     }
                     if (voicePermissionState.status.isGranted) {
-                        if (File(filepath).exists()) {
-                            File(filepath).delete()
-                        }
                         startRecording(context, filepath)
                         currentState = RecordState.ON_RECORDING
                     }

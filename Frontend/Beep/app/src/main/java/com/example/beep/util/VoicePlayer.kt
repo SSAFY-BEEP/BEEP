@@ -21,6 +21,9 @@ class VoicePlayer {
 
         @JvmStatic
         fun nullInstance() {
+            instance?.apply {
+                release()
+            }
             instance = null
         }
 

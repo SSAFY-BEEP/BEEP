@@ -121,36 +121,7 @@ class MessageViewModel @Inject constructor(
         }
     }
 
-    fun playSavedMessageAudio(message: Message24Response) {
-        VoicePlayer.nullInstance()
-        VoicePlayer.getInstance().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-            )
-            setDataSource(S3_CONSTANT_URI + message.audioUri)
-            setOnPreparedListener {
-                it.start()
-                msg24State =
-                    msg24State.copy(messageAudioState = MessageAudioState(isPlaying = true, message = message))
-            }
-            prepareAsync()
-            setOnCompletionListener {
-                it.stop()
-                it.release()
-                msg24State =
-                    msg24State.copy(messageAudioState = MessageAudioState(isPlaying = false, message = null))
-            }
-        }
-    }
 
-    fun stopSavedMessageAudio() {
-        VoicePlayer.getInstance().apply {
-            stop()
-            release()
-            msg24State =
-                msg24State.copy(messageAudioState = MessageAudioState(isPlaying = false, message = null))
-        }
-    }
 
     fun changeCurrentSavedMessageType(type: ReceiveSendState) {
         Log.d("CurrentSavedMessageType", type.name)

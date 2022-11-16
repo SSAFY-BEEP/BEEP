@@ -37,6 +37,7 @@ import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.message.*
+import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
 
 @Composable
@@ -190,10 +191,10 @@ fun DeleteBlockDialog(
                 AlertDialog(
                     onDismissRequest = { viewModel.toggleConfirmDeleteAlert() },
                     title = {
-                            Text(text = "차단 해제하시겠습니까?")
+                        Text(text = "차단 해제하시겠습니까?")
                     },
                     text = {
-                            Text(text = "이 유저로부터 다시 메시지를 받을 수 있습니다.")
+                        Text(text = "이 유저로부터 다시 메시지를 받을 수 있습니다.")
                     },
                     confirmButton = {
                         TextButton(onClick = {
@@ -323,7 +324,10 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "수신", color = if (currentMenu == SavedMessageType.RECEIVED) Color.Black else Color.White)
+            Text(
+                text = "수신",
+                color = if (currentMenu == SavedMessageType.RECEIVED) Color.Black else Color.White
+            )
         }
         Button(
             onClick = selectSent, colors =
@@ -332,7 +336,10 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "송신", color = if (currentMenu == SavedMessageType.SEND) Color.Black else Color.White)
+            Text(
+                text = "송신",
+                color = if (currentMenu == SavedMessageType.SEND) Color.Black else Color.White
+            )
         }
         Button(
             onClick = selectBlocked,
@@ -392,11 +399,16 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                if(message.audioUri != null)
+                if (message.audioUri != null)
                     AudioBtn(
                         enabled = message.audioUri != null,
-                        onPlay = { viewModel.playSavedMessageAudio(message) },
-                        onStop = { viewModel.stopSavedMessageAudio() },
+                        onPlay = {
+                            viewModel.stopSavedMessageAudio()
+                            Log.d("DataSource", "$S3_CONSTANT_URI${message.audioUri}")
+                        },
+                        onStop = {
+                            viewModel.playSavedMessageAudio(message)
+                        },
                         isPlaying = viewModel.savedMessageAudioState.isPlaying
                                 && viewModel.savedMessageAudioState.message?.id == message.id
                     )
@@ -441,7 +453,7 @@ fun SavedMessageInfo(
         Text(text = content, fontSize = 18.sp)
         Column() {
             Text(text = tag ?: "", fontSize = 12.sp)
-            Text(text = localDateTime.substring(0,10), fontSize = 12.sp)
+            Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
         }
 
     }

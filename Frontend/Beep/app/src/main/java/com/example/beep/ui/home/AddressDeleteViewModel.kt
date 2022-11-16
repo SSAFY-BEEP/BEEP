@@ -1,6 +1,6 @@
 package com.example.beep.ui.home
 
-import com.example.beep.domain.retrofit.DeleteUserAddressUseCase
+import com.example.beep.domain.DeleteUserAddressUseCase
 
 
 
