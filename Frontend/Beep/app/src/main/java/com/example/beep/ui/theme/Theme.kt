@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 
 
 val galmurinineFont = FontFamily(
@@ -58,9 +59,17 @@ fun BeepTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable (
         LightColorPalette
     }
 
+    val typSelect = when(MainApplication.sharedPreferencesUtil.getFont()) {
+        1 -> TypographyGal
+        2 -> TypographyDung
+        3 -> TypographyLab
+        4 -> TypographyLana
+        else -> TypographyGal
+    }
+
     MaterialTheme(
         colors = colors,
-        typography = TypographyGal,
+        typography = typSelect,
         shapes = Shapes,
         content = content
     )

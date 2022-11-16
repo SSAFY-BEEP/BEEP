@@ -9,23 +9,24 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.beep.di.MainApplication
 import com.example.beep.ui.home.getKeyboard
 import com.example.beep.ui.theme.BeepImage
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ColorSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
+fun ColorSettingScreen( model: MyPageViewModel) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(0.dp, 0.dp, 0.dp, 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Column(modifier = modifier) {
+        Column(modifier = Modifier) {
             BeepImage(modifier = Modifier,"",model.themeNum)
             Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(onClick = {
@@ -45,11 +46,14 @@ fun ColorSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
                 }
             }
         }
-        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(onClick = {  }) {
                 Text(text = "뒤로가기")
             }
-            Button(onClick = { model.changeTheme() }) {
+            Button(onClick = {
+                model.changeTheme()
+                MainApplication.sharedPreferencesUtil.saveTheme(model.themeNum)
+            }) {
                 Text(text = "설정")
             }
         }
