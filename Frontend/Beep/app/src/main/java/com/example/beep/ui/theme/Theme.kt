@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package com.example.beep.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,11 +10,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
 )
+
+val dunggeunmmoFont = FontFamily(
+    Font(R.font.dunggeunmo)
+)
+
+val labDigitalFont = FontFamily(
+    Font(R.font.labdigital)
+)
+
+val lanaPixelFont = FontFamily(
+    Font(R.font.lanapixel)
+)
+
 
 private val DarkColorPalette = darkColors(
     primary = PINK500,
@@ -43,9 +59,17 @@ fun BeepTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable (
         LightColorPalette
     }
 
+    val typSelect = when(MainApplication.sharedPreferencesUtil.getFont()) {
+        1 -> TypographyGal
+        2 -> TypographyDung
+        3 -> TypographyLab
+        4 -> TypographyLana
+        else -> TypographyGal
+    }
+
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = typSelect,
         shapes = Shapes,
         content = content
     )

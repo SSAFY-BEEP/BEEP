@@ -2,12 +2,36 @@ package com.example.beep.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.ui.text.font.FontFamily
 
 class SharedPreferencesUtil(context: Context) {
     private val sharedPreferencesName = "store_preference"
     private val preferences: SharedPreferences =
         context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
 
+    // font 저장
+    fun saveFont(font:Int) {
+        val editor = preferences.edit()
+        editor.putInt("font", font)
+        editor.apply()
+    }
+
+    // font 불러오기
+    fun getFont(): Int {
+        return preferences.getInt("font", 1)
+    }
+
+    // theme 저장
+    fun saveTheme(theme: Int) {
+        val editor = preferences.edit()
+        editor.putInt("theme", theme)
+        editor.apply()
+    }
+
+    // theme 불러오기
+    fun getTheme(): Int {
+        return preferences.getInt("theme", 1)
+    }
 
     // 토큰 저장
     fun saveToken(token: String) {
