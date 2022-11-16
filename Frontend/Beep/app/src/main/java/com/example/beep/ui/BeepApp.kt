@@ -76,11 +76,11 @@ fun BeepApp() {
                         route = "settings",
                         icon = Icons.Outlined.Settings
                     ),
-                    BottomNavItem(
-                        name = "SavedMessage",
-                        route = "savedMessage",
-                        icon = Icons.Default.Person
-                    )
+//                    BottomNavItem(
+//                        name = "SavedMessage",
+//                        route = "savedMessage",
+//                        icon = Icons.Default.Person
+//                    )
                 ),
                 navController = navController,
                 onItemClick = {
