@@ -56,6 +56,7 @@ fun Bbibbi(
     var contentString = ""
 
 
+
     var sendText by remember { mutableStateOf(false) }
 
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())

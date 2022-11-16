@@ -5,4 +5,6 @@ sealed class KeyboardAction {
     object Delete: KeyboardAction()
     data class Change(val number: String) : KeyboardAction()
     object Clear: KeyboardAction()
+    data class getMessagePreset(val number: String): KeyboardAction()
+    data class getAddressPreset(val number: String): KeyboardAction()
 }

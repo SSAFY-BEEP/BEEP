@@ -56,10 +56,8 @@ class HomeViewModel @Inject constructor(
     val gson = Gson()
 
     //24시간 후에 사라지는 일반 메시지 리스트
-    val receiveMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> =
-        message24UseCase.getReceive24()
-    val sendMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> =
-        message24UseCase.getSend24()
+    val receiveMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getReceive24()
+    val sendMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getSend24()
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend: Message24Request by mutableStateOf(Message24Request())
