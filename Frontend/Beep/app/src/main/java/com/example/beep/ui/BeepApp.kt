@@ -2,6 +2,7 @@ package com.example.beep.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,6 +37,7 @@ val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
 )
 
+@Preview
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
@@ -58,35 +61,41 @@ fun BeepApp() {
         ,
         topBar = { BeepAppBar() },
         bottomBar = {
-            BottomNavigationBar(
-                items = listOf(
-                    BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
-                    ),
-                    BottomNavItem(
-                        name = "Message",
-                        route = "message",
-                        icon = Icons.Outlined.Message,
-                        badgeCount = 24
-                    ),
-                    BottomNavItem(
-                        name = "Settings",
-                        route = "settings",
-                        icon = Icons.Outlined.Settings
-                    ),
+            Box(
+                modifier = Modifier
+                    .background(color = BACKGROUND_WHITE)
+            ) {
+                BottomNavigationBar(
+                    items = listOf(
+                        BottomNavItem(
+                            name = "Home",
+                            route = "home",
+                            icon = Icons.Default.Home
+                        ),
+                        BottomNavItem(
+                            name = "Message",
+                            route = "message",
+                            icon = Icons.Outlined.Message,
+                            badgeCount = 24
+                        ),
+                        BottomNavItem(
+                            name = "Settings",
+                            route = "settings",
+                            icon = Icons.Outlined.Settings
+                        ),
 //                    BottomNavItem(
 //                        name = "SavedMessage",
 //                        route = "savedMessage",
 //                        icon = Icons.Default.Person
 //                    )
-                ),
-                navController = navController,
-                onItemClick = {
-                    navController.navigate(it.route)
-                },
-            )
+                    ),
+                    navController = navController,
+                    onItemClick = {
+                        navController.navigate(it.route)
+                    },
+                )
+            }
+
         }
     ) {
         BeepNavGraph(navController = navController)
@@ -115,7 +124,6 @@ fun BottomNavigationBar(
         modifier = modifier.clip(
                 RoundedCornerShape(40.dp, 40.dp, 0.dp, 0.dp)),
         backgroundColor = BLUE100,
-        elevation = 10.dp
     ) {
         // items 배열에 담긴 모든 항목을 추가합니다.
         items.forEach { item ->
