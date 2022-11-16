@@ -38,30 +38,36 @@ fun HomeScreen(
         presetViewModel.getPresetByToken(1)
         presetViewModel.getPresetByToken(2)
     }
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(android.graphics.Color.parseColor("#F5F8FF")))
             .wrapContentSize(Center)
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Box {
-            Image(
-                painter = image,
-                contentDescription = "삐삐 이미지",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-                    .width(320.dp),
-                contentScale = ContentScale.FillWidth
-            )
-            Bbibbi()
 
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(0.dp, 10.dp, 0.dp, 0.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box {
+                Image(
+                    painter = image,
+                    contentDescription = "삐삐 이미지",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .width(320.dp),
+                    contentScale = ContentScale.FillWidth
+                )
+                Bbibbi()
+
+            }
+            KeyboardVsAddressChoice()
         }
-        KeyboardVsAddressChoice()
     }
+
 }
 
 

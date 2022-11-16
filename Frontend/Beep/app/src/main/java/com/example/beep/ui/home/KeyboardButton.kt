@@ -30,9 +30,9 @@ fun KeyboardButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(14.dp))
-            .width(96.dp)
-            .height(48.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .width(98.dp)
+            .height(50.dp)
             .combinedClickable (
                 onClick = onClick,
                 onLongClick = onLongClick

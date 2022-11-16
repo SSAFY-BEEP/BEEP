@@ -94,10 +94,12 @@ fun BeepNumKeyboard(
 
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .height(300.dp)
-            .padding(40.dp, 40.dp, 40.dp, 20.dp)
-            .fillMaxWidth(),
+            .width(320.dp)
+            .padding(0.dp, 50.dp, 0.dp, 0.dp)
+        ,
         verticalArrangement = Arrangement.SpaceBetween,
 
     ) {
@@ -413,7 +415,7 @@ fun BeepAlphabetKeyboard(
                 onLongClick = {  }
             )
             KeyboardButton(
-                paint = painterResource(R.drawable.btnimgdigeut),
+                paint = painterResource(R.drawable.btnimgdiguet),
                 onClick = { letsGoNumber('ㄷ') },
                 onLongClick = {  }
             )
