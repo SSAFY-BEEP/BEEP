@@ -22,9 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
-import android.util.Log
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
@@ -34,10 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.message.UiState
 import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
