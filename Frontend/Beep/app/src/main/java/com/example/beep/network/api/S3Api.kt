@@ -11,7 +11,7 @@ interface S3Api {
     suspend fun getIntroduce(): BaseResponse<String?>
 
     @PATCH("s3/introduce")
-    suspend fun deleteIntroduce(request: S3Request): BaseResponse<String>
+    suspend fun deleteIntroduce(@Body request: S3Request): BaseResponse<String>
 
     @Multipart
     @POST("s3/introduce")

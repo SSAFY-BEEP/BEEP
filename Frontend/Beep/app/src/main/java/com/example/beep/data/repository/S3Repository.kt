@@ -1,5 +1,6 @@
 package com.example.beep.data.repository
 
+import android.util.Log
 import com.example.beep.data.datasource.S3DataSource
 import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.mypage.S3Request
@@ -24,13 +25,14 @@ class S3Repository @Inject constructor(private val s3DataSource: S3DataSource) {
         ResultType.Error(e)
     }
 
-    suspend fun deleteIntroduce(request: S3Request): ResultType<String> = try {
+    suspend fun deleteIntroduce(request: S3Request): ResultType<String?> = try {
         val result = s3DataSource.deleteIntroduce(request)
         if (result.status == "OK")
             ResultType.Success(result.data)
         else
             ResultType.Fail(result.data)
     } catch (e: Exception) {
+        Log.d("ERROR", e.toString())
         ResultType.Error(e)
     }
 

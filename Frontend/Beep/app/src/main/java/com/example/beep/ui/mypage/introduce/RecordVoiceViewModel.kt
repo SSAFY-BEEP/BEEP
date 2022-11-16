@@ -82,6 +82,7 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
             val result = s3UseCase.postIntroduceUseCase(partFile)
             recordVoiceUiState = when (result) {
                 is ResultType.Success -> {
+                    togglePopup()
                     UiState.Success(result.data)
                 }
                 else -> {

@@ -96,10 +96,3 @@ fun Bbibbi(
         )
     }
 }
-
-
-//        //임시로 메시지 보내기 넣음
-//        onClick = {
-//            /* cancel 버튼 */
-//            homeViewModel.sendMsg(null, "5012", "01012345678")
-//        },
