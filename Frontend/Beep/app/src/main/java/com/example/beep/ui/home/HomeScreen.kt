@@ -41,7 +41,6 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(android.graphics.Color.parseColor("#F5F8FF")))
             .wrapContentSize(Center)
             .verticalScroll(scrollState),
 
