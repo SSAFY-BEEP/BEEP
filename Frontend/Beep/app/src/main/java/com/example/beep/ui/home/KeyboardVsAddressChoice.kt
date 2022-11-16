@@ -1,5 +1,7 @@
 package com.example.beep.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.beep.data.dto.mainpage.AddressResponse
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
 fun KeyboardVsAddressChoice() {
