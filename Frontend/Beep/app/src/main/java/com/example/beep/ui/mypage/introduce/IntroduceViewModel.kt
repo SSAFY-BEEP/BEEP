@@ -37,26 +37,12 @@ class IntroduceViewModel @Inject constructor(private val s3UseCase: S3UseCase): 
         }
     }
 
-    fun postIntroduce(voice: MultipartBody.Part) {
+    fun deleteIntroduce() {
         viewModelScope.launch {
-            introduceVoiceUiState = UiState.Loading
-            val result = s3UseCase.postIntroduceUseCase(voice)
+            val result = s3UseCase.deleteIntroduceUseCase(S3Request(introduceUrl))
             introduceVoiceUiState = when (result) {
                 is ResultType.Success -> {
-                    UiState.Success("")
-                }
-                else -> {
-                    UiState.Error
-                }
-            }
-        }
-    }
-
-    fun deleteIntroduce(introduceUri: String) {
-        viewModelScope.launch {
-            val result = s3UseCase.deleteIntroduceUseCase(S3Request(introduceUri))
-            introduceVoiceUiState = when (result) {
-                is ResultType.Success -> {
+                    getIntroduce()
                     UiState.Success("")
                 }
                 else -> {

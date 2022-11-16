@@ -420,7 +420,6 @@ fun MessageItem(
                                 && viewModel.savedMessageAudioState.message?.id == message.id
                     )
                 }
-                if (message.audioUri != null)
 
                 SavedMessageInfo(
                     modifier = modifier.weight(5f),
