@@ -41,7 +41,9 @@ fun BeepNavGraph(
 ) {
     NavHost(navController = navController,
         startDestination = "home",
-        modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,56.dp)) {
+        modifier = Modifier
+            .imePadding()
+            .padding(0.dp, 0.dp, 0.dp, 56.dp)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
@@ -112,6 +114,15 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
+        }
+        composable("themeSettingScreen"){
+            MyPageStyleScreen() { route: String -> navController.navigate(route) }
+        }
+        composable("hotkeySettingScreen"){
+            MyPagePresetScreen() { route: String -> navController.navigate(route) }
+        }
+        composable("memberSettingScreen"){
+            MyPageMemberScreen() { route: String -> navController.navigate(route) }
         }
     }
 }
