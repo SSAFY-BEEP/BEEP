@@ -1,5 +1,6 @@
 package com.example.beep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -10,6 +11,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.ui.base.ErrorScreen
+import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.mypage.ContactPresetSuccessScreen
+import com.example.beep.ui.mypage.introduce.UiState
 
 
 @ExperimentalComposeUiApi
@@ -41,11 +46,50 @@ fun BeepNumKeyboard(
     val presetViewModel = viewModel<PresetViewModel>()
     val homeViewModel = viewModel<HomeViewModel>()
 
-    if (homeViewModel.currentPage == "PutAddress") {
 
-    } else if (homeViewModel.currentPage == "PutMsg") {
+//    var goSearchPreset = false
 
+
+    var presetList: Array<String?>
+
+    fun doIt(clickNum: Int) {
+        if (homeViewModel.currentPage == "PutAddress") {
+            when (val currentUiState = presetViewModel.contactPreset) {
+                is UiState.Loading -> {
+                    Log.d("Preset", "Loading")
+                }
+                is UiState.Success -> {
+                    Log.d("Preset", "Success")
+//                    goSearchPreset = true
+                    presetList = currentUiState.data
+                    if (presetList[clickNum] != null) {
+                        viewModel.onAction(KeyboardAction.Clear)
+                        viewModel.onAction(KeyboardAction.Number(presetList[clickNum].toString()))
+                    }
+                }
+                is UiState.Error -> {
+                    Log.d("Preset", "Error")
+                }
+            }
+        } else if (homeViewModel.currentPage == "PutMsg") {
+            when (val currentUiState = presetViewModel.messagePreset) {
+                is UiState.Loading -> {
+                }
+                is UiState.Success -> {
+//                    goSearchPreset = true
+                    presetList = currentUiState.data
+                    Log.d("presetList", presetList[clickNum].toString())
+                    if (presetList[clickNum] != null) {
+                        viewModel.onAction(KeyboardAction.Clear)
+                        viewModel.onAction(KeyboardAction.Number(presetList[clickNum].toString()))
+                    }
+                }
+                is UiState.Error -> {
+                }
+            }
+        }
     }
+
 
 
     Column(
@@ -66,17 +110,17 @@ fun BeepNumKeyboard(
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgone),
                 onClick = { viewModel.onAction(KeyboardAction.Number("1")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 1) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgtwo),
                 onClick = { viewModel.onAction(KeyboardAction.Number("2")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 2) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgthree),
                 onClick = { viewModel.onAction(KeyboardAction.Number("3")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 3) }
             )
         }
         Row(
@@ -88,17 +132,17 @@ fun BeepNumKeyboard(
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgfour),
                 onClick = { viewModel.onAction(KeyboardAction.Number("4")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 4) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgfive),
                 onClick = { viewModel.onAction(KeyboardAction.Number("5")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 5) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgsix),
                 onClick = { viewModel.onAction(KeyboardAction.Number("6")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 6) }
             )
         }
         Row(
@@ -110,17 +154,17 @@ fun BeepNumKeyboard(
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgseven),
                 onClick = { viewModel.onAction(KeyboardAction.Number("7")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 7) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgeight),
                 onClick = { viewModel.onAction(KeyboardAction.Number("8")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 8) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgnine),
                 onClick = { viewModel.onAction(KeyboardAction.Number("9")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 9) }
             )
         }
         Row(
@@ -137,7 +181,7 @@ fun BeepNumKeyboard(
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgzero),
                 onClick = { viewModel.onAction(KeyboardAction.Number("0")) },
-                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+                onLongClick = { doIt(clickNum = 0) }
             )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgdelete),

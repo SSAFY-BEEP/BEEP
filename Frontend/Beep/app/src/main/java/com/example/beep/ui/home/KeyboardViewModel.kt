@@ -34,9 +34,6 @@ class KeyboardViewModel @Inject constructor(private val presetUseCase : PresetUs
             is KeyboardAction.Clear -> state = KeyboardState()
             is KeyboardAction.Change -> enterChange(action.number)
             is KeyboardAction.Delete -> delete()
-            is KeyboardAction.getMessagePreset -> getMessage(action.number)
-            is KeyboardAction.getAddressPreset -> enterNumber(action.number)
-
         }
     }
 
@@ -64,6 +61,11 @@ class KeyboardViewModel @Inject constructor(private val presetUseCase : PresetUs
     state = state.copy(
         number1 = state.number1 + number
     )
+        while (state.number1.length > MAX_NUM_LENGTH) {
+            state = state.copy(
+                number1 = state.number1.dropLast(1)
+            )
+        }
     return
     }
 
