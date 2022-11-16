@@ -3,6 +3,7 @@ package com.example.beep.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -27,10 +29,7 @@ import com.example.beep.data.BottomNavItem
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
-import com.example.beep.ui.theme.BACKGROUND_WHITE
-import com.example.beep.ui.theme.GRAY100
-import com.example.beep.ui.theme.GRAY500
-import com.example.beep.ui.theme.PINK500
+import com.example.beep.ui.theme.*
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -53,6 +52,7 @@ fun BeepApp() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
+            .fillMaxHeight()
             .statusBarsPadding()
             .navigationBarsPadding()
         ,
@@ -95,7 +95,7 @@ fun BeepApp() {
 
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth().height(80.dp), backgroundColor = BACKGROUND_WHITE) {
+    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
         Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center, color= PINK500,
             fontFamily = galmurinineFont, fontSize = 25.sp
         )
@@ -112,8 +112,9 @@ fun BottomNavigationBar(
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     BottomNavigation(
-        modifier = modifier,
-        backgroundColor = GRAY100,
+        modifier = modifier.clip(
+                RoundedCornerShape(40.dp, 40.dp, 0.dp, 0.dp)),
+        backgroundColor = BLUE100,
         elevation = 10.dp
     ) {
         // items 배열에 담긴 모든 항목을 추가합니다.
