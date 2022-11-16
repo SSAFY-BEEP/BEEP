@@ -94,7 +94,7 @@ public class S3Controller {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ApiResult<?> findUserVoice(@PathVariable String phoneNumber) {
-        String voiceUrl = s3Service.findUserVoice();
+        String voiceUrl = s3Service.findUserVoiceByPhoneNumber(phoneNumber);
         return new ApiResult<>(voiceUrl, HttpStatus.OK);
     }
 }
