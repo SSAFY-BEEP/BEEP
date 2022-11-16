@@ -27,7 +27,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
     var isRecordScreen by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     LaunchedEffect(key1 = isRecordScreen) {
         viewModel.getIntroduce()
@@ -90,39 +89,40 @@ fun IntroduceSuccessScreen(
             Text(text = "자기소개 등록")
         }
     } else {
-        Log.d("VoicePlayer", "VoicePlayer Initialized")
-
         DisposableEffect(key1 = Unit) {
-            Log.d("DisposableEvent", "DisposableEvent")
             VoicePlayer.getInstance()
-            if (viewModel.introduceUrl != null || viewModel.introduceUrl != "") {
-                VoicePlayer.getInstance().apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .build()
-                    )
-                    setDataSource(S3_CONSTANT_URI + viewModel.introduceUrl)
-                    setOnPreparedListener {
-                        isReady = true
-                        voiceLength = it.duration
-                    }
-                    prepareAsync()
-                    setOnCompletionListener {
-                        if (voiceLength != 0) {
-                            it.stop()
-                            it.release()
+            try {
+                if (viewModel.introduceUrl != null || viewModel.introduceUrl != "") {
+                    VoicePlayer.getInstance().apply {
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build()
+                        )
+                        setDataSource(S3_CONSTANT_URI + viewModel.introduceUrl)
+                        setOnPreparedListener {
+                            isReady = true
+                            voiceLength = it.duration
                         }
-                        isPlaying = false
+                        prepareAsync()
+                        setOnCompletionListener {
+                            if (voiceLength != 0) {
+                                it.stop()
+                                it.release()
+                            }
+                            isPlaying = false
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                viewModel.introduceVoiceUiState = UiState.Error
             }
+
             onDispose {
-                Log.d("onDispose", "onDispose")
                 VoicePlayer.nullInstance()
             }
         }
         LaunchedEffect(key1 = isPlaying) {
-            Log.d("LaunchedEffect", "IntroducePlay")
             cursor = 0
 //            voiceLength = VoicePlayer.getInstance().duration
             while (isPlaying && cursor < voiceLength) {
@@ -203,7 +203,7 @@ fun IntroduceSuccessScreen(
                 )
             }
             Button(onClick = toggleScreen) {
-                Text(text = "자기소개 바꾸기")
+                Text(text = "인사말 바꾸기")
             }
         }
     }
