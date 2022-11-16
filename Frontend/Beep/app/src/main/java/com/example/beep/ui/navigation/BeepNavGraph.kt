@@ -22,8 +22,10 @@ import com.example.beep.ui.home.*
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
-import com.example.beep.ui.message.RecordVoiceViewModel
+import com.example.beep.ui.mypage.introduce.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
+import com.example.beep.ui.mypage.introduce.IntroduceScreen
+import com.example.beep.ui.mypage.introduce.IntroduceViewModel
 import com.example.beep.ui.savedmessage.SavedMessageScreen
 import com.example.beep.ui.savedmessage.SavedMessageViewModel
 

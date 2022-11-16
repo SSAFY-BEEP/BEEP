@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.mypage.UserInfoResponse
 import com.example.beep.domain.UserUseCase
-import com.example.beep.ui.message.UiState
+import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.ResultType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

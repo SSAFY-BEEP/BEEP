@@ -1,4 +1,4 @@
-package com.example.beep.ui.message
+package com.example.beep.ui.mypage.introduce
 
 import android.content.Context
 import android.media.MediaRecorder
@@ -19,6 +19,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.home.formatSecond
 import com.google.accompanist.permissions.isGranted
 import java.io.File
 
@@ -51,11 +52,6 @@ fun RecordVoiceScreen(
 
 }
 
-@Composable
-fun RecordErrorScreen() {
-    Text(text = "에러가 뜨다니 ㅠㅠㅠ")
-}
-
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -69,7 +65,7 @@ fun RecordSuccessScreen(
         android.Manifest.permission.RECORD_AUDIO
     )
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
-    var currentState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
+
 
     DisposableEffect(key1 = Unit) {
         Log.d("DisposableEffect", "Disposable Effect Called!!")
@@ -92,47 +88,60 @@ fun RecordSuccessScreen(
     Column(
         modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Record voice Screen")
+        Text(text = "${formatSecond(viewModel.time)}:${formatSecond(viewModel.fileLength)}")
 
-        RecordButton(state = currentState) {
-            when (currentState) {
+        RecordButton(state = viewModel.currentState) {
+            when (viewModel.currentState) {
                 RecordState.BEFORE_RECORDING -> {
                     if (!voicePermissionState.status.isGranted) {
                         voicePermissionState.launchPermissionRequest()
                     }
                     if (voicePermissionState.status.isGranted) {
+                        viewModel.fileLength = 30
                         startRecording(context, filepath)
-                        currentState = RecordState.ON_RECORDING
+                        viewModel.startTimer()
+                        viewModel.currentState = RecordState.ON_RECORDING
                     }
                 }
                 RecordState.ON_RECORDING -> {
-                    stopRecording(context)
+                    stopRecordingIntroduce(context, filepath,
+                        onComplete = {
+                            stopPlaying()
+                            viewModel.stopTimer()
+                            viewModel.currentState = RecordState.ASK_POST },
+                        onPrepared = { duration: Int ->
+                            viewModel.fileLength = duration
+                        })
+                    viewModel.stopTimer()
                     var files = context.cacheDir.listFiles()
                     for (file in files) {
                         Log.d("Files", file.absolutePath)
                     }
-                    currentState = RecordState.AFTER_RECORDING
+                    viewModel.currentState = RecordState.AFTER_RECORDING
                 }
                 RecordState.AFTER_RECORDING -> {
-                    startPlaying(
-                        filepath,
-                        changeCurrentState = { currentState = RecordState.ASK_POST })
-                    currentState = RecordState.ON_PLAYING
+                    VoicePlayer.getInstance().start()
+                    viewModel.startTimer()
+                    viewModel.currentState = RecordState.ON_PLAYING
                 }
                 RecordState.ON_PLAYING -> {
                     stopPlaying()
-                    currentState = RecordState.ASK_POST
+                    viewModel.stopTimer()
+                    viewModel.currentState = RecordState.ASK_POST
                 }
                 RecordState.ASK_POST -> {
-                    currentState = RecordState.BEFORE_RECORDING
+                    viewModel.fileLength = 30
+                    VoiceRecorder.nullInstance()
+                    VoicePlayer.nullInstance()
+                    viewModel.currentState = RecordState.BEFORE_RECORDING
                 }
             }
         }
         Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(
-                enabled = currentState == RecordState.AFTER_RECORDING
-                        || currentState == RecordState.ON_PLAYING
-                        || currentState == RecordState.ASK_POST,
+                enabled = viewModel.currentState == RecordState.AFTER_RECORDING
+                        || viewModel.currentState == RecordState.ON_PLAYING
+                        || viewModel.currentState == RecordState.ASK_POST,
                 onClick = {
                     viewModel.postIntroduce(
                         filepath = filepath,
@@ -170,15 +179,37 @@ fun stopRecording(context: Context) {
     VoiceRecorder.nullInstance()
 }
 
-fun startPlaying(filepath: String, changeCurrentState: () -> Unit) {
+@RequiresApi(Build.VERSION_CODES.S)
+fun stopRecordingIntroduce(context: Context, filepath: String, onComplete: () -> Unit, onPrepared: (Int) -> Unit) {
+    VoiceRecorder.getInstance(context).run {
+        stop()
+        release()
+    }
+    VoiceRecorder.nullInstance()
     VoicePlayer.nullInstance()
     VoicePlayer.getInstance().apply {
         setDataSource(filepath)
-        prepare()
-        setOnCompletionListener {
-            stopPlaying()
-            changeCurrentState()
+        setOnPreparedListener {
+            onPrepared(duration / 1000)
         }
+        setOnCompletionListener {
+            onComplete()
+        }
+        prepare()
+    }
+}
+
+fun startPlaying(filepath: String, onComplete: () -> Unit, onPrepared: (Int) -> Unit) {
+    VoicePlayer.nullInstance()
+    VoicePlayer.getInstance().apply {
+        setDataSource(filepath)
+        setOnPreparedListener {
+            onPrepared(duration / 1000)
+        }
+        setOnCompletionListener {
+            onComplete()
+        }
+        prepare()
     }.start()
 }
 

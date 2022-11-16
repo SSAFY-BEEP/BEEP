@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.mainpage.AddressResponse
 import com.example.beep.domain.GetUserAddressUseCase
-import com.example.beep.ui.message.UiState
+import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.ResultType
 import com.example.beep.util.fromJson
 import com.google.gson.Gson

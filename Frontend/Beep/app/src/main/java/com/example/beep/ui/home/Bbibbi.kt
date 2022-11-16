@@ -1,24 +1,14 @@
 package com.example.beep.ui.home
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.data.dto.BaseResponse
-import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.ui.base.ErrorScreen
-import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.message.UiState
-import com.example.beep.util.collectAsStateLifecycleAware
+import com.example.beep.ui.mypage.introduce.UiState
 
 @RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi

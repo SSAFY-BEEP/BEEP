@@ -21,10 +21,12 @@ class S3DataSource @Inject constructor(private val s3Api: S3Api) {
 //            Log.d("FlowTimer", "fetched introduce")
 //        }
 //    }
-    suspend fun getIntroduce(): BaseResponse<String> = s3Api.getIntroduce()
+    suspend fun getIntroduce(): BaseResponse<String?> = s3Api.getIntroduce()
 
     suspend fun deleteIntroduce(request: S3Request): BaseResponse<String> = s3Api.deleteIntroduce(request)
 
     suspend fun postIntroduce(voice: MultipartBody.Part): BaseResponse<String> =
         s3Api.postIntroduce(voice)
+
+    suspend fun getIntroduceByPhone(phoneNumber: String): BaseResponse<String> = s3Api.getIntroduceByPhone(phoneNumber)
 }

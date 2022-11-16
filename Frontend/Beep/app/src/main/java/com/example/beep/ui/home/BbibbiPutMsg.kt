@@ -2,7 +2,6 @@ package com.example.beep.ui.home
 
 import android.os.Handler
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,14 +15,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.ui.message.UiState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import com.example.beep.ui.mypage.introduce.UiState
 
 @ExperimentalComposeUiApi
 @Composable

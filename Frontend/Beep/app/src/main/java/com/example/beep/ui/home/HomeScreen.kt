@@ -1,16 +1,12 @@
 package com.example.beep.ui.home
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -21,24 +17,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
-import com.example.beep.data.dto.BaseResponse
-import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.di.MainApplication
-import com.example.beep.ui.base.ErrorScreen
-import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.message.UiState
-import com.example.beep.ui.savedmessage.SavedMessageSuccessScreen
-import com.example.beep.util.collectAsStateLifecycleAware
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
 )
 
+@RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(

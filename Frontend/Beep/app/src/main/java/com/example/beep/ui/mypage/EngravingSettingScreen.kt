@@ -7,13 +7,10 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
-import com.example.beep.ui.message.MessageSuccessScreen
-import com.example.beep.ui.message.ResultState
-import com.example.beep.ui.message.UiState
+import com.example.beep.ui.mypage.introduce.UiState
 
 //@Preview
 @Composable

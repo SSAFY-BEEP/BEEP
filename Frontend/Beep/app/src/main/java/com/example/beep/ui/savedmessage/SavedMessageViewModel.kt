@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.MessageUseCase
-import com.example.beep.ui.message.UiState
+import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.ResultType
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer

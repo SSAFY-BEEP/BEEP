@@ -16,10 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.ui.message.startPlaying
-import com.example.beep.ui.message.startRecording
-import com.example.beep.ui.message.stopPlaying
-import com.example.beep.ui.message.stopRecording
+import com.example.beep.ui.mypage.introduce.startRecording
+import com.example.beep.ui.mypage.introduce.stopPlaying
+import com.example.beep.ui.mypage.introduce.stopRecording
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -235,7 +234,7 @@ fun DoRecordScreen(
 
     when (currentState) {
         RecordMessageState.Greeting -> {
-            Text(text = "인사말 재생중...")
+            Text(text = "인사말 재생중 $messageTime/$duration")
         }
         RecordMessageState.Before -> {
             Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
