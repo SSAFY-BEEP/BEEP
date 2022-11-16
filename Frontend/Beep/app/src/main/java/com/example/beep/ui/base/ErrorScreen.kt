@@ -1,9 +1,20 @@
 package com.example.beep.ui.base
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 
 @Composable
 fun ErrorScreen() {
-    Text(text = "에러가 발생했습니다.")
+    Box(modifier = Modifier
+        .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "에러가 발생했습니다.")
+    }
+
 }
