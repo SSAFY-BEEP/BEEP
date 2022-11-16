@@ -12,9 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.PresetViewModel
@@ -22,7 +25,11 @@ import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.theme.PINK500
 
 @Composable
-fun ContactPresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel, presetViewModel: PresetViewModel = viewModel()) {
+fun ContactPresetScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MyPageViewModel,
+    presetViewModel: PresetViewModel = viewModel()
+) {
     LaunchedEffect(key1 = Unit) {
         presetViewModel.getPresetByToken(2)
     }
@@ -52,28 +59,42 @@ fun ContactPresetSuccessScreen(
     var clickNum = remember { mutableStateOf(0) }     //클릭된 수
     var content = remember { mutableStateOf("${presetList[clickNum.value] ?: ""}") }
 
-    Box() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
         Column(
             modifier = modifier
-                .fillMaxSize(), horizontalAlignment = Alignment.Start
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
         ) {
-//        Column(modifier = modifier.height(200.dp)) {
-//            BeepForTest()
-//        }
 
             Row(
                 modifier = modifier
                     .height(80.dp)
                     .fillMaxWidth()
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),
-                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                TextButton(onClick = { }) {
-                    Text("<")
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(R.drawable.backbutton_gray),
+                        contentDescription = "뒤로가기"
+                    )
                 }
-                Text(modifier = modifier.padding(10.dp, 0.dp, 0.dp, 0.dp), text = "연락처 단축키 설정")
+
+                Text(
+                    modifier = modifier
+                    .padding(20.dp, 0.dp, 0.dp, 0.dp),
+                    textAlign = TextAlign.Center,
+                    text = "연락처 단축키 설정"
+                )
             }
 
 //        //수정, 입력 창
@@ -119,9 +140,7 @@ fun ContactPresetSuccessScreen(
 
             Column(
                 modifier = modifier
-                    .padding(50.dp, 0.dp, 100.dp, 0.dp)
-                    .fillMaxHeight()
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -129,7 +148,8 @@ fun ContactPresetSuccessScreen(
                 for (num in 0..9) {
                     Row(
                         modifier = modifier.fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
                             onClick = {
@@ -149,11 +169,14 @@ fun ContactPresetSuccessScreen(
                             Text(text = "$num", color = Color.White, fontSize = 20.sp)
                         }
 
-                        TextButton(modifier = modifier.fillMaxWidth(), onClick = {
+                        TextButton(modifier = modifier
+                            .width(200.dp)
+                            .height(50.dp), onClick = {
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
                         }) {
-                            Text(text = "${presetList[num] ?: "미등록"}")
+                            Text(text = "${presetList[num] ?: "미등록"}",
+                            fontSize = 20.sp)
                         }
                     }
                 }
