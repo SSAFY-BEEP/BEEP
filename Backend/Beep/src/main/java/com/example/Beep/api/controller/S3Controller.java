@@ -73,7 +73,7 @@ public class S3Controller {
     }
 
     @GetMapping("/voice")
-    @ApiOperation(value = "유저토큰으로 인사말 파일명 찾기")
+    @ApiOperation(value = "인사말 파일명 조회(유저토큰)")
     @PreAuthorize("hasAnyRole('USER')")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
@@ -81,6 +81,19 @@ public class S3Controller {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ApiResult<?> findUserVoice() {
+        String voiceUrl = s3Service.findUserVoice();
+        return new ApiResult<>(voiceUrl, HttpStatus.OK);
+    }
+
+    @GetMapping("/voice/{phoneNumber}")
+    @ApiOperation(value = "인사말 파일명 조회(핸드폰번호)")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공"),
+            @ApiResponse(code = 401, message = "권한 에러"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ApiResult<?> findUserVoice(@PathVariable String phoneNumber) {
         String voiceUrl = s3Service.findUserVoice();
         return new ApiResult<>(voiceUrl, HttpStatus.OK);
     }
