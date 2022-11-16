@@ -3,11 +3,13 @@ package com.example.Beep.api.service;
 import com.example.Beep.api.domain.dto.MessageRequestDto;
 import com.example.Beep.api.domain.dto.MessageResponseDto;
 import com.example.Beep.api.domain.entity.Message;
+import com.example.Beep.api.domain.entity.Message24;
 import com.example.Beep.api.domain.entity.User;
 import com.example.Beep.api.domain.enums.ErrorCode;
 import com.example.Beep.api.domain.enums.S3Type;
 import com.example.Beep.api.exception.CustomException;
 import com.example.Beep.api.repository.BlockRepository;
+import com.example.Beep.api.repository.Message24Repository;
 import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class MessageServiceImpl implements MessageService{
 
     private final MessageRepository messageRepository;
+    private final Message24Repository message24Repository;
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final BlockRepository blockRepository;
@@ -107,6 +110,21 @@ public class MessageServiceImpl implements MessageService{
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void cancelSave(Long id) {
+        String userId = SecurityUtil.getCurrentUsername().get();
+        Message message = messageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
+        //내 보관 메시지 아니면 Bad Request
+        if(!message.getOwner().getPhoneNumber().equals(userId)) throw new CustomException(ErrorCode.BAD_REQUEST);
+        //레디스 메시지 있으면 찾고 타입 바꿔줌
+        Message24 message24 = message24Repository.findByTime(message.getTime()).orElse(null);
+        if(message24 != null) {
+            message24.updateType(0);
+        }
+        //보관 메시지함에서 삭제
+        messageRepository.delete(message);
     }
 
     @Override

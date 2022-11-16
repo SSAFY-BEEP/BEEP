@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public interface Message24Repository extends CrudRepository<Message24, String> {
 
     //해당 메세지 조회
     Optional<Message24> findById(String id);
+    Optional<Message24> findByTime(LocalDateTime time);
 
     //메세지 삭제
     void deleteById(String id);

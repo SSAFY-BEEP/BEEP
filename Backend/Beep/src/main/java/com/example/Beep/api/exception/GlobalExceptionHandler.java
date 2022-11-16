@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(CustomException.class)
     protected ApiResult<?> handleCustomException(final CustomException e) {
-        log.error("handleCustomException: {}", e.getErrorCode());
+        log.error("handleCustomException: {}", e);
         return new ApiResult<ErrorResponse>(new ErrorResponse(e.getErrorCode()), HttpStatus.MULTI_STATUS);
     }
 
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ApiResult handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
-        log.error("handleHttpRequestMethodNotSupportedException: {}", e.getMessage());
+        log.error("handleHttpRequestMethodNotSupportedException: {}", e);
         return new ApiResult<>(new ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
