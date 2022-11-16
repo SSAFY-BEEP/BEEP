@@ -25,7 +25,8 @@ import com.example.beep.util.collectAsStateLifecycleAware
 @Composable
 fun Bbibbi(
     homeViewModel: HomeViewModel = viewModel(),
-    presetViewModel: PresetViewModel = viewModel()
+    presetViewModel: PresetViewModel = viewModel(),
+    keyboardViewModel: KeyboardViewModel = viewModel()
 ) {
     var receiveMsg = ""
 //    var senderPhoneNumber = ""
@@ -56,13 +57,9 @@ fun Bbibbi(
     var contentString = ""
 
 
-
     var sendText by remember { mutableStateOf(false) }
 
 //    Log.d("Message24 Receive!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", receiveMsg.value.toString())
-
-
-
 
 
     if (homeViewModel.currentPage == "PutAddress") {
@@ -76,8 +73,8 @@ fun Bbibbi(
             changeContentString = { changedContentString: String ->
                 contentString = changedContentString
             },
-
-            )
+            resetKeyboard = { keyboardViewModel.onAction(KeyboardAction.Clear) }
+        )
     } else if (homeViewModel.currentPage == "AskRecord") {
         BbibbiAskToRecord(
             toPutMsg = { homeViewModel.currentPage = "PutMsg" },

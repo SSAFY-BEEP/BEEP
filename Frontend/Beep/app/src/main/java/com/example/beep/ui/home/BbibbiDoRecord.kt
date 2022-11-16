@@ -67,8 +67,8 @@ fun BbibbiDoRecord(
     ) {
         DoRecordScreen(
             currentState = currentState,
-            messageTime = homeViewModel.time,
-            duration = homeViewModel.fileLength
+            messageTime = formatSecond(homeViewModel.time) ,
+            duration = formatSecond(homeViewModel.fileLength)
         )
         Spacer(modifier = modifier.height(35.dp))
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
@@ -229,8 +229,8 @@ fun CancelBtn(
 fun DoRecordScreen(
     modifier: Modifier = Modifier,
     currentState: RecordMessageState,
-    messageTime: Int,
-    duration: Int
+    messageTime: String,
+    duration: String
 ) {
 
     when (currentState) {
@@ -241,7 +241,7 @@ fun DoRecordScreen(
             Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
-            Text(text = "녹음중 $messageTime/00:30", fontSize = 19.sp)
+            Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
         }
         RecordMessageState.Finished -> {
             Text(text = "/ : 다시 녹음 | > : 재생 | ● : 전송", fontSize = 19.sp)
@@ -256,4 +256,11 @@ fun DoRecordScreen(
 fun resetRecording(context: Context) {
     VoiceRecorder.nullInstance()
     VoiceRecorder.getInstance(context)
+}
+
+fun formatSecond(second: Int): String {
+    if (second < 10) {
+        return "00:0$second"
+    }
+    return "00:$second"
 }
