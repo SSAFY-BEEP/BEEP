@@ -22,6 +22,7 @@ fun BbibbiAskToSend(
     toAskRecord: () -> Unit,
     toFirstPage: () -> Unit,
     homeViewModel: HomeViewModel = viewModel(),
+    keyboardViewModel: KeyboardViewModel = viewModel()
 ) {
     val context = LocalContext.current
     var filepath = context.cacheDir.absolutePath + "/temp.3gp"
@@ -109,6 +110,7 @@ fun BbibbiAskToSend(
             } else {
                 //  첫 페이지로
                 homeViewModel.resetMessageToSend()
+                keyboardViewModel.onAction(KeyboardAction.Clear)
                 toFirstPage()
             }
         },
@@ -173,6 +175,7 @@ fun BbibbiAskToSend(
         onClick = {
             /* no버튼 */
             homeViewModel.resetMessageToSend()
+            keyboardViewModel.onAction(KeyboardAction.Clear)
             toFirstPage()
         },
         modifier = Modifier
