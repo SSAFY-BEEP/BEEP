@@ -1,5 +1,6 @@
 package com.example.beep.ui.message
 
+import android.media.AudioAttributes
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
@@ -24,7 +25,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.savedmessage.AudioBtn
+import com.example.beep.ui.savedmessage.MessageOptions
+import com.example.beep.ui.savedmessage.SwitchReceivedSent
 import com.example.beep.ui.theme.PINK500
+import com.example.beep.util.S3_CONSTANT_URI
+import com.example.beep.util.S3_REDIS_URI
+import com.example.beep.util.VoicePlayer
 
 @Composable
 fun MessageScreen(
@@ -33,6 +40,7 @@ fun MessageScreen(
 //    navigateTo: (String) -> Unit,
     onClickMenu: (String) -> Unit
 ) {
+
     Log.d("MessageType", viewModel.msg24State.receiveSendState.name)
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -43,7 +51,10 @@ fun MessageScreen(
                 LoadingScreen()
             }
             ResultState.Success -> {
-                MessageSuccessScreen(messageList = viewModel.msg24State.msg24List, viewModel = viewModel)
+                MessageSuccessScreen(
+                    messageList = viewModel.msg24State.msg24List,
+                    viewModel = viewModel
+                )
             }
             ResultState.Error -> {
                 ErrorScreen()
@@ -58,6 +69,7 @@ fun MessageSuccessScreen(
     modifier: Modifier = Modifier,
     viewModel: MessageViewModel,
 ) {
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         SwitchReceivedSent(
             currentMenu = viewModel.msg24State.receiveSendState,
@@ -170,7 +182,7 @@ fun ConfirmDialog(
                     }
                 )
             MessagePopupState.DUPLICATE -> {
-                Toast.makeText(LocalContext.current,"이미 보관된 메시지입니다", Toast.LENGTH_LONG).show()
+                Toast.makeText(LocalContext.current, "이미 보관된 메시지입니다", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -225,14 +237,42 @@ fun MessageItem(
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                if(message.audioUri != null)
-                    AudioBtn(
+                if (message.audioUri != null) {
+                    Log.d("DataSource", "$S3_REDIS_URI${message.audioUri}")
+                    Message24AudioBtn(
                         enabled = message.audioUri != null,
-                        onPlay = { viewModel.playSavedMessageAudio(message) },
-                        onStop = { viewModel.stopSavedMessageAudio() },
-                        isPlaying = viewModel.msg24State.messageAudioState.isPlaying
-                                && viewModel.msg24State.messageAudioState.message?.id == message.id
+                        onPlay = {
+                            stopMessage24Audio()
+                            viewModel.msg24State = viewModel.msg24State.copy(
+                                messageAudioState = MessageAudioState(
+                                    isPlaying = false,
+                                    message = null
+                                )
+                            )
+                        },
+                        onStop = {
+                            playMessage24Audio(
+                                message,
+                                onPrepared = {
+                                    viewModel.msg24State = viewModel.msg24State.copy(
+                                        messageAudioState = MessageAudioState(
+                                            isPlaying = true,
+                                            message = message
+                                        )
+                                    )
+                                },
+                                onComplete = {
+                                    viewModel.msg24State = viewModel.msg24State.copy(
+                                        messageAudioState = MessageAudioState(
+                                            isPlaying = false,
+                                            message = null
+                                        )
+                                    )
+                                })
+                        },
+                        isPlaying = viewModel.msg24State.messageAudioState.isPlaying && viewModel.msg24State.messageAudioState.message?.id == message.id
                     )
+                }
                 MessageInfo(
                     modifier = modifier.weight(1f),
                     content = message.content,
@@ -272,7 +312,10 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "수신", color = if (currentMenu == ReceiveSendState.Receive) Color.Black else Color.White)
+            Text(
+                text = "수신",
+                color = if (currentMenu == ReceiveSendState.Receive) Color.Black else Color.White
+            )
         }
         Button(
             onClick = selectSent, colors =
@@ -281,11 +324,13 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "송신", color = if (currentMenu == ReceiveSendState.Send) Color.Black else Color.White)
+            Text(
+                text = "송신",
+                color = if (currentMenu == ReceiveSendState.Send) Color.Black else Color.White
+            )
         }
     }
 }
-
 
 
 @Composable
@@ -300,16 +345,22 @@ fun MessageInfo(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Text(text = content, fontSize = 18.sp)
-        Text(text = localDateTime.substring(0,10), fontSize = 12.sp)
+        Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
     }
 }
 
 @Composable
-fun AudioBtn(enabled: Boolean, onPlay: () -> Unit, onStop: () -> Unit, isPlaying: Boolean) {
+fun Message24AudioBtn(
+    enabled: Boolean,
+    onPlay: () -> Unit,
+    onStop: () -> Unit,
+    isPlaying: Boolean
+) {
     IconButton(enabled = enabled, onClick = { if (isPlaying) onPlay() else onStop() }) {
+        val color = if (isPlaying) Color.Green else Color.Black
         Icon(
             imageVector = Icons.Filled.Mic,
-            tint = if (isPlaying) Color.Green else Color.Black,
+            tint = color,
             contentDescription = "message audio button",
         )
     }
@@ -331,14 +382,14 @@ fun MessageOptions(
 //                contentDescription = "message share button",
 //            )
 //        }
-        IconButton(onClick =  onSave ) {
+        IconButton(onClick = onSave) {
             Icon(
                 imageVector = Icons.Filled.BookmarkAdd,
-                tint = if(duplicate) PINK500 else MaterialTheme.colors.secondary,
+                tint = if (duplicate) PINK500 else MaterialTheme.colors.secondary,
                 contentDescription = "message save button",
             )
         }
-        IconButton(onClick =  onDelete ) {
+        IconButton(onClick = onDelete) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 tint = MaterialTheme.colors.secondary,
@@ -346,7 +397,7 @@ fun MessageOptions(
             )
         }
         if (currentMenu == ReceiveSendState.Receive) {
-            IconButton(onClick =  onBlock ) {
+            IconButton(onClick = onBlock) {
                 Icon(
                     imageVector = Icons.Filled.Block,
                     tint = MaterialTheme.colors.secondary,
@@ -371,4 +422,44 @@ fun ExpandButton(
             contentDescription = "message options button",
         )
     }
+}
+
+fun playMessage24Audio(message: Message24Response, onPrepared: () -> Unit, onComplete: () -> Unit) {
+    VoicePlayer.nullInstance()
+    VoicePlayer.getInstance().apply {
+        setAudioAttributes(
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+        )
+        setDataSource(S3_REDIS_URI + message.audioUri)
+        setOnPreparedListener {
+            onPrepared()
+            it.start()
+            Log.d("VoicePlayer", "Duration : ${it.duration}")
+        }
+        prepareAsync()
+        setOnCompletionListener {
+            if (it.duration != 0)
+                if (this.isPlaying)
+                    it.stop()
+            it.release()
+            onComplete()
+        }
+    }
+}
+
+fun stopMessage24Audio() {
+    try {
+        VoicePlayer.getInstance().apply {
+            if (this.isPlaying)
+                stop()
+            release()
+        }
+    } catch (e: Exception) {
+        Log.e(
+            "VoicePlayer",
+            "stopMessage24Audio",
+            e
+        )
+    }
+
 }

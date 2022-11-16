@@ -45,6 +45,7 @@ fun BeepNavGraph(
             val patchAddress: AddressPatchViewModel = hiltViewModel(it)
             val homeModel: HomeViewModel = hiltViewModel(it)
             val presetViewModel: PresetViewModel = hiltViewModel(it)
+            val keyboardViewModel: KeyboardViewModel = hiltViewModel(it)
             HomeScreen()
         }
         messageGraph(navController)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,11 +22,11 @@ import com.example.beep.ui.message.UiState
 import com.example.beep.ui.theme.PINK500
 
 @Composable
-fun ContactPresetScreen(
-    modifier: Modifier = Modifier,
-    viewModel: MyPageViewModel,
-    presetViewModel: PresetViewModel = viewModel()
-) {
+fun ContactPresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel, presetViewModel: PresetViewModel = viewModel()) {
+    LaunchedEffect(key1 = Unit) {
+        presetViewModel.getPresetByToken(2)
+    }
+
     when (val currentUiState = presetViewModel.contactPreset) {
         is UiState.Loading -> {
             LoadingScreen()

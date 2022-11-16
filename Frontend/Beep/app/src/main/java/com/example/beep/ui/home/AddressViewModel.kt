@@ -1,23 +1,17 @@
 package com.example.beep.ui.home
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.mainpage.AddressResponse
-import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.domain.retrofit.GetUserAddressUseCase
+import com.example.beep.domain.GetUserAddressUseCase
 import com.example.beep.ui.message.UiState
-import com.example.beep.ui.savedmessage.SavedMessageType
 import com.example.beep.util.ResultType
 import com.example.beep.util.fromJson
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject

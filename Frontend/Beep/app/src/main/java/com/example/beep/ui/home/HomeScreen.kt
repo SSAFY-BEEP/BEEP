@@ -3,8 +3,11 @@ package com.example.beep.ui.home
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -39,29 +42,22 @@ val galmurinineFont = FontFamily(
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(
-    presetViewModel: PresetViewModel = viewModel()
+    presetViewModel: PresetViewModel = viewModel(),
 ) {
-//    val addressList = viewModel.exampleEntities.collectAsStateLifecycleAware(initial = listOf())
     val image = painterResource(R.drawable.bbibbi_blue)
+    val scrollState = rememberScrollState()
 
-    //프리셋가져오기
-//    val presetList = presetViewModel.getPresetByToken()
-
-//    val receiveMsg = homeViewModel.receiveMsg24.collectAsStateLifecycleAware(
-//        initial = emptyList<BaseResponse<Message24Response>>()
-//    );
-//    val sendMsg = homeViewModel.sendMsg24.collectAsStateLifecycleAware(
-//        initial = emptyList<BaseResponse<Message24Response>>()
-//    );
-//    Log.d("Message24 Receive", receiveMsg.value.toString())
-//    Log.d("Message24 Send", sendMsg.value.toString())
-
+    LaunchedEffect(key1 = Unit) {
+        presetViewModel.getPresetByToken(1)
+        presetViewModel.getPresetByToken(2)
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(android.graphics.Color.parseColor("#F5F8FF")))
-            .wrapContentSize(Center),
+            .wrapContentSize(Center)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Box {

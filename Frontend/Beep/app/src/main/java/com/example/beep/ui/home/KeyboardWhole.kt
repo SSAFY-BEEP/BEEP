@@ -38,153 +38,113 @@ fun BeepNumKeyboard(
     changeIsNum: () -> Unit
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
-    val buttonSpacing = 11.dp
-//    val colorBackground = painterResource(R.drawable.btnimgtonum)
+    val presetViewModel = viewModel<PresetViewModel>()
+    val homeViewModel = viewModel<HomeViewModel>()
+    val buttonSpacing = 13.dp
+
+    if (homeViewModel.currentPage == "PutAddress") {
+
+    } else if (homeViewModel.currentPage == "PutMsg") {
+
+    }
+
 
     Column(
         modifier = Modifier
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(40.dp, 20.dp)
+            .height(300.dp)
+            .padding(40.dp, 40.dp, 40.dp, 20.dp)
             .fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceBetween,
+
     ) {
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgone),
-//                symbol = "1",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("1"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("1")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgtwo),
-//                symbol = "2",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f),
-            ) {
-                viewModel.onAction(KeyboardAction.Number("2"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("2")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgthree),
-//                symbol = "3",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("3"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("3")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgfour),
-//                symbol = "4",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("4"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("4")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgfive),
-//                symbol = "5",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("5"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("5")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgsix),
-//                symbol = "6",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("6"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("6")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgseven),
-//                symbol = "7",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("7"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("7")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgeight),
-//                symbol = "8",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("8"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("8")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgnine),
-//                symbol = "9",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("9"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("9")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgtoalph),
-//                symbol = "ㄱㄴㄷ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-                    .clickable(
-                        onClick = changeIsNum
-                    )
-            ) {
-//                viewModel.onAction(KeyboardAction.Number("ㄱㄴㄷ"))
-            }
+                onClick = changeIsNum,
+                onLongClick = {}
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgzero),
-//                symbol = "0",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Number("0"))
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Number("0")) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgdelete),
-//                symbol = "<",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                viewModel.onAction(KeyboardAction.Delete)
-            }
+                onClick = { viewModel.onAction(KeyboardAction.Delete) },
+                onLongClick = { viewModel.onAction(KeyboardAction.Clear) }
+            )
         }
     }
 }
@@ -198,7 +158,7 @@ fun BeepAlphabetKeyboard(
     changeIsNum: () -> Unit,
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
-    val buttonSpacing = 11.dp
+    val buttonSpacing = 13.dp
 
     val gArr = listOf('ㄱ'.toString(), 'ㅋ'.toString(), 'ㄲ'.toString())
     val nArr = listOf('ㄴ'.toString(), 'ㄹ'.toString())
@@ -366,149 +326,104 @@ fun BeepAlphabetKeyboard(
     Column(
         modifier = Modifier
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(40.dp, 20.dp)
+            .height(300.dp)
+            .padding(40.dp, 40.dp, 40.dp, 20.dp)
             .fillMaxWidth(),
-    ) {
+        verticalArrangement = Arrangement.SpaceBetween,
+        ) {
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgheart),
-//                symbol = "♥",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('♥')
-            }
+                onClick = { letsGoNumber('♥') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgstar),
-//                symbol = "★",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('★')
-            }
+                onClick = { letsGoNumber('★') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgspacebar),
-//                description = "1",
-//                symbol = "﹈",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber(' ')
-            }
+                onClick = { letsGoNumber(' ') },
+                onLongClick = {  }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimggieuk),
-//                symbol = "ㄱㅋ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㄱ')
-            }
+                onClick = { letsGoNumber('ㄱ') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgnieun),
-//                symbol = "ㄴㄹ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㄴ')
-            }
+                onClick = { letsGoNumber('ㄴ') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgdigeut),
-//                symbol = "ㄷㅌ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㄷ')
-            }
+                onClick = { letsGoNumber('ㄷ') },
+                onLongClick = {  }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgbieup),
-//                symbol = "ㄱ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㅂ')
-            }
+                onClick = { letsGoNumber('ㅂ') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgsieot),
-//                symbol = "ㄴ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㅅ')
-            }
+                onClick = { letsGoNumber('ㅅ') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgjieut),
-//                symbol = "ㄷ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㅈ')
-            }
+                onClick = { letsGoNumber('ㅈ') },
+                onLongClick = {  }
+            )
         }
         Row(
             modifier = Modifier
                 .padding(0.dp, 5.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgtonum),
-//                symbol = "123",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-                    .clickable(
-                        onClick = changeIsNum
-                    )
-            ) {
-                letsGoNumber('n')
-            }
+                onClick = {
+                    letsGoNumber('n')
+                    changeIsNum()
+                          },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgyieung),
-//                symbol = "ㅇ",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('ㅇ')
-            }
+                onClick = { letsGoNumber('ㅇ') },
+                onLongClick = {  }
+            )
             KeyboardButton(
                 paint = painterResource(R.drawable.btnimgdelete),
-//                symbol = "<",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(1f)
-            ) {
-                letsGoNumber('n')
-                viewModel.onAction(KeyboardAction.Delete)
-            }
+                onClick = {
+                    letsGoNumber('n')
+                    viewModel.onAction(KeyboardAction.Delete)
+                          },
+                onLongClick = {  }
+            )
         }
     }
 }
