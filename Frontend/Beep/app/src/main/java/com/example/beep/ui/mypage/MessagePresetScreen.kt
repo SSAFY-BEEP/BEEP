@@ -55,7 +55,7 @@ fun MessagePresetSuccessScreen(modifier: Modifier = Modifier, presetList: Array<
             TextButton(onClick = { }) {
                 Text("<")
             }
-            Text(modifier = modifier.padding(10.dp,0.dp,0.dp,0.dp), text ="메세지 즐겨찾기 설정")
+            Text(modifier = modifier.padding(10.dp,0.dp,0.dp,0.dp), text ="메세지 단축키 설정")
         }
 
 //        //수정, 입력 창
@@ -68,7 +68,7 @@ fun MessagePresetSuccessScreen(modifier: Modifier = Modifier, presetList: Array<
                     openDialog.value = false
                 },
                 title = {
-                    Text(text = "단축번호 ${clickNum.value}번 설정")
+                    Text(text = "단축키 ${clickNum.value}번 설정")
                 },
                 text ={
                     TextField(value = content.value, onValueChange = {content.value = it}, singleLine = true)
@@ -95,7 +95,7 @@ fun MessagePresetSuccessScreen(modifier: Modifier = Modifier, presetList: Array<
         }
 
         Column(modifier = modifier
-            .padding(50.dp, 0.dp, 50.dp, 0.dp)
+            .padding(50.dp, 0.dp, 100.dp, 0.dp)
             .fillMaxHeight()
             .fillMaxWidth()
             .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
