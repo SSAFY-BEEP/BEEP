@@ -38,7 +38,16 @@ fun BeepNumKeyboard(
     changeIsNum: () -> Unit
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
+    val presetViewModel = viewModel<PresetViewModel>()
+    val homeViewModel = viewModel<HomeViewModel>()
     val buttonSpacing = 13.dp
+
+    if (homeViewModel.currentPage == "PutAddress") {
+
+    } else if (homeViewModel.currentPage == "PutMsg") {
+
+    }
+
 
     Column(
         modifier = Modifier

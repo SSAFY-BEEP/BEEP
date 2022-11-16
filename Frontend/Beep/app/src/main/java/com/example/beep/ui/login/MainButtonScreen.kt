@@ -20,6 +20,9 @@ fun MainButtonScreen(navController: NavController) {
         Column(
             Modifier
                 .fillMaxSize()
+                .imePadding()
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .padding(48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

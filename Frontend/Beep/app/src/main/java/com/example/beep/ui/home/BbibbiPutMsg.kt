@@ -31,8 +31,10 @@ fun BbibbiPutMsg(
     toPutAddress: () -> Unit,
     toAskRecord: () -> Unit,
     changeContentString: (String) -> Unit,
-    resetKeyboard: () -> Unit
+    resetKeyboard: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
     ) {
+    Log.d("PageMove", "Moved to PutMessage")
 
     val keyboardViewModel = viewModel<KeyboardViewModel>()
 
@@ -43,6 +45,7 @@ fun BbibbiPutMsg(
     ResetButton(
         modifier = Modifier
     ) {
+        homeViewModel.resetMessageToSend()
         // 입력값 리셋 필요
         keyboardViewModel.onAction(KeyboardAction.Clear)
         // 다시 연락처 입력 페이지로
@@ -58,6 +61,7 @@ fun BbibbiPutMsg(
             } else if (defaultNameString == "=(๑º ﾛ º๑)") {
                 // 내용을 입력해주세요
             } else if (defaultNameString.length < 12) {
+                homeViewModel.setMessageContent(keyboardViewModel.state.number1)
                 // 음성을 녹음하시겠습니까
                 changeContentString(defaultNameString)
                 toAskRecord()

@@ -54,6 +54,8 @@ fun BeepApp() {
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp,25.dp)
+            .statusBarsPadding()
+            .navigationBarsPadding()
         ,
         topBar = { BeepAppBar() },
         bottomBar = {
@@ -76,11 +78,6 @@ fun BeepApp() {
                         icon = Icons.Outlined.Settings
                     ),
                     BottomNavItem(
-                        name = "LoginMain",
-                        route = "login_main",
-                        icon = Icons.Default.Person
-                    ),
-                    BottomNavItem(
                         name = "SavedMessage",
                         route = "savedMessage",
                         icon = Icons.Default.Person
@@ -89,7 +86,8 @@ fun BeepApp() {
                 navController = navController,
                 onItemClick = {
                     navController.navigate(it.route)
-                })
+                },
+            )
         }
     ) {
         BeepNavGraph(navController = navController)

@@ -18,8 +18,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun BbibbiAskToSend(
     toPutMsg: () -> Unit,
     toAskRecord: () -> Unit,
-    toFirstPage: () -> Unit
+    toFirstPage: () -> Unit,
+    homeViewModel: HomeViewModel = viewModel(),
 ) {
+    Log.d("PageMove", "Moved to AskToSend")
 
     var go by remember { mutableStateOf(true) }
 
@@ -99,8 +101,10 @@ fun BbibbiAskToSend(
             /* go버튼 */
             if (go) {
                 // 메시지보내기 action
+                homeViewModel.sendMsg()
             } else {
                 //  첫 페이지로
+                homeViewModel.resetMessageToSend()
                 toFirstPage()
             }
         },
@@ -134,6 +138,7 @@ fun BbibbiAskToSend(
         // 메시지 보내기
         onClick = {
             /* yes버튼 */
+            homeViewModel.sendMsg()
         },
         modifier = Modifier
             .width(60.dp)
@@ -162,6 +167,7 @@ fun BbibbiAskToSend(
         // 첫 페이지로
         onClick = {
             /* no버튼 */
+            homeViewModel.resetMessageToSend()
             toFirstPage()
         },
         modifier = Modifier
