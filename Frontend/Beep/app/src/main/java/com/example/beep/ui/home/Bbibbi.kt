@@ -22,12 +22,13 @@ import com.example.beep.util.collectAsStateLifecycleAware
 @Composable
 fun Bbibbi(
     homeViewModel: HomeViewModel = viewModel(),
-    presetViewModel: PresetViewModel = viewModel()
+    presetViewModel: PresetViewModel = viewModel(),
+    keyboardViewModel: KeyboardViewModel = viewModel()
 ) {
     var receiveMsg = ""
 //    var senderPhoneNumber = ""
 //    var receiverPhoneNumber = ""
-    var currentPage by remember { mutableStateOf("ReceivedMsg") }
+//    var currentPage by remember { mutableStateOf("ReceivedMsg") }
 
     when (val currentUiState = homeViewModel.receivedMessageUiState) {
         is UiState.Loading -> {
@@ -36,10 +37,10 @@ fun Bbibbi(
         is UiState.Success -> {
             if (currentUiState.data.isEmpty()) {
                 receiveMsg = "데이터가 없습니다"
-                currentPage = "PutAddress"
+                homeViewModel.currentPage = "PutAddress"
             } else {
                 receiveMsg = currentUiState.data[0].content
-
+                Log.d("데이터", currentUiState.data[0].senderPhoneNumber)
             }
 //            val senderPhoneNumber = currentUiState.data[0].senderPhoneNumber
 //            val receiverPhoneNumber = currentUiState.data[0].receiverPhoneNumber
@@ -62,50 +63,44 @@ fun Bbibbi(
 
 
 
-    if (currentPage == "PutAddress") {
+    if (homeViewModel.currentPage == "PutAddress") {
         BbibbiPutAddress(
-            toPutMsg = {currentPage = "PutMsg"}
+            toPutMsg = {homeViewModel.currentPage = "PutMsg"}
         )
-    } else if (currentPage == "PutMsg") {
+    } else if (homeViewModel.currentPage == "PutMsg") {
         BbibbiPutMsg(
-            toPutAddress = {currentPage = "PutAddress"},
-            toAskRecord = {currentPage = "AskRecord"},
+            toPutAddress = {homeViewModel.currentPage = "PutAddress"},
+            toAskRecord = {homeViewModel.currentPage = "AskRecord"},
             changeContentString = { changedContentString: String -> contentString = changedContentString },
-
+            resetKeyboard = {keyboardViewModel.onAction(KeyboardAction.Clear)}
             )
-    } else if (currentPage == "AskRecord") {
+    } else if (homeViewModel.currentPage == "AskRecord") {
         BbibbiAskToRecord (
-            toPutMsg = {currentPage = "PutMsg"},
-            toSendMsg = {currentPage = "SendMsg"},
-            toRecord = {currentPage = "DoRecord"},
+            toPutMsg = {homeViewModel.currentPage = "PutMsg"},
+            toSendMsg = {homeViewModel.currentPage = "SendMsg"},
+            toRecord = {homeViewModel.currentPage = "DoRecord"},
             )
-    } else if (currentPage == "SendMsg") {
+    } else if (homeViewModel.currentPage == "SendMsg") {
         BbibbiAskToSend(
-            toPutMsg = {currentPage = "PutMsg"},
-            toAskRecord = {currentPage = "AskRecord"},
-            toFirstPage = {currentPage = "ReceivedMsg"},
+            toPutMsg = {homeViewModel.currentPage = "PutMsg"},
+            toAskRecord = {homeViewModel.currentPage = "AskRecord"},
+            toFirstPage = {homeViewModel.currentPage = "ReceivedMsg"},
         )
-    } else if (currentPage == "DoRecord") {
+    } else if (homeViewModel.currentPage == "DoRecord") {
         BbibbiDoRecord(
-            toSendMsg = {currentPage = "DoRecord"},
+            toSendMsg = {homeViewModel.currentPage = "DoRecord"},
             )
     } else if (receiveMsg.isNotEmpty()) {
         BbibbiShowMessage(
         /* 메시지 내용 String, 발신인 */
-        toPutAddress = {currentPage = "PutAddress"},
-            toPutMsg = {currentPage = "PutMsg"},
+        toPutAddress = {homeViewModel.currentPage = "PutAddress"},
+            toPutMsg = {homeViewModel.currentPage = "PutMsg"},
             receivedMsg = receiveMsg
         )
     } else {
         BbibbiPutAddress(
-            toPutMsg = {currentPage = "PutMsg"},
+            toPutMsg = {homeViewModel.currentPage = "PutMsg"},
         )
     }
 }
 
-
-//        //임시로 메시지 보내기 넣음
-//        onClick = {
-//            /* cancel 버튼 */
-//            homeViewModel.sendMsg(null, "5012", "01012345678")
-//        },

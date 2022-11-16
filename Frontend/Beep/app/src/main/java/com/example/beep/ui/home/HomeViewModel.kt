@@ -46,7 +46,7 @@ ViewModel() {
     var receivedMessageUiState: UiState<List<Message24Response>> by mutableStateOf(UiState.Loading)
     var currentReceivedMessageType by mutableStateOf(SavedMessageType.RECEIVED)
     var messageToSend:Message24Request by mutableStateOf(Message24Request())
-
+    var currentPage by mutableStateOf("ReceivedMsg")
 
 
     fun getOne24() {

@@ -53,6 +53,7 @@ fun BeepApp() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
+            .padding(0.dp,25.dp)
             .statusBarsPadding()
             .navigationBarsPadding()
         ,
