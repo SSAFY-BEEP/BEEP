@@ -2,6 +2,8 @@ package com.example.beep.ui.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
@@ -9,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.beep.R
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.theme.BACKGROUND_WHITE
 import com.example.beep.ui.theme.GRAY100
@@ -50,7 +55,9 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
 
 
 @Composable
-fun MyPageMemberScreen(onClickMenu: (String) -> Unit) {
+fun MyPageMemberScreen(
+    navController: NavController,
+    onClickMenu: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -116,7 +123,9 @@ fun MyPageMemberScreen(onClickMenu: (String) -> Unit) {
 }
 
 @Composable
-fun MyPageStyleScreen(onClickMenu: (String) -> Unit) {
+fun MyPageStyleScreen(
+    navController: NavController,
+    onClickMenu: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -150,7 +159,9 @@ fun MyPageStyleScreen(onClickMenu: (String) -> Unit) {
 }
 
 @Composable
-fun MyPagePresetScreen(onClickMenu: (String) -> Unit) {
+fun MyPagePresetScreen(
+    navController: NavController,
+    onClickMenu: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -161,12 +172,22 @@ fun MyPagePresetScreen(onClickMenu: (String) -> Unit) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(49.dp),
-                contentAlignment = Alignment.Center
             ) {
+                IconButton(
+                    onClick = { navController.popBackStack()},
+                    modifier = Modifier
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(R.drawable.backbutton_gray),
+                        contentDescription = "뒤로가기"
+                    )
+                }
+
                 Text(
                     text = "설정",
                     modifier = Modifier

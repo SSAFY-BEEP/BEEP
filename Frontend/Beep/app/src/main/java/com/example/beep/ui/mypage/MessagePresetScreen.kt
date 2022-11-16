@@ -12,8 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.PresetViewModel
@@ -21,7 +25,11 @@ import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.theme.PINK500
 
 @Composable
-fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewModel, presetViewModel: PresetViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MessagePresetScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: MyPageViewModel,
+    presetViewModel: PresetViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     LaunchedEffect(key1 = Unit) {
         presetViewModel.getPresetByToken(1)
     }
@@ -31,7 +39,9 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
             LoadingScreen()
         }
         is UiState.Success -> {
-            MessagePresetSuccessScreen(modifier, presetList = currentUiState.data, presetViewModel)
+            MessagePresetSuccessScreen(
+                navController,
+                modifier, presetList = currentUiState.data, presetViewModel)
         }
         is UiState.Error -> {
             ErrorScreen()
@@ -40,7 +50,9 @@ fun MessagePresetScreen(modifier: Modifier = Modifier, viewModel: MyPageViewMode
 }
 
 @Composable
-fun MessagePresetSuccessScreen(modifier: Modifier = Modifier, presetList: Array<String?>, viewModel: PresetViewModel) {
+fun MessagePresetSuccessScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier, presetList: Array<String?>, viewModel: PresetViewModel) {
     val scrollState = rememberScrollState()
     val openDialog = remember { mutableStateOf(false)  }
     var clickNum = remember{ mutableStateOf(0) }     //클릭된 수
@@ -57,10 +69,22 @@ fun MessagePresetSuccessScreen(modifier: Modifier = Modifier, presetList: Array<
             ,horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = { }) {
-                Text("<")
+            IconButton(
+                onClick = { navController.popBackStack()},
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
             }
-            Text(modifier = modifier.padding(10.dp,0.dp,0.dp,0.dp), text ="메세지 단축키 설정")
+            Text(
+                modifier = modifier
+                    .padding(20.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                text = "메세지 단축키 설정"
+            )
         }
 
 //        //수정, 입력 창

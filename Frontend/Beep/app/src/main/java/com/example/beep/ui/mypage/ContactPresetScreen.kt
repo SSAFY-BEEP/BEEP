@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
@@ -26,6 +27,7 @@ import com.example.beep.ui.theme.PINK500
 
 @Composable
 fun ContactPresetScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel,
     presetViewModel: PresetViewModel = viewModel()
@@ -39,7 +41,11 @@ fun ContactPresetScreen(
             LoadingScreen()
         }
         is UiState.Success -> {
-            ContactPresetSuccessScreen(modifier, presetList = currentUiState.data, presetViewModel)
+            ContactPresetSuccessScreen(
+                navController,
+                modifier,
+                presetList = currentUiState.data,
+                presetViewModel)
         }
         is UiState.Error -> {
             ErrorScreen()
@@ -50,6 +56,7 @@ fun ContactPresetScreen(
 
 @Composable
 fun ContactPresetSuccessScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     presetList: Array<String?>,
     viewModel: PresetViewModel
@@ -79,7 +86,7 @@ fun ContactPresetSuccessScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = {},
+                    onClick = { navController.popBackStack()},
                     modifier = Modifier
                 ) {
                     Icon(

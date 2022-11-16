@@ -87,12 +87,12 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("contactPreset") {
             val model: MyPageViewModel = hiltViewModel(it)
             val presetViewModel: PresetViewModel = hiltViewModel(it)
-            ContactPresetScreen(viewModel = model)
+            ContactPresetScreen(navController, viewModel = model)
         }
         composable("messagePreset") {
             val model: MyPageViewModel = hiltViewModel(it)
             val presetViewModel: PresetViewModel = hiltViewModel(it)
-            MessagePresetScreen(viewModel = model)
+            MessagePresetScreen(navController, viewModel = model)
         }
         composable("greetingPreset") {
             val model: IntroduceViewModel = hiltViewModel(it)
@@ -116,13 +116,13 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             PasswordChangeScreen(viewModel = model)
         }
         composable("themeSettingScreen"){
-            MyPageStyleScreen() { route: String -> navController.navigate(route) }
+            MyPageStyleScreen(navController) { route: String -> navController.navigate(route) }
         }
         composable("hotkeySettingScreen"){
-            MyPagePresetScreen() { route: String -> navController.navigate(route) }
+            MyPagePresetScreen(navController) { route: String -> navController.navigate(route) }
         }
         composable("memberSettingScreen"){
-            MyPageMemberScreen() { route: String -> navController.navigate(route) }
+            MyPageMemberScreen(navController) { route: String -> navController.navigate(route) }
         }
     }
 }
