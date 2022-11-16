@@ -48,8 +48,6 @@ fun BbibbiDoRecord(
         Log.d("DisposableEffect", "Disposable Effect Called!!")
         VoiceRecorder.nullInstance()
         VoiceRecorder.getInstance(context)
-        VoicePlayer.nullInstance()
-        VoicePlayer.getInstance()
         File(filepath)
 
         onDispose {
@@ -75,6 +73,9 @@ fun BbibbiDoRecord(
                 when (currentState) {
                     RecordMessageState.Before, RecordMessageState.Greeting -> {
                         toAskRecord()
+                        stopPlaying()
+                        homeViewModel.stopTimer()
+                        homeViewModel.recordMessageState = RecordMessageState.Greeting
                     }
                     RecordMessageState.Recording -> {
                         stopRecording(context)
