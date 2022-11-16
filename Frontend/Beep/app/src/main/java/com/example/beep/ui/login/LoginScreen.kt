@@ -25,11 +25,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.beep.MainActivity
 import com.example.beep.di.MainApplication
 
 
@@ -163,14 +161,28 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    viewModel.loginEvent(LoginFormEvent.Submit)
-                },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(text = "Submit")
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                Button(
+                    onClick = { navController.navigate("join_graph") },
+                    modifier = Modifier
+                ) {
+                    Text(text = "회원가입")
+                }
+
+                Button(
+                    onClick = {
+                        viewModel.loginEvent(LoginFormEvent.Submit)
+                    },
+                    modifier = Modifier
+                ) {
+                    Text(text = "Submit")
+                }
             }
+
 
         }
 

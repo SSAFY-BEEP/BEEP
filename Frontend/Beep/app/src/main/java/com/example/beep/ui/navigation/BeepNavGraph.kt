@@ -3,12 +3,9 @@ package com.example.beep.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,13 +17,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.beep.R
 import com.example.beep.ui.home.*
-import com.example.beep.ui.login.JoinScreen
 import com.example.beep.ui.home.HomeViewModel
 import com.example.beep.ui.login.MainButtonScreen
-import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
-import com.example.beep.ui.message.RecordVoiceScreen
 import com.example.beep.ui.message.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
 import com.example.beep.ui.savedmessage.SavedMessageScreen
@@ -89,6 +83,7 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         }
         composable("messagePreset") {
             val model: MyPageViewModel = hiltViewModel(it)
+            val presetViewModel: PresetViewModel = hiltViewModel(it)
             MessagePresetScreen(viewModel = model)
         }
         composable("greetingPreset") {
@@ -97,13 +92,16 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             IntroduceScreen(viewModel = model)
         }
         composable("colorSetting") {
-            ColorSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            ColorSettingScreen(model = model)
         }
         composable("engravingSetting") {
-            EngravingSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            EngravingSettingScreen(model = model)
         }
         composable("fontSetting") {
-            FontSettingScreen()
+            val model: MyPageViewModel = hiltViewModel(it)
+            FontSettingScreen(model = model)
         }
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)

@@ -1,6 +1,7 @@
 package com.example.beep.ui.message
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.theme.PINK500
 
 @Composable
 fun MessageScreen(
@@ -166,6 +169,9 @@ fun ConfirmDialog(
                         }
                     }
                 )
+            MessagePopupState.DUPLICATE -> {
+                Toast.makeText(LocalContext.current,"이미 보관된 메시지입니다", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
@@ -206,25 +212,27 @@ fun MessageItem(
     var expanded by remember { mutableStateOf(false) }
     Card(elevation = 4.dp, modifier = modifier.padding(8.dp)) {
         Column(
-            modifier = Modifier.animateContentSize(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
+            modifier = Modifier
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
                 )
-            )
         ) {
             Row(
                 modifier = modifier
                     .padding(8.dp)
                     .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                AudioBtn(
-                    enabled = message.audioUri != null,
-                    onPlay = { viewModel.playSavedMessageAudio(message) },
-                    onStop = { viewModel.stopSavedMessageAudio() },
-                    isPlaying = viewModel.msg24State.messageAudioState.isPlaying
-                            && viewModel.msg24State.messageAudioState.message?.id == message.id
-                )
+                if(message.audioUri != null)
+                    AudioBtn(
+                        enabled = message.audioUri != null,
+                        onPlay = { viewModel.playSavedMessageAudio(message) },
+                        onStop = { viewModel.stopSavedMessageAudio() },
+                        isPlaying = viewModel.msg24State.messageAudioState.isPlaying
+                                && viewModel.msg24State.messageAudioState.message?.id == message.id
+                    )
                 MessageInfo(
                     modifier = modifier.weight(1f),
                     content = message.content,
@@ -241,7 +249,9 @@ fun MessageItem(
                     currentMenu = currentMenu,
                     onDelete = { onDelete(message) },
                     onSave = { onSave(message) },
-                    onBlock = { onBlock(message) })
+                    onBlock = { onBlock(message) },
+                    duplicate = message.type == 1
+                )
             }
         }
     }
@@ -262,7 +272,7 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "수신")
+            Text(text = "수신", color = if (currentMenu == ReceiveSendState.Receive) Color.Black else Color.White)
         }
         Button(
             onClick = selectSent, colors =
@@ -271,7 +281,7 @@ fun SwitchReceivedSent(
             )
             else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text(text = "송신")
+            Text(text = "송신", color = if (currentMenu == ReceiveSendState.Send) Color.Black else Color.White)
         }
     }
 }
@@ -289,8 +299,8 @@ fun MessageInfo(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        Text(text = content, fontSize = 24.sp)
-        Text(text = localDateTime.substring(0,10))
+        Text(text = content, fontSize = 18.sp)
+        Text(text = localDateTime.substring(0,10), fontSize = 12.sp)
     }
 }
 
@@ -310,7 +320,8 @@ fun MessageOptions(
     currentMenu: ReceiveSendState,
     onDelete: () -> Unit,
     onSave: () -> Unit,
-    onBlock: () -> Unit
+    onBlock: () -> Unit,
+    duplicate: Boolean
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
 //        IconButton(onClick = { /*TODO*/ }) {
@@ -323,7 +334,7 @@ fun MessageOptions(
         IconButton(onClick =  onSave ) {
             Icon(
                 imageVector = Icons.Filled.BookmarkAdd,
-                tint = MaterialTheme.colors.secondary,
+                tint = if(duplicate) PINK500 else MaterialTheme.colors.secondary,
                 contentDescription = "message save button",
             )
         }

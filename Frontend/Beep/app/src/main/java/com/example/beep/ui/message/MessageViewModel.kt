@@ -61,6 +61,10 @@ class MessageViewModel @Inject constructor(
         msg24State = msg24State.copy(resultState = ResultState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             if(msg24State.messageToModify == null) return@launch
+            if(msg24State.messageToModify!!.type == 1) {
+                msg24State = msg24State.copy(popupState = MessagePopupState.DUPLICATE)
+                getMsg24()
+            }
             message24UseCase.saveMsg(msg24State.messageToModify!!.id).collectLatest {
                 when(it){
                     is ResultType.Success -> {

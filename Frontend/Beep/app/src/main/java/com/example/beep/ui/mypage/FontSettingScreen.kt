@@ -9,9 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Preview
 @Composable
-fun FontSettingScreen(modifier: Modifier = Modifier) {
+fun FontSettingScreen(modifier: Modifier = Modifier, model: MyPageViewModel) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -20,16 +19,28 @@ fun FontSettingScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceAround
     ) {
         Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                model.fontNum = 1
+                model.changeFont()
+            }) {
                 Text(text = "라나픽셀")
             }
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                model.fontNum = 2
+                model.changeFont()
+            }) {
                 Text(text = "둥근모")
             }
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                model.fontNum = 3
+                model.changeFont()
+            }) {
                 Text(text = "검은 고딕")
             }
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = {
+                model.fontNum = 4
+                model.changeFont()
+            }) {
                 Text(text = "랩디지털")
             }
         }
