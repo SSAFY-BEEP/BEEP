@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.PresetViewModel
-import com.example.beep.ui.message.UiState
+import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.theme.PINK500
 
 @Composable

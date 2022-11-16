@@ -5,25 +5,18 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.fragment.app.FragmentResultListener
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.BaseResponse
 import com.example.beep.data.dto.message.Message24Request
 import com.example.beep.data.dto.message.Message24Response
-import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.domain.Message24UseCase
-import com.example.beep.ui.message.RecordState
-import com.example.beep.ui.message.ResultState
-import com.example.beep.ui.message.UiState
-import com.example.beep.ui.message.stopRecording
+import com.example.beep.domain.S3UseCase
+import com.example.beep.ui.message.*
+import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.savedmessage.SavedMessageType
-import com.example.beep.util.ResultType
-import com.example.beep.util.VoicePlayer
-import com.example.beep.util.VoiceRecorder
-import com.example.beep.util.fromJson
+import com.example.beep.util.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +42,8 @@ enum class RecordMessageState {
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val message24UseCase: Message24UseCase
+    private val message24UseCase: Message24UseCase,
+    private val s3UseCase: S3UseCase
 ) :
     ViewModel() {
 
@@ -162,6 +156,7 @@ class HomeViewModel @Inject constructor(
         messageToSend = messageToSend.copy(receiverNum = receiverNum)
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     fun stopGreeting() {
         try {
             VoicePlayer.getInstance().apply {
@@ -169,6 +164,8 @@ class HomeViewModel @Inject constructor(
                     stop()
                 release()
             }
+            stopTimer()
+            recordMessageState = RecordMessageState.Before
         } catch (e: Exception) {
             Log.e(
                 "VoicePlayer",
@@ -178,10 +175,38 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     fun playGreeting() {
         /* API에서 상대 인사말 주소를 가져온 뒤 null이 아니라면 MediaPlayer로 재생,
             null이면 상태를 바로 Before로 바꾸기 */
-        /* onComplete -> stopGreeting() && 상태 Before로 바꾸기 */
+        viewModelScope.launch {
+            val result = s3UseCase.getIntroduceByPhone(messageToSend.receiverNum)
+            opponentGreetingUri = when (result) {
+                is ResultType.Success -> {
+                    result.data
+                }
+                else -> {
+                    null
+                }
+            }
+            if (opponentGreetingUri != null) {
+                VoicePlayer.nullInstance()
+                VoicePlayer.getInstance().apply {
+                    setDataSource(S3_CONSTANT_URI + opponentGreetingUri)
+                    prepare()
+                    setOnPreparedListener {
+                        fileLength = it.duration/1000
+                        startTimer()
+                    }
+                    setOnCompletionListener {
+                        stopGreeting()
+                        recordMessageState = RecordMessageState.Before
+                    }
+                }.start()
+            } else {
+                recordMessageState = RecordMessageState.Before
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

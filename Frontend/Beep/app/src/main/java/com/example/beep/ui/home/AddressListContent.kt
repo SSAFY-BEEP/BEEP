@@ -23,9 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
-import com.example.beep.data.dto.mainpage.AddressResponse
-import com.example.beep.ui.message.UiState
-import com.example.beep.util.collectAsStateLifecycleAware
+import com.example.beep.ui.mypage.introduce.UiState
 
 
 @Composable
