@@ -42,7 +42,6 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(android.graphics.Color.parseColor("#F5F8FF")))
             .wrapContentSize(Center)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(10.dp)
