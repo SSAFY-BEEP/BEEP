@@ -39,7 +39,9 @@ val galmurinineFont = FontFamily(
 fun BeepNavGraph(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "home", modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,60.dp)) {
+    NavHost(navController = navController,
+        startDestination = "home",
+        modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,56.dp)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
