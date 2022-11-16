@@ -66,7 +66,7 @@ fun SavedMessageScreen(
                 LoadingScreen()
             }
             is UiState.Success -> {
-                SavedMessageSuccessScreen(messageList = currentUiState.data)
+                SavedMessageSuccessScreen(messageList = currentUiState.data, onClickMenu = navigateTo)
             }
             is UiState.Error -> {
                 ErrorScreen()
@@ -79,7 +79,8 @@ fun SavedMessageScreen(
 fun SavedMessageSuccessScreen(
     messageList: List<MessageResponse>,
     modifier: Modifier = Modifier,
-    viewModel: SavedMessageViewModel = viewModel()
+    viewModel: SavedMessageViewModel = viewModel(),
+    onClickMenu: (String) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -90,7 +91,8 @@ fun SavedMessageSuccessScreen(
             currentMenu = viewModel.currentSavedMessageType,
             selectReceived = { viewModel.changeCurrentSavedMessageType(SavedMessageType.RECEIVED) },
             selectSent = { viewModel.changeCurrentSavedMessageType(SavedMessageType.SEND) },
-            selectBlocked = { viewModel.changeCurrentSavedMessageType(SavedMessageType.BLOCKED) }
+            selectBlocked = { viewModel.changeCurrentSavedMessageType(SavedMessageType.BLOCKED) },
+            onClickMenu = onClickMenu
         )
         if (messageList.isEmpty())
             Box(modifier = modifier.weight(1f), contentAlignment = Alignment.Center) {
@@ -313,7 +315,8 @@ fun SwitchReceivedSent(
     currentMenu: SavedMessageType,
     selectReceived: () -> Unit,
     selectSent: () -> Unit,
-    selectBlocked: () -> Unit
+    selectBlocked: () -> Unit,
+    onClickMenu: (String) -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Button(
@@ -346,6 +349,9 @@ fun SwitchReceivedSent(
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
         ) {
             Text(text = "차단목록")
+        }
+        Button(onClick = { onClickMenu("messageList") }) {
+            Text(text = "24 메시지")
         }
     }
 }

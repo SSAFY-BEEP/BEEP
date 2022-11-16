@@ -37,7 +37,6 @@ import com.example.beep.util.VoicePlayer
 fun MessageScreen(
     viewModel: MessageViewModel = viewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-//    navigateTo: (String) -> Unit,
     onClickMenu: (String) -> Unit
 ) {
 
@@ -53,7 +52,8 @@ fun MessageScreen(
             ResultState.Success -> {
                 MessageSuccessScreen(
                     messageList = viewModel.msg24State.msg24List,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    onClickMenu = onClickMenu
                 )
             }
             ResultState.Error -> {
@@ -68,6 +68,7 @@ fun MessageSuccessScreen(
     messageList: List<Message24Response>,
     modifier: Modifier = Modifier,
     viewModel: MessageViewModel,
+    onClickMenu: (String) -> Unit
 ) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -75,6 +76,7 @@ fun MessageSuccessScreen(
             currentMenu = viewModel.msg24State.receiveSendState,
             selectReceived = { viewModel.changeCurrentSavedMessageType(ReceiveSendState.Receive) },
             selectSent = { viewModel.changeCurrentSavedMessageType(ReceiveSendState.Send) },
+            onClickMenu = onClickMenu
         )
         Column(modifier = Modifier.weight(4f)) {
             MessageList(
@@ -302,6 +304,7 @@ fun SwitchReceivedSent(
     currentMenu: ReceiveSendState,
     selectReceived: () -> Unit,
     selectSent: () -> Unit,
+    onClickMenu: (String) -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Button(
@@ -328,6 +331,9 @@ fun SwitchReceivedSent(
                 text = "송신",
                 color = if (currentMenu == ReceiveSendState.Send) Color.Black else Color.White
             )
+        }
+        Button(onClick = { onClickMenu("savedMessage") }, Modifier.padding(end = 3.dp)) {
+            Text(text = "보관함")
         }
     }
 }

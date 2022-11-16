@@ -52,10 +52,7 @@ fun BeepNavGraph(
         composable("login_main_graph") {
             MainButtonScreen(navController=navController)
         }
-        composable("savedMessage") {
-            val model: SavedMessageViewModel = hiltViewModel(it)
-            SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
-        }
+
     }
 }
 
@@ -65,6 +62,10 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
         composable("messageList") {
             val model: MessageViewModel = hiltViewModel(it)
             MessageScreen(model) { route: String -> navController.navigate(route) }
+        }
+        composable("savedMessage") {
+            val model: SavedMessageViewModel = hiltViewModel(it)
+            SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
         }
     }
 }
