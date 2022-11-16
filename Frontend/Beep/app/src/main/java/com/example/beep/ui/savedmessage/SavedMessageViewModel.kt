@@ -77,7 +77,7 @@ class SavedMessageViewModel @Inject constructor(
         savedMessageUiState = UiState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             if (messageToModify == null) return@launch
-            when (messageUseCase.deleteMessage(messageToModify!!.id)) {
+            when (messageUseCase.cancelSave(messageToModify!!.id)) {
                 is ResultType.Success -> {
                     Log.d("SavedMessage", "Delete Success")
                     getMessage()

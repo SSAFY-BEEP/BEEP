@@ -407,6 +407,7 @@ fun MessageItem(
                     modifier = Modifier
                         .weight(1f)
                 ) {
+                if (message.audioUri != null)
                     AudioBtn(
                         enabled = message.audioUri != null,
                         onPlay = {
