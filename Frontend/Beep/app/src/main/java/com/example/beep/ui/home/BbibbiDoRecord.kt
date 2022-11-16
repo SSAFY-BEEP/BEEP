@@ -261,13 +261,13 @@ fun DoRecordScreen(
             Text(text = "인사말 재생중 $messageTime/$duration")
         }
         RecordMessageState.Before -> {
-            Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
             Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
         }
         RecordMessageState.Finished -> {
-            Text(text = "/ : 다시 녹음 | > : 재생 | ● : 전송", fontSize = 19.sp)
+            Text(text = "\\ 다시 녹음  > 재생  ● 전송", fontSize = 17.sp)
         }
         RecordMessageState.Playing -> {
             Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)
