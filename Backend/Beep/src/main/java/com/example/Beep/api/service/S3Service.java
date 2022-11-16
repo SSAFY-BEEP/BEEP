@@ -101,7 +101,11 @@ public class S3Service {
         String userNum = SecurityUtil.getCurrentUsername().get();
 
         User user=userRepository.findByPhoneNumber(userNum).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
-        System.out.println("service"+ user.getIntroduceAudio()+","+userNum);
+        return user.getIntroduceAudio();
+    }
+
+    public String findUserVoiceByPhoneNumber(String phoneNumber){
+        User user=userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()-> new CustomException(ErrorCode.BAD_REQUEST));
         return user.getIntroduceAudio();
     }
 }
