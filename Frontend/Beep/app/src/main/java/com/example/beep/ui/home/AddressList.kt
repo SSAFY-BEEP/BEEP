@@ -53,14 +53,14 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(0.dp, 20.dp, 0.dp, 0.dp)
+            .padding(0.dp, 40.dp, 0.dp, 0.dp)
     ) {
         Row(
             modifier = Modifier
                 .width(320.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(Alignment.CenterVertically)
-                .padding(0.dp, 0.dp, 0.dp, 14.dp),
+                .padding(0.dp, 0.dp, 0.dp, 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -101,8 +101,8 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
         Box(
             modifier = Modifier
                 .width(320.dp)
-                .height(232.dp)
-                .padding(0.dp, 0.dp, 0.dp, 20.dp)
+                .height(214.dp)
+                .padding(0.dp, 0.dp, 0.dp, 0.dp)
                 .background(
                     color = androidx.compose.ui.graphics.Color.White,
                     shape = RoundedCornerShape(15.dp)
