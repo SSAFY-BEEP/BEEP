@@ -47,6 +47,9 @@ fun HomeScreen(
     ) {
         Column(
             modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .width(320.dp)
                 .padding(0.dp, 10.dp, 0.dp, 0.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -55,9 +58,7 @@ fun HomeScreen(
                     painter = image,
                     contentDescription = "삐삐 이미지",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                        .width(320.dp),
+                    ,
                     contentScale = ContentScale.FillWidth
                 )
                 Bbibbi()

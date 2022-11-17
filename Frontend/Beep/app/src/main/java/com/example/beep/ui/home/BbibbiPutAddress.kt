@@ -45,14 +45,14 @@ fun BbibbiPutAddress(
         },
         modifier = Modifier
             .width(83.dp)
-            .offset(252.dp, 110.dp)
+            .offset(212.dp, 110.dp)
             .height(67.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
     ) {
 
