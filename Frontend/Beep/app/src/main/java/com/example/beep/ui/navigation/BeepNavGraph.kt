@@ -115,14 +115,5 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
         }
-        composable("themeSettingScreen"){
-            MyPageStyleScreen(navController) { route: String -> navController.navigate(route) }
-        }
-        composable("hotkeySettingScreen"){
-            MyPagePresetScreen(navController) { route: String -> navController.navigate(route) }
-        }
-        composable("memberSettingScreen"){
-            MyPageMemberScreen(navController) { route: String -> navController.navigate(route) }
-        }
     }
 }
