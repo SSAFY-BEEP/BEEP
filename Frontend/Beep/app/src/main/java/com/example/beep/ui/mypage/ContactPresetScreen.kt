@@ -1,7 +1,9 @@
 package com.example.beep.ui.mypage
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -11,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +27,7 @@ import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.PresetViewModel
 import com.example.beep.ui.mypage.introduce.UiState
+import com.example.beep.ui.theme.BLUE500
 import com.example.beep.ui.theme.PINK500
 
 @Composable
@@ -91,7 +95,7 @@ fun ContactPresetSuccessScreen(
                     modifier = Modifier
                 ) {
                     Icon(
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(17.dp),
                         painter = painterResource(R.drawable.backbutton_gray),
                         contentDescription = "뒤로가기"
                     )
@@ -99,9 +103,9 @@ fun ContactPresetSuccessScreen(
 
                 Text(
                     modifier = modifier
-                        .padding(20.dp, 0.dp, 0.dp, 0.dp),
+                        .padding(10.dp, 0.dp, 0.dp, 0.dp),
                     textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     text = "연락처 단축키 설정"
                 )
@@ -112,39 +116,42 @@ fun ContactPresetSuccessScreen(
             if (openDialog.value) {
                 AlertDialog(
                     onDismissRequest = {
-                        // Dismiss the dialog when the user clicks outside the dialog or on the back
-                        // button. If you want to disable that functionality, simply use an empty
-                        // onCloseRequest.
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "단축키 ${clickNum.value}번 설정")
+                        Text(text = "단축키 ${clickNum.value}번 설정", fontWeight = FontWeight.Bold,modifier = modifier.padding(bottom = 30.dp).height(30.dp))
                     },
                     text = {
                         TextField(
+                            modifier = modifier.padding(top = 30.dp),
                             value = content.value,
                             onValueChange = { content.value = it },
                             singleLine = true
                         )
                     },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                openDialog.value = false;
-                                //api 요청
-                                viewModel.updatePreset(clickNum.value, 2, content.value);
-                            }) {
-                            Text("설정")
+                    buttons = {
+                        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+                            Button(
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color.Gray,
+                                    contentColor = Color.White
+                                ),
+                                onClick = {
+                                    openDialog.value = false
+                                }) {
+                                Text("취소", color = Color.White)
+                            }
+                            Button(
+                                colors = ButtonDefaults.buttonColors(backgroundColor = PINK500),
+                                onClick = {
+                                    openDialog.value = false;
+                                    //api 요청
+                                    viewModel.updatePreset(clickNum.value, 2, content.value);
+                                }) {
+                                Text("설정")
+                            }
                         }
-                    },
-                    dismissButton = {
-                        Button(
-                            onClick = {
-                                openDialog.value = false
-                            }) {
-                            Text("취소")
-                        }
-                    }
+                    }, shape = RoundedCornerShape(12.dp)
                 )
             }
 
@@ -154,7 +161,7 @@ fun ContactPresetSuccessScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 for (num in 0..9) {
                     Row(
@@ -170,16 +177,29 @@ fun ContactPresetSuccessScreen(
                                     "${presetList[num] ?: ""}"
                             },
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = PINK500,
+                                backgroundColor = Color.Transparent,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(100),
                             modifier = Modifier
-                                .wrapContentSize()
-                                .width(50.dp)
-                                .height(50.dp),
+//                                .wrapContentSize()
+                                .width(44.dp)
+                                .height(44.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(listOf(BLUE500, PINK500)),
+                                    shape = CircleShape,
+                                    alpha = 0.7f
+                                ),
+                            elevation = null
                         ) {
-                            Text(text = "$num", color = Color.White, fontSize = 20.sp)
+                            Text(
+                                text = "$num",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
                         }
 
                         TextButton(modifier = modifier
@@ -190,7 +210,7 @@ fun ContactPresetSuccessScreen(
                         }) {
                             Text(
                                 text = "${presetList[num] ?: "미등록"}",
-                                fontSize = 20.sp,
+                                fontSize = 15.sp,
                                 textAlign = TextAlign.Center
                             )
                         }

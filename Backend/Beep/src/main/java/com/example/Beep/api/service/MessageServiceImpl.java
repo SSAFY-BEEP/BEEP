@@ -14,6 +14,7 @@ import com.example.Beep.api.repository.MessageRepository;
 import com.example.Beep.api.repository.UserRepository;
 import com.example.Beep.api.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -118,9 +119,12 @@ public class MessageServiceImpl implements MessageService{
         Message message = messageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.METHOD_NO_CONTENT));
         //내 보관 메시지 아니면 Bad Request
         if(!message.getOwner().getPhoneNumber().equals(userId)) throw new CustomException(ErrorCode.BAD_REQUEST);
+        System.out.println(message.getTime()+"!!!!!!!");
         //레디스 메시지 있으면 찾고 타입 바꿔줌
         Message24 message24 = message24Repository.findByTime(message.getTime()).orElse(null);
         if(message24 != null) {
+            System.out.println((message24.getTime()==message.getTime()));
+            System.out.println(message24+"~~~~~null입니다~~");
             message24.updateType(0);
         }
         //보관 메시지함에서 삭제
