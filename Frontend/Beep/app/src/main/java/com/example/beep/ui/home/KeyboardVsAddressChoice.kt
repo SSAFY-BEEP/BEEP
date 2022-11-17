@@ -119,7 +119,7 @@ fun KeyboardVsAddressChoice() {
             getKeyboard()
 
         } else {
-            ShowAddressList()
+            ShowAddressList(showAddressToggle = {showKeyboard = true})
         }
     }
 

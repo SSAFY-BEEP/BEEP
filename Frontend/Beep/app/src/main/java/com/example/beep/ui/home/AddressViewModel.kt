@@ -29,16 +29,12 @@ class AddressViewModel @Inject constructor(
     ViewModel() {
     var addressUiState:AddressUiState<Any> by mutableStateOf(AddressUiState.Loading)
 
-
     val gson = Gson()
 
     //24시간 후에 사라지는 일반 메시지 리스트
     var addressListUiState: UiState<List<AddressResponse>> by mutableStateOf(UiState.Loading)
 
-
-
-
-    fun getAddress() {
+    suspend fun getAddress() {
         addressListUiState = UiState.Loading
         viewModelScope.launch() {
             getUserAddressUseCase.execute().collectLatest {
@@ -69,7 +65,7 @@ class AddressViewModel @Inject constructor(
 //        }
 //    }
 
-    init {
-        getAddress()
-    }
+//    init {
+//        getAddress()
+//    }
 }

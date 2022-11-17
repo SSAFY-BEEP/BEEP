@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,19 +20,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
+import com.example.beep.data.dto.mainpage.AddressResponse
+import com.example.beep.ui.message.MessagePopupState
 import com.example.beep.ui.mypage.introduce.UiState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun AddressListContent(
     modifier: Modifier = Modifier,
     viewModel: AddressViewModel = viewModel(),
+    keyboardViewModel: KeyboardViewModel = viewModel(),
     viewModelDelete: AddressDeleteViewModel = viewModel(),
+    homeViewModel: HomeViewModel = viewModel(),
     viewEditDelBtn: Boolean,
     changeToAddAddress: () -> Unit,
     changeToPatchAddress: () -> Unit,
     changeDefaultNameString: (String) -> Unit,
-    changeDefaultPhoneString: (String) -> Unit
+    changeDefaultPhoneString: (String) -> Unit,
+    showAddressToggle: () -> Unit
 ) {
 
 
@@ -75,8 +80,12 @@ fun AddressListContent(
                 }
                 is UiState.Success -> {
                     for (address in currentUiState.data) {
+                        var showDialog by remember { mutableStateOf(false) }
                         TextButton(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                showDialog = true
+                                Log.d("Selected Address", address.phone)
+                            },
                             modifier = Modifier
                                 .height(40.dp)
                         ) {
@@ -101,6 +110,11 @@ fun AddressListContent(
                                     modifier = Modifier
                                         .weight((phoneWeight as Number).toFloat()),
                                 )
+                                if(showDialog)
+                                    ConfirmDialog(address, keyboardViewModel, homeViewModel) {
+                                        showDialog = false
+                                        showAddressToggle()
+                                    }
                                 if (viewEditDelBtn) {
                                     Row(
                                         modifier = Modifier
@@ -140,6 +154,10 @@ fun AddressListContent(
                                                 .height(16.dp)
                                                 .clickable {
                                                     viewModelDelete.deleteAddress(address.phone)
+                                                    GlobalScope.launch {
+                                                        delay(100L)
+                                                        viewModel.getAddress()
+                                                    }
                                                 }
                                                 .then(modifier)
                                         ) {
@@ -204,4 +222,40 @@ fun AddressListContent(
 //            BeepForTest()
 //        }
     }
+}
+
+@Composable
+fun ConfirmDialog(
+    address: AddressResponse,
+    keyboardViewModel: KeyboardViewModel,
+    homeViewModel: HomeViewModel,
+    showDialog: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { showDialog() },
+        title = {
+            Text(
+                text = "${address.phone} 번호를 선택하셨습니다."
+            )
+        },
+        text = {
+            Text(
+                text = "이 번호로 메시지를 보내시겠습니까?"
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                homeViewModel.setMessageReceiverNum(address.phone)
+                homeViewModel.currentPage = "PutMsg"
+                showDialog()
+            }) {
+                Text("확인")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { showDialog() }) {
+                Text("취소")
+            }
+        }
+    )
 }
