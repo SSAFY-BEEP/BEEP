@@ -13,10 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
@@ -26,6 +28,7 @@ import com.example.beep.ui.theme.PINK500
 
 @Composable
 fun ContactPresetScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel,
     presetViewModel: PresetViewModel = viewModel()
@@ -39,7 +42,12 @@ fun ContactPresetScreen(
             LoadingScreen()
         }
         is UiState.Success -> {
-            ContactPresetSuccessScreen(modifier, presetList = currentUiState.data, presetViewModel)
+            ContactPresetSuccessScreen(
+                navController,
+                modifier,
+                presetList = currentUiState.data,
+                presetViewModel
+            )
         }
         is UiState.Error -> {
             ErrorScreen()
@@ -50,6 +58,7 @@ fun ContactPresetScreen(
 
 @Composable
 fun ContactPresetSuccessScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     presetList: Array<String?>,
     viewModel: PresetViewModel
@@ -70,7 +79,6 @@ fun ContactPresetSuccessScreen(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
-
             Row(
                 modifier = modifier
                     .height(80.dp)
@@ -79,7 +87,7 @@ fun ContactPresetSuccessScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = {},
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier
                 ) {
                     Icon(
@@ -91,11 +99,14 @@ fun ContactPresetSuccessScreen(
 
                 Text(
                     modifier = modifier
-                    .padding(20.dp, 0.dp, 0.dp, 0.dp),
+                        .padding(20.dp, 0.dp, 0.dp, 0.dp),
                     textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
                     text = "연락처 단축키 설정"
                 )
             }
+
 
 //        //수정, 입력 창
             if (openDialog.value) {
@@ -153,8 +164,10 @@ fun ContactPresetSuccessScreen(
                     ) {
                         Button(
                             onClick = {
-                                openDialog.value = true; clickNum.value = num; content.value =
-                                "${presetList[num] ?: ""}"
+                                openDialog.value = true;
+                                clickNum.value = num;
+                                content.value =
+                                    "${presetList[num] ?: ""}"
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = PINK500,
@@ -175,8 +188,11 @@ fun ContactPresetSuccessScreen(
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
                         }) {
-                            Text(text = "${presetList[num] ?: "미등록"}",
-                            fontSize = 20.sp)
+                            Text(
+                                text = "${presetList[num] ?: "미등록"}",
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
                 }

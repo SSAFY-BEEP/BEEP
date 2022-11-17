@@ -87,12 +87,12 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("contactPreset") {
             val model: MyPageViewModel = hiltViewModel(it)
             val presetViewModel: PresetViewModel = hiltViewModel(it)
-            ContactPresetScreen(viewModel = model)
+            ContactPresetScreen(navController, viewModel = model)
         }
         composable("messagePreset") {
             val model: MyPageViewModel = hiltViewModel(it)
             val presetViewModel: PresetViewModel = hiltViewModel(it)
-            MessagePresetScreen(viewModel = model)
+            MessagePresetScreen(navController, viewModel = model)
         }
         composable("greetingPreset") {
             val model: IntroduceViewModel = hiltViewModel(it)
