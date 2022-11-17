@@ -33,15 +33,15 @@ fun BbibbiShowMessage(
             Log.d("BUTTON", "CLICKED")
         },
         modifier = Modifier
+            .offset(24.dp, 135.dp)
             .width(69.dp)
-            .offset(60.dp, 133.dp)
-            .height(45.dp),
+            .height(42.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue.copy(0.0F)),
         shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
     }
@@ -55,14 +55,14 @@ fun BbibbiShowMessage(
         },
         modifier = Modifier
             .width(83.dp)
-            .offset(252.dp, 110.dp)
-            .height(67.dp),
+            .offset(214.dp, 112.dp)
+            .height(64.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
     ) {
 

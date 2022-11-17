@@ -64,14 +64,14 @@ fun BbibbiPutMsg(
         },
         modifier = Modifier
             .width(83.dp)
-            .offset(252.dp, 110.dp)
-            .height(67.dp),
+            .offset(214.dp, 112.dp)
+            .height(64.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green.copy(0.3F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
     ) {
 
@@ -151,14 +151,14 @@ fun ResetButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .offset(60.dp, 133.dp)
+            .offset(24.dp, 135.dp)
             .clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp))
             .width(69.dp)
-            .height(45.dp)
+            .height(42.dp)
             .clickable {
                 onClick()
             }
-            .background(color = Color.Green.copy(0.3F))
+            .background(color = Color.Green.copy(0.0F))
     ) {
     }
 }

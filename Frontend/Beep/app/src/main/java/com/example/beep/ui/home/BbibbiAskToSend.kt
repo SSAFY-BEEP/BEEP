@@ -47,15 +47,15 @@ fun BbibbiAskToSend(
                   toPutMsg()
         },
         modifier = Modifier
+            .offset(24.dp, 135.dp)
             .width(69.dp)
-            .offset(60.dp, 133.dp)
-            .height(45.dp),
+            .height(42.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
         shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
     }
@@ -67,14 +67,14 @@ fun BbibbiAskToSend(
         },
         modifier = Modifier
             .width(60.dp)
-            .offset(130.dp, 133.dp)
-            .height(45.dp),
+            .offset(93.dp, 135.dp)
+            .height(42.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
         shape = RoundedCornerShape(5.dp)
     ) {
 
@@ -87,14 +87,14 @@ fun BbibbiAskToSend(
         },
         modifier = Modifier
             .width(68.dp)
-            .offset(190.dp, 133.dp)
-            .height(45.dp),
+            .offset(154.dp, 135.dp)
+            .height(42.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
         shape = RoundedCornerShape(5.dp, 0.dp, 40.dp, 5.dp)
     ) {
 
@@ -116,14 +116,14 @@ fun BbibbiAskToSend(
         },
         modifier = Modifier
             .width(83.dp)
-            .offset(252.dp, 110.dp)
-            .height(67.dp),
+            .offset(214.dp, 112.dp)
+            .height(64.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.2F)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp)
     ) {
@@ -139,68 +139,74 @@ fun BbibbiAskToSend(
         fontSize = 17.sp,
         fontFamily = galmurinineFont
     )
-
-    Button(
-        // 메시지 보내기
-        onClick = {
-
-            /* yes버튼 */
-            homeViewModel.sendMsg(filepath)
-        },
+    Row(
         modifier = Modifier
-            .width(60.dp)
-            .offset(120.dp, 63.dp)
-            .height(30.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            disabledElevation = 0.dp
-        ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
-//        shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        contentPadding = PaddingValues(0.dp),
-    ) {
-        Text(
-            text = "YES",
+            .offset(0.dp, 63.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+
+        ) {
+        Button(
+            // 메시지 보내기
+            onClick = {
+
+                /* yes버튼 */
+                homeViewModel.sendMsg(filepath)
+            },
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-                .padding(0.dp),
-            fontSize = 15.sp,
-            fontFamily = galmurinineFont
-        )
-    }
-    Button(
-        // 첫 페이지로
-        onClick = {
-            /* no버튼 */
-            homeViewModel.resetMessageToSend()
-            keyboardViewModel.onAction(KeyboardAction.Clear)
-            toFirstPage()
-        },
-        modifier = Modifier
-            .width(60.dp)
-            .offset(220.dp, 63.dp)
-            .height(30.dp),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            disabledElevation = 0.dp
-        ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
-//        shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        contentPadding = PaddingValues(0.dp),
-    ) {
-        Text(
-            text = "NO ",
+                .width(80.dp)
+                .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                .height(30.dp),
+            elevation = ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                disabledElevation = 0.dp
+            ),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Text(
+                text = "YES",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(0.dp),
+                fontSize = 15.sp,
+                fontFamily = galmurinineFont
+            )
+        }
+        Button(
+            // 첫 페이지로
+            onClick = {
+                /* no버튼 */
+                homeViewModel.resetMessageToSend()
+                keyboardViewModel.onAction(KeyboardAction.Clear)
+                toFirstPage()
+            },
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-                .padding(0.dp),
-            fontSize = 15.sp,
-            fontFamily = galmurinineFont
-        )
+                .width(80.dp)
+                .padding(20.dp, 0.dp, 0.dp, 0.dp)
+                .height(30.dp),
+            elevation = ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                disabledElevation = 0.dp
+            ),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta.copy(0.0F)),
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Text(
+                text = "NO ",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(0.dp),
+                fontSize = 15.sp,
+                fontFamily = galmurinineFont
+            )
+        }
     }
+
 
     Text(
         text = ">",
