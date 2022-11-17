@@ -24,6 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.R
 import com.example.beep.ui.mypage.introduce.UiState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -140,6 +143,10 @@ fun AddressListContent(
                                                 .height(16.dp)
                                                 .clickable {
                                                     viewModelDelete.deleteAddress(address.phone)
+                                                    GlobalScope.launch {
+                                                        delay(100L)
+                                                        viewModel.getAddress()
+                                                    }
                                                 }
                                                 .then(modifier)
                                         ) {

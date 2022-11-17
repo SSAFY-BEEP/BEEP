@@ -18,7 +18,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ShowAddressList(viewModel: AddressViewModel = viewModel()
+fun ShowAddressList(
+    viewModel: AddressViewModel = viewModel()
 ) {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
@@ -31,8 +32,8 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
 
     var addressListTitle = if (goAddAddress) {
         "주소록 추가"
-    } else if(goPatchAddress) {
-    "주소록 수정"
+    } else if (goPatchAddress) {
+        "주소록 수정"
     } else {
         "주소록"
     }
@@ -113,23 +114,27 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            if(goAddAddress) {
+            if (goAddAddress) {
                 AddressPostSelf(
                     changeToAddAddress = { goAddAddress = !goAddAddress },
-                    )
-            } else if(goPatchAddress) {
-                AddressPatch (
+                )
+            } else if (goPatchAddress) {
+                AddressPatch(
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
                     defaultNameString = defaultNameString,
                     defaultPhoneString = defaultPhoneString,
-                    )
-            } else{
+                )
+            } else {
                 AddressListContent(
                     viewEditDelBtn = viewEditDelBtn,
                     changeToAddAddress = { goAddAddress = !goAddAddress },
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
-                    changeDefaultNameString = { defaultName: String -> defaultNameString = defaultName },
-                    changeDefaultPhoneString = { defaultPhone: String -> defaultPhoneString = defaultPhone }
+                    changeDefaultNameString = { defaultName: String ->
+                        defaultNameString = defaultName
+                    },
+                    changeDefaultPhoneString = { defaultPhone: String ->
+                        defaultPhoneString = defaultPhone
+                    }
                 )
             }
 
