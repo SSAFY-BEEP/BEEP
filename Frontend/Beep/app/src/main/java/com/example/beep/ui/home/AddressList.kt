@@ -19,7 +19,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ShowAddressList(
-    viewModel: AddressViewModel = viewModel()
+    viewModel: AddressViewModel = viewModel(),
+    showAddressToggle: () -> Unit
 ) {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
@@ -134,7 +135,8 @@ fun ShowAddressList(
                     },
                     changeDefaultPhoneString = { defaultPhone: String ->
                         defaultPhoneString = defaultPhone
-                    }
+                    },
+                    showAddressToggle = showAddressToggle
                 )
             }
 
