@@ -67,6 +67,15 @@ public class MessageController {
         String result = messageService.changeMessageType(messageId, MessageType.SAVE.getNum());
         return new ApiResult<>(result, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "보관 해제", notes = "message id로 해제")
+    @PatchMapping("/{messageId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<?> cancelSave(@PathVariable Long messageId){
+        messageService.cancelSave(messageId);
+        return new ApiResult<>("Success", HttpStatus.OK);
+    }
+
     @ApiOperation(value = "메세지 차단", notes = "메세지의 id를 통해서 차단 기능")
     @PostMapping("/block/{messageId}")
     @PreAuthorize("hasRole('USER')")

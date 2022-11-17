@@ -1,5 +1,7 @@
 package com.example.beep.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.beep.data.dto.mainpage.AddressResponse
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
 fun KeyboardVsAddressChoice() {
@@ -44,76 +47,84 @@ fun KeyboardVsAddressChoice() {
     } else {
         Color(android.graphics.Color.parseColor("#FFFFFF"))
     }
-
-    Box(
+    Column(
         modifier = Modifier
-            .clip(shape = RoundedCornerShape(15.dp))
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
-            .width(200.dp)
-            .height(30.dp)
-            .background(color = androidx.compose.ui.graphics.Color.White, shape = RoundedCornerShape(15.dp))
-            .border(width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")), shape = RoundedCornerShape(15.dp)),
+            .fillMaxSize()
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center)
+                .offset(0.dp, 25.dp)
+                .clip(shape = RoundedCornerShape(15.dp))
+                .fillMaxWidth()
                 .wrapContentWidth(Alignment.CenterHorizontally)
-
+                .width(200.dp)
+                .height(30.dp)
+                .background(color = Color.White, shape = RoundedCornerShape(15.dp))
+                .border(
+                    width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    shape = RoundedCornerShape(15.dp)),
         ) {
-            Button(
-                onClick = { showKeyboard = true },
+            Row(
                 modifier = Modifier
-                    .width(97.dp)
-                    .height(24.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = keyboardBtnBgColor),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(0.dp),
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
 
             ) {
-                Text(
-                    text = "키보드",
-                    Modifier.padding(0.dp),
-                    color = keyboardBtnTxtColor,
-                    fontFamily = galmurinineFont
-                )
-            }
-            Button(
-                onClick = { showKeyboard = false },
-                modifier = Modifier
-                    .width(97.dp)
-                    .height(24.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp
-                ),
-                colors = ButtonDefaults.buttonColors(backgroundColor = addressBtnBgColor),
-                shape = RoundedCornerShape(12.dp),
-                contentPadding = PaddingValues(0.dp),
-            ) {
-                Text(
-                    text = "주소록",
+                Button(
+                    onClick = { showKeyboard = true },
                     modifier = Modifier
-                        .padding(top = 0.dp),
-                    color = addressBtnTxtColor,
-                    fontFamily = galmurinineFont
-                )
-            }
+                        .width(97.dp)
+                        .height(24.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = keyboardBtnBgColor),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(0.dp),
 
+                    ) {
+                    Text(
+                        text = "키보드",
+                        Modifier.padding(0.dp),
+                        color = keyboardBtnTxtColor,
+                        fontFamily = galmurinineFont
+                    )
+                }
+                Button(
+                    onClick = { showKeyboard = false },
+                    modifier = Modifier
+                        .width(97.dp)
+                        .height(24.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = addressBtnBgColor),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Text(
+                        text = "주소록",
+                        modifier = Modifier
+                            .padding(top = 0.dp),
+                        color = addressBtnTxtColor,
+                        fontFamily = galmurinineFont
+                    )
+                }
+
+            }
+        }
+        if (showKeyboard) {
+            getKeyboard()
+
+        } else {
+            ShowAddressList(showAddressToggle = {showKeyboard = true})
         }
     }
-    if (showKeyboard) {
-        getKeyboard()
 
-    } else {
-        ShowAddressList()
-    }
 
 }

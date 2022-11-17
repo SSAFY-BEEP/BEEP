@@ -2,6 +2,7 @@ package com.example.beep.ui.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -22,12 +23,13 @@ import com.example.beep.ui.home.*
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
-import com.example.beep.ui.mypage.introduce.RecordVoiceViewModel
 import com.example.beep.ui.mypage.*
 import com.example.beep.ui.mypage.introduce.IntroduceScreen
 import com.example.beep.ui.mypage.introduce.IntroduceViewModel
+import com.example.beep.ui.mypage.introduce.RecordVoiceViewModel
 import com.example.beep.ui.savedmessage.SavedMessageScreen
 import com.example.beep.ui.savedmessage.SavedMessageViewModel
+import com.example.beep.ui.theme.BACKGROUND_WHITE
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -41,9 +43,7 @@ fun BeepNavGraph(
 ) {
     NavHost(navController = navController,
         startDestination = "home",
-        modifier = Modifier
-            .imePadding()
-            .padding(0.dp, 0.dp, 0.dp, 56.dp)) {
+        modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,56.dp).background(BACKGROUND_WHITE)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)

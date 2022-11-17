@@ -1,6 +1,8 @@
 package com.example.beep.ui.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -17,6 +19,7 @@ import com.example.beep.ui.mypage.ContactPresetSuccessScreen
 import com.example.beep.ui.mypage.introduce.UiState
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
 fun getKeyboard() {
@@ -37,6 +40,7 @@ fun getKeyboard() {
 
 
 
+@RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
 fun BeepNumKeyboard(
@@ -94,10 +98,12 @@ fun BeepNumKeyboard(
 
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .height(300.dp)
-            .padding(40.dp, 40.dp, 40.dp, 20.dp)
-            .fillMaxWidth(),
+            .width(320.dp)
+            .padding(0.dp, 50.dp, 0.dp, 0.dp)
+        ,
         verticalArrangement = Arrangement.SpaceBetween,
 
     ) {
@@ -368,10 +374,11 @@ fun BeepAlphabetKeyboard(
 
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .height(300.dp)
-            .padding(40.dp, 40.dp, 40.dp, 20.dp)
-            .fillMaxWidth(),
+            .width(320.dp)
+            .padding(0.dp, 50.dp, 0.dp, 0.dp),
         verticalArrangement = Arrangement.SpaceBetween,
         ) {
         Row(
@@ -413,7 +420,7 @@ fun BeepAlphabetKeyboard(
                 onLongClick = {  }
             )
             KeyboardButton(
-                paint = painterResource(R.drawable.btnimgdigeut),
+                paint = painterResource(R.drawable.btnimgdiguet),
                 onClick = { letsGoNumber('ㄷ') },
                 onLongClick = {  }
             )

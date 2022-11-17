@@ -12,4 +12,5 @@ class MessageUseCase @Inject constructor(private val messageRepository: MessageR
     suspend fun deleteMessage(messageId: Long) = messageRepository.deleteMessage(messageId)
     suspend fun blockMessage(messageId: Long) = messageRepository.blockMessage(messageId)
     suspend fun cancelBlock(messageId: Long) = messageRepository.cancelBlock(messageId)
+    suspend fun cancelSave(messageId: Long) = messageRepository.cancelSave(messageId)
 }

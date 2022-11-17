@@ -20,6 +20,7 @@ import com.example.beep.util.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ enum class ReceivedMessageType {
 }
 
 enum class RecordMessageState {
-    Greeting, Before, Recording, Finished, Playing, Error, Loading
+    Greeting, Before, Recording, Finished, Playing, Error, Loading, NoIntroduce
 }
 
 @HiltViewModel
@@ -177,9 +178,10 @@ class HomeViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun playGreeting() {
+        recordMessageState = RecordMessageState.Loading
         /* API에서 상대 인사말 주소를 가져온 뒤 null이 아니라면 MediaPlayer로 재생,
             null이면 상태를 바로 Before로 바꾸기 */
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = s3UseCase.getIntroduceByPhone(messageToSend.receiverNum)
             opponentGreetingUri = when (result) {
                 is ResultType.Success -> {
@@ -190,6 +192,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
             if (opponentGreetingUri != null) {
+                recordMessageState = RecordMessageState.Greeting
                 VoicePlayer.nullInstance()
                 VoicePlayer.getInstance().apply {
                     setDataSource(S3_CONSTANT_URI + opponentGreetingUri)
@@ -204,6 +207,8 @@ class HomeViewModel @Inject constructor(
                     }
                 }.start()
             } else {
+                recordMessageState = RecordMessageState.NoIntroduce
+                delay(1000)
                 recordMessageState = RecordMessageState.Before
             }
         }

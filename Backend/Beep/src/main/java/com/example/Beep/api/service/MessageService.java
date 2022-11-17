@@ -17,6 +17,8 @@ public interface MessageService {
     //메세지 삭제
     void deleteMessage(Long id);
 
+    void cancelSave(Long id);
+
     //보낸메세지 조회
     List<MessageResponseDto> findSendMessage();
     //보관메세지 조회(보관1, 차단2)

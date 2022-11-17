@@ -82,6 +82,7 @@ fun IntroduceSuccessScreen(
     var isPlaying by remember { mutableStateOf(false) }
     var sliderPosition by remember { mutableStateOf(0f) }
     var cursor by remember { mutableStateOf(0) }
+    var toggleDeletePopup by remember { mutableStateOf(false) }
 
     if (audioUrl == "") {
         Text(text = "등록된 소개 메시지가 없습니다.")
@@ -202,11 +203,37 @@ fun IntroduceSuccessScreen(
                     }"
                 )
             }
-            Button(onClick = toggleScreen) {
-                Text(text = "인사말 바꾸기")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = toggleScreen) {
+                    Text(text = "인사말 바꾸기")
+                }
+                Button(onClick = { toggleDeletePopup = !toggleDeletePopup }) {
+                    Text(text = "인사말 삭제")
+                }
             }
         }
     }
+    if (toggleDeletePopup)
+        AlertDialog(onDismissRequest = { toggleDeletePopup = !toggleDeletePopup }, title = {
+            Text(text = "삭제하시겠습니까?")
+        },
+            text = {
+                Text(text = "인사말이 삭제됩니다.")
+            }, confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deleteIntroduce()
+                    toggleDeletePopup = !toggleDeletePopup
+                }) {
+                    Text("확인")
+                }
+            }, dismissButton = {
+                TextButton(onClick = { toggleDeletePopup = !toggleDeletePopup }) {
+                    Text("취소")
+                }
+            })
 }
 
 fun formatMillisecondToSecond(ms: Int): String {

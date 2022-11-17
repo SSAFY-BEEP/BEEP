@@ -3,15 +3,17 @@ package com.example.beep.ui.home
 import android.Manifest
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,13 +47,11 @@ fun BbibbiDoRecord(
 
     DisposableEffect(key1 = Unit) {
         homeViewModel.playGreeting()
-        Log.d("DisposableEffect", "Disposable Effect Called!!")
         VoiceRecorder.nullInstance()
         VoiceRecorder.getInstance(context)
         File(filepath)
 
         onDispose {
-            Log.d("DisposableEffect", "onDispose Called!!")
             VoiceRecorder.nullInstance()
             VoicePlayer.nullInstance()
         }
@@ -64,7 +64,7 @@ fun BbibbiDoRecord(
     ) {
         DoRecordScreen(
             currentState = currentState,
-            messageTime = formatSecond(homeViewModel.time) ,
+            messageTime = formatSecond(homeViewModel.time),
             duration = formatSecond(homeViewModel.fileLength)
         )
         Spacer(modifier = modifier.height(35.dp))
@@ -174,7 +174,7 @@ fun startPlayingVoiceMessage(
         setDataSource(filepath)
         prepare()
         setOnPreparedListener {
-            onPrepared(it.duration/1000)
+            onPrepared(it.duration / 1000)
         }
         setOnCompletionListener {
             stopPlaying()
@@ -192,8 +192,10 @@ fun ConfirmBtn(
 ) {
     Button(
         modifier = modifier.height(67.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
-        onClick = onClick
+        onClick = onClick,
+        elevation = null
     ) {
     }
 }
@@ -202,7 +204,12 @@ fun ConfirmBtn(
 fun RightBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Button(onClick = onClick) {
+    Button(
+        modifier = Modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
+        onClick = onClick,
+        elevation = null
+    ) {
 
     }
 }
@@ -211,7 +218,12 @@ fun RightBtn(
 fun LeftBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Button(onClick = onClick) {
+    Button(
+        modifier = Modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
+        onClick = onClick,
+        elevation = null
+    ) {
 
     }
 }
@@ -220,7 +232,12 @@ fun LeftBtn(
 fun CancelBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Button(onClick = onClick) {
+    Button(
+        modifier = Modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
+        onClick = onClick,
+        elevation = null
+    ) {
 
     }
 }
@@ -234,17 +251,23 @@ fun DoRecordScreen(
 ) {
 
     when (currentState) {
+        RecordMessageState.Loading -> {
+            Text(text = "로딩중..")
+        }
+        RecordMessageState.NoIntroduce -> {
+            Text(text = "상대의 인사말이 없습니다.")
+        }
         RecordMessageState.Greeting -> {
             Text(text = "인사말 재생중 $messageTime/$duration")
         }
         RecordMessageState.Before -> {
-            Text(text = "/ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
             Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
         }
         RecordMessageState.Finished -> {
-            Text(text = "/ : 다시 녹음 | > : 재생 | ● : 전송", fontSize = 19.sp)
+            Text(text = "\\ 다시 녹음  > 재생  ● 전송", fontSize = 17.sp)
         }
         RecordMessageState.Playing -> {
             Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)

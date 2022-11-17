@@ -18,7 +18,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ShowAddressList(viewModel: AddressViewModel = viewModel()
+fun ShowAddressList(
+    viewModel: AddressViewModel = viewModel(),
+    showAddressToggle: () -> Unit
 ) {
     var goAddAddress by remember { mutableStateOf(false) }
     var viewEditDelBtn by remember { mutableStateOf(false) }
@@ -31,8 +33,8 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
 
     var addressListTitle = if (goAddAddress) {
         "주소록 추가"
-    } else if(goPatchAddress) {
-    "주소록 수정"
+    } else if (goPatchAddress) {
+        "주소록 수정"
     } else {
         "주소록"
     }
@@ -53,14 +55,14 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(0.dp, 20.dp, 0.dp, 0.dp)
+            .padding(0.dp, 40.dp, 0.dp, 0.dp)
     ) {
         Row(
             modifier = Modifier
                 .width(320.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(Alignment.CenterVertically)
-                .padding(0.dp, 0.dp, 0.dp, 14.dp),
+                .padding(0.dp, 0.dp, 0.dp, 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -101,8 +103,8 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
         Box(
             modifier = Modifier
                 .width(320.dp)
-                .height(232.dp)
-                .padding(0.dp, 0.dp, 0.dp, 20.dp)
+                .height(214.dp)
+                .padding(0.dp, 0.dp, 0.dp, 0.dp)
                 .background(
                     color = androidx.compose.ui.graphics.Color.White,
                     shape = RoundedCornerShape(15.dp)
@@ -113,23 +115,28 @@ fun ShowAddressList(viewModel: AddressViewModel = viewModel()
                     shape = RoundedCornerShape(15.dp)
                 ),
         ) {
-            if(goAddAddress) {
+            if (goAddAddress) {
                 AddressPostSelf(
                     changeToAddAddress = { goAddAddress = !goAddAddress },
-                    )
-            } else if(goPatchAddress) {
-                AddressPatch (
+                )
+            } else if (goPatchAddress) {
+                AddressPatch(
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
                     defaultNameString = defaultNameString,
                     defaultPhoneString = defaultPhoneString,
-                    )
-            } else{
+                )
+            } else {
                 AddressListContent(
                     viewEditDelBtn = viewEditDelBtn,
                     changeToAddAddress = { goAddAddress = !goAddAddress },
                     changeToPatchAddress = { goPatchAddress = !goPatchAddress },
-                    changeDefaultNameString = { defaultName: String -> defaultNameString = defaultName },
-                    changeDefaultPhoneString = { defaultPhone: String -> defaultPhoneString = defaultPhone }
+                    changeDefaultNameString = { defaultName: String ->
+                        defaultNameString = defaultName
+                    },
+                    changeDefaultPhoneString = { defaultPhone: String ->
+                        defaultPhoneString = defaultPhone
+                    },
+                    showAddressToggle = showAddressToggle
                 )
             }
 

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.mainpage.AddressResponse
 import com.example.beep.util.collectAsStateLifecycleAware
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 
 @Composable
@@ -90,7 +90,7 @@ fun AddSubmitBtn(
     name: String,
     phone: String,
     viewModel: AddressPostSelfViewModel = viewModel(),
-//    getViewModel: AddressViewModel = viewModel(),
+    getViewModel: AddressViewModel = viewModel(),
     changeToAddAddress: () -> Unit,
 ) {
     val openDialog = remember { mutableStateOf(false)  }
@@ -127,6 +127,10 @@ fun AddSubmitBtn(
                             phone,
                             name
                         )
+                        GlobalScope.launch {
+                            delay(100L)
+                            getViewModel.getAddress()
+                        }
                     },
                 )
             }
@@ -190,7 +194,8 @@ fun PatchSubmitBtn(
     name: String,
     phone: String,
     changeToPatchAddress: () -> Unit,
-    viewModel: AddressPatchViewModel = viewModel()
+    viewModel: AddressPatchViewModel = viewModel(),
+    getViewModel: AddressViewModel = viewModel(),
 ) {
     val openDialog = remember { mutableStateOf(false)  }
 //    var dialogTxt = ""
@@ -220,6 +225,10 @@ fun PatchSubmitBtn(
                             phone,
                             name
                         )
+                        GlobalScope.launch {
+                            delay(100L)
+                            getViewModel.getAddress()
+                        }
                     },
                 )
             }
