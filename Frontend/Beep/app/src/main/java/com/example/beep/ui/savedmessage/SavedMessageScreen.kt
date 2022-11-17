@@ -4,9 +4,7 @@ import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,11 +16,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.data.dto.message.MessageResponse
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +33,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.home.galmurinineFont
+import com.example.beep.ui.message.ReceiveSendState
 import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
@@ -307,6 +309,7 @@ fun TagDialog(
         }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwitchReceivedSent(
     currentMenu: SavedMessageType,
@@ -315,41 +318,180 @@ fun SwitchReceivedSent(
     selectBlocked: () -> Unit,
     onClickMenu: (String) -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        Button(
-            onClick = selectReceived,
-            colors =
-            if (currentMenu == SavedMessageType.RECEIVED) ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary
-            )
-            else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+    var expanded by remember { mutableStateOf(false)}
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowRight
+
+
+    var receivedBtnBgColor = if (currentMenu == SavedMessageType.RECEIVED) {
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
+    } else {
+        Color(android.graphics.Color.parseColor("#FFFFFF"))
+    }
+    var receivedBtnTxtColor = if (currentMenu == SavedMessageType.RECEIVED) {
+        Color(android.graphics.Color.parseColor("#FFFFFF"))
+    } else {
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
+    }
+    var sentBtnBgColor = if (currentMenu == SavedMessageType.SEND) {
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
+    } else {
+        Color(android.graphics.Color.parseColor("#FFFFFF"))
+    }
+    var sentBtnTxtColor = if (currentMenu == SavedMessageType.SEND) {
+        Color(android.graphics.Color.parseColor("#FFFFFF"))
+    } else {
+        Color(android.graphics.Color.parseColor("#7AA8FF"))
+    }
+
+
+    Row(modifier = Modifier
+        .padding(10.dp)
+        .height(50.dp)
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+//        dropdownSaved()
+        ExposedDropdownMenuBox(
+            modifier = Modifier
+//                .clip(RoundedCornerShape(15.dp))
+                .width(200.dp)
+                .height(50.dp)
+//                .background(color = Color.White)
+//                .padding(5.dp)
+//                .border(
+//                    width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+//                    shape = RoundedCornerShape(15.dp))
+            ,
+            expanded = expanded, 
+            onExpandedChange = { expanded = !expanded }
         ) {
-            Text(
-                text = "수신",
-                color = if (currentMenu == SavedMessageType.RECEIVED) Color.Black else Color.White
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = rememberVectorPainter(image = icon),
+                    contentDescription = "24시간 메시지"
+                )
+                Text(
+                    text = " 내 보관함",
+                )
+            }
+            ExposedDropdownMenu(
+                expanded = expanded, 
+                onDismissRequest = { expanded = false }
+            ) {
+                Column() {
+                    DropdownMenuItem(
+                        onClick = { onClickMenu("messageList") }
+                    ) {
+                        Text(text = "24 메시지")
+                    }
+                }
+            }
         }
-        Button(
-            onClick = selectSent, colors =
-            if (currentMenu == SavedMessageType.SEND) ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary
-            )
-            else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+        Box(
+            modifier = Modifier
+                .offset(0.dp, 0.dp)
+                .clip(shape = RoundedCornerShape(15.dp))
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .width(108.dp)
+                .height(30.dp)
+                .background(color = Color.White, shape = RoundedCornerShape(15.dp))
+                .border(
+                    width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    shape = RoundedCornerShape(15.dp)
+                ),
         ) {
-            Text(
-                text = "송신",
-                color = if (currentMenu == SavedMessageType.SEND) Color.Black else Color.White
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+
+            ) {
+                Button(
+                    onClick = selectReceived,
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(24.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = receivedBtnBgColor),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(0.dp),
+
+                    ) {
+                    Text(
+                        text = "수신",
+                        Modifier.padding(0.dp),
+                        color = receivedBtnTxtColor,
+                        fontFamily = galmurinineFont
+                    )
+                }
+                Button(
+                    onClick = selectSent,
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(24.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = sentBtnBgColor),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Text(
+                        text = "송신",
+                        modifier = Modifier
+                            .padding(top = 0.dp),
+                        color = sentBtnTxtColor,
+                        fontFamily = galmurinineFont
+                    )
+                }
+            }
         }
-        Button(
-            onClick = selectBlocked,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-        ) {
-            Text(text = "차단목록")
-        }
-        Button(onClick = { onClickMenu("messageList") }) {
-            Text(text = "24 메시지")
-        }
+//        Row(
+//            modifier = Modifier
+//                .width(200.dp)
+//        ) {
+//            Button(
+//                onClick = selectReceived,
+//                colors =
+//                if (currentMenu == SavedMessageType.RECEIVED) ButtonDefaults.buttonColors(
+//                    backgroundColor = MaterialTheme.colors.primary
+//                )
+//                else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+//            ) {
+//                Text(
+//                    text = "수신",
+//                    color = if (currentMenu == SavedMessageType.RECEIVED) Color.Black else Color.White
+//                )
+//            }
+//            Button(
+//                onClick = selectSent, colors =
+//                if (currentMenu == SavedMessageType.SEND) ButtonDefaults.buttonColors(
+//                    backgroundColor = MaterialTheme.colors.primary
+//                )
+//                else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+//            ) {
+//                Text(
+//                    text = "송신",
+//                    color = if (currentMenu == SavedMessageType.SEND) Color.Black else Color.White
+//                )
+//            }
+//        }
     }
 }
 
