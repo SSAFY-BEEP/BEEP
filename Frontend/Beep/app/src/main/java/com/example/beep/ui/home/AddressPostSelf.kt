@@ -59,7 +59,7 @@ fun AddressPostSelf(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             AddCancelBtn(changeToAddAddress)
-            AddToBookBtn()
+//            AddToBookBtn()
 
             AddSubmitBtn(
                 name = inputNameTxt,
