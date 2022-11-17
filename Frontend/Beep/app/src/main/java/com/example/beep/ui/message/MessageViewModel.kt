@@ -49,6 +49,9 @@ class MessageViewModel @Inject constructor(
                         msg24State = msg24State.copy(msg24List = list)
                         ResultState.Success
                     }
+                    is ResultType.Loading -> {
+                        ResultState.Loading
+                    }
                     else -> {
                         ResultState.Error
                     }

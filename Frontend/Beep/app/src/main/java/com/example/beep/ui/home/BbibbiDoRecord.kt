@@ -258,7 +258,8 @@ fun DoRecordScreen(
             Text(text = "상대의 인사말이 없습니다.")
         }
         RecordMessageState.Greeting -> {
-            Text(text = "인사말 재생중 $messageTime/$duration")
+            Text(text = "인사말 재생중...", fontSize = 15.sp)
+            Text(text = "$messageTime/$duration", fontSize = 14.sp)
         }
         RecordMessageState.Before -> {
             Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
