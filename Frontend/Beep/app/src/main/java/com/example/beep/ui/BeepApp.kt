@@ -112,28 +112,33 @@ fun BottomNavigationBar(
     onItemClick: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
-    BottomNavigation(
-        modifier = modifier.clip(
-                RoundedCornerShape(40.dp, 40.dp, 0.dp, 0.dp)),
-        backgroundColor = BLUE100,
-        elevation = 10.dp
+
+    Box(
+        modifier = Modifier
+            .background(color = BACKGROUND_WHITE)
     ) {
-        // items 배열에 담긴 모든 항목을 추가합니다.
-        items.forEach { item ->
-            // 뷰의 활동 상태를 백스택에 담아 저장합니다.
-            val selected = item.route == backStackEntry.value?.destination?.route
-            BottomNavigationItem(
-                selected = selected,
-                onClick = { onItemClick(item) },
-                selectedContentColor = PINK500,
-                unselectedContentColor = GRAY500,
-                icon = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.name
-                        )
-                        // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
+        BottomNavigation(
+            modifier = modifier.clip(
+                RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)),
+            backgroundColor = BLUE100,
+            elevation = 10.dp
+        ) {
+            // items 배열에 담긴 모든 항목을 추가합니다.
+            items.forEach { item ->
+                // 뷰의 활동 상태를 백스택에 담아 저장합니다.
+                val selected = item.route == backStackEntry.value?.destination?.route
+                BottomNavigationItem(
+                    selected = selected,
+                    onClick = { onItemClick(item) },
+                    selectedContentColor = PINK500,
+                    unselectedContentColor = GRAY500,
+                    icon = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.name
+                            )
+                            // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
 //                        if (selected) {
 //                            Text(
 //                                text = item.name,
@@ -141,9 +146,12 @@ fun BottomNavigationBar(
 //                                fontSize = 10.sp
 //                            )
 //                        }
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
+
+
 }
