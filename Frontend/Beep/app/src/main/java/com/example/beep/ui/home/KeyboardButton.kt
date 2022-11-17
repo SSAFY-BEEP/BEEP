@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.beep.util.keyboardLongVibration
 import com.example.beep.util.keyboardVibration
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -43,10 +44,14 @@ fun KeyboardButton(
             .clip(RoundedCornerShape(18.dp))
             .width(98.dp)
             .height(50.dp)
-            .combinedClickable (
-                onClick = {onClick()
-                          vibrator.vibrate(keyboardVibration)},
-                onLongClick = onLongClick
+            .combinedClickable(
+                onClick = {
+                    onClick()
+                    vibrator.vibrate(keyboardVibration)
+                },
+                onLongClick = {onLongClick()
+                    vibrator.vibrate(keyboardLongVibration)
+                }
             )
 //            .clickable {
 //                onClick()
