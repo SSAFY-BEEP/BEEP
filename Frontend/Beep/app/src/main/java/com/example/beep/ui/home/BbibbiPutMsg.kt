@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.mypage.introduce.UiState
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 
 @ExperimentalComposeUiApi
 @Composable
@@ -40,6 +42,7 @@ fun BbibbiPutMsg(
     ResetButton(
         modifier = Modifier
     ) {
+        SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
         homeViewModel.resetMessageToSend()
         // 입력값 리셋 필요
         keyboardViewModel.onAction(KeyboardAction.Clear)
@@ -49,6 +52,7 @@ fun BbibbiPutMsg(
 
     Button(
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* go버튼 */
             if (defaultNameString == "메시지를 입력해주세요") {
                 defaultNameString = "=(๑º ﾛ º๑)"
