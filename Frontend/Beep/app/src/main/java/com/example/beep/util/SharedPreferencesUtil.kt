@@ -33,6 +33,18 @@ class SharedPreferencesUtil(context: Context) {
         return preferences.getInt("theme", 1)
     }
 
+    // 각인 저장
+    fun saveEngrave(engrave: String) {
+        val editor = preferences.edit()
+        editor.putString("engrave", engrave)
+        editor.apply()
+    }
+
+    // 각인 불러오기
+    fun getEngrave() : String? {
+        return preferences.getString("engrave", null)
+    }
+
     // 토큰 저장
     fun saveToken(token: String) {
         val editor = preferences.edit()
