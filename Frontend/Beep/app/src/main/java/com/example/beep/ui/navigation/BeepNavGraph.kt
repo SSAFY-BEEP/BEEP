@@ -24,6 +24,8 @@ import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.mypage.*
+import com.example.beep.ui.mypage.block.BlockScreen
+import com.example.beep.ui.mypage.block.BlockViewModel
 import com.example.beep.ui.mypage.introduce.IntroduceScreen
 import com.example.beep.ui.mypage.introduce.IntroduceViewModel
 import com.example.beep.ui.mypage.introduce.RecordVoiceViewModel
@@ -43,7 +45,10 @@ fun BeepNavGraph(
 ) {
     NavHost(navController = navController,
         startDestination = "home",
-        modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,56.dp).background(BACKGROUND_WHITE)) {
+        modifier = Modifier
+            .imePadding()
+            .padding(0.dp, 0.dp, 0.dp, 56.dp)
+            .background(BACKGROUND_WHITE)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
@@ -114,6 +119,10 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
+        }
+        composable("blockScreen") {
+            val model: BlockViewModel = hiltViewModel(it)
+            BlockScreen(navController)
         }
     }
 }
