@@ -1,12 +1,17 @@
 package com.example.beep.ui.mypage
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,7 +20,9 @@ import com.example.beep.R
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.home.galmurinineFont
 import com.example.beep.ui.mypage.introduce.UiState
+import com.example.beep.ui.theme.BLUE400
 import com.example.beep.ui.theme.BeepImage
 
 //@Preview
@@ -74,24 +81,74 @@ fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, m
     }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .offset(0.dp, 20.dp)
+        ,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(50.dp)
     ) {
 
         BeepImage(Modifier,"",selectImage)
-        TextField(value = model.engraveText, onValueChange = { model.engraveText = it })
-        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "취소")
-            }
-            Button(onClick = {
-                model.writeEngrave()
-                MainApplication.sharedPreferencesUtil.saveEngrave(model.engraveText)
-            }) {
-                Text(text = "수정")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            OutlinedTextField(
+                value = model.engraveText,
+                onValueChange = { model.engraveText = it },
+                modifier = Modifier
+                    .width(320.dp),
+                singleLine = true,
+                placeholder = { Text(
+                    text = "이니셜을 각인해드려요",
+                    fontFamily = galmurinineFont,
+                    color = BLUE400
+                ) },
+                textStyle = TextStyle(
+                    fontFamily = galmurinineFont,
+                    fontSize = 16.sp
+                ),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+            )
+//        TextField(value = model.engraveText, onValueChange = { model.engraveText = it })
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier
+                        .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                ) {
+                    Text(
+                        text = "취소",
+                        color = Color.White,
+                    )
+                }
+                Button(
+                    onClick = {
+                    model.writeEngrave()
+                    MainApplication.sharedPreferencesUtil.saveEngrave(model.engraveText)
+                    },
+                    modifier = Modifier
+                        .padding(20.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    Text(
+                        text = "등록",
+                        color = Color.White,
+                    )
+                }
             }
         }
+
         Spacer(modifier = modifier.height(100.dp))
     }
 }
