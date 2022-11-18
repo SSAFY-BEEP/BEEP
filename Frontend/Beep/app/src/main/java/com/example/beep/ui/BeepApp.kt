@@ -2,6 +2,7 @@ package com.example.beep.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +32,7 @@ import com.example.beep.di.MainApplication
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
 import com.example.beep.ui.theme.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -96,10 +99,25 @@ fun BeepApp() {
 
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
-        Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center, color= PINK500,
-            fontFamily = galmurinineFont, fontSize = 25.sp
-        )
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+        ,
+        backgroundColor = BACKGROUND_WHITE,
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier
+                    .width(70.dp),
+                painter = painterResource(id = R.drawable.beepicon),
+                contentDescription = "로딩중",
+                alignment =  Alignment.Center,
+            )
+        }
+
     }
 }
 
