@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beep.data.dto.BaseResponse
@@ -22,6 +23,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -49,6 +52,10 @@ class HomeViewModel @Inject constructor(
     ViewModel() {
 
     val gson = Gson()
+
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
+
 
     //24시간 후에 사라지는 일반 메시지 리스트
     val receiveMsg24: Flow<ResultType<BaseResponse<List<Message24Response>>>> = message24UseCase.getReceive24()
@@ -101,8 +108,10 @@ class HomeViewModel @Inject constructor(
                     Log.d("Send Message", it.data.toString())
                     if (file.exists())
                         file.delete()
+                    showToast("마음이 성공적으로 전달됐어요!")
                 } else {
                     Log.d("Send Message", "Fail!!")
+                    showToast("마음을 전송하지 못했습니다ㅠ")
                 }
                 currentPage = "ReceivedMsg"
             }
@@ -243,6 +252,19 @@ class HomeViewModel @Inject constructor(
                 release()
             }
             recordMessageState = RecordMessageState.Finished
+        }
+    }
+
+    fun checkAddress(address: String): Boolean {
+        if (address.length != 11) return false
+        if (!address.isDigitsOnly()) return false
+        if (address.substring(0, 3) != "010") return false
+        return true
+    }
+
+    fun showToast(message: String) {
+        viewModelScope.launch {
+            _toastMessage.emit(message)
         }
     }
 

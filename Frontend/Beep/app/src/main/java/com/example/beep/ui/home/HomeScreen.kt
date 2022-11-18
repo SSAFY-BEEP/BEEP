@@ -2,6 +2,7 @@ package com.example.beep.ui.home
 
 import android.Manifest
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,7 +38,7 @@ val galmurinineFont = FontFamily(
 @RequiresApi(Build.VERSION_CODES.S)
 @ExperimentalComposeUiApi
 @Composable
-fun HomeScreen(
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(),
     presetViewModel: PresetViewModel = viewModel(),
 ) {
 
@@ -47,11 +49,16 @@ fun HomeScreen(
         Manifest.permission.VIBRATE
     )
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = Unit) {
         presetViewModel.getPresetByToken(1)
         presetViewModel.getPresetByToken(2)
         if (!vibrationPermissionState.status.isGranted) {
             vibrationPermissionState.launchPermissionRequest()
+        }
+        homeViewModel.toastMessage.collect {
+            message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
     Box(
