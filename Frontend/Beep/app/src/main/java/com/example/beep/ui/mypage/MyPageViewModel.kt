@@ -36,6 +36,9 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
                         fontNum = it.data.data.font
                         UiState.Success(it.data.data)
                     }
+                    is ResultType.Loading -> {
+                        UiState.Loading
+                    }
                     else -> {
                         UiState.Error
                     }
@@ -54,6 +57,9 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
                     is ResultType.Success -> {
                         getUserInfo()
                     }
+                    is ResultType.Loading -> {
+                        UiState.Loading
+                    }
                     else -> {
                         UiState.Error
                     }
@@ -71,6 +77,9 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
                     is ResultType.Success -> {
                         getUserInfo()
                     }
+                    is ResultType.Loading -> {
+                        UiState.Loading
+                    }
                     else -> {
                         UiState.Error
                     }
@@ -87,6 +96,9 @@ class MyPageViewModel @Inject constructor(private val userUseCase: UserUseCase) 
                 when (it) {
                     is ResultType.Success -> {
                         getUserInfo()
+                    }
+                    is ResultType.Loading -> {
+                        UiState.Loading
                     }
                     else -> {
                         UiState.Error

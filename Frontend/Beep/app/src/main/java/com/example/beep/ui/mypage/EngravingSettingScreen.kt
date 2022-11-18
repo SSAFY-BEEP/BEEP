@@ -1,12 +1,14 @@
 package com.example.beep.ui.mypage
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,7 +22,11 @@ import com.example.beep.ui.theme.BeepImage
 
 //@Preview
 @Composable
-fun EngravingSettingScreen(navController: NavController, modifier: Modifier = Modifier, model: MyPageViewModel) {
+fun EngravingSettingScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    model: MyPageViewModel
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -32,7 +38,8 @@ fun EngravingSettingScreen(navController: NavController, modifier: Modifier = Mo
                 EngraveScreen(
                     navController,
                     modifier = Modifier,
-                    model = model)
+                    model = model
+                )
             }
             is UiState.Error -> {
                 ErrorScreen()
@@ -42,7 +49,11 @@ fun EngravingSettingScreen(navController: NavController, modifier: Modifier = Mo
 }
 
 @Composable
-fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, model: MyPageViewModel) {
+fun EngraveScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    model: MyPageViewModel
+) {
     val selectImage = MainApplication.sharedPreferencesUtil.getTheme()
 
     Row(
@@ -79,8 +90,15 @@ fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, m
         verticalArrangement = Arrangement.Center
     ) {
 
-        BeepImage(Modifier,"",selectImage)
-        TextField(value = model.engraveText, onValueChange = { model.engraveText = it })
+        BeepImage(Modifier, "", selectImage, engrave = model.engraveText)
+        TextField(
+            value = model.engraveText,
+            onValueChange = { model.engraveText = it },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text
+            )
+
+        )
         Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(onClick = { navController.popBackStack() }) {
                 Text(text = "취소")
