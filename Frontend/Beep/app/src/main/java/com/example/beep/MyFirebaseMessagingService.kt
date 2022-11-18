@@ -3,9 +3,13 @@ package com.example.beep
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -63,9 +67,12 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this, uniId, intent, PendingIntent.FLAG_IMMUTABLE)
 
         // 알림 채널 이름
-        val channelId = "my_channel"
+        val channelId = "test_channel"
         // 알림 소리
-        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+//        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val alarmUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + R.raw.pager);
+//        val player: MediaPlayer = MediaPlayer.create(this, R.raw.pager)
+//        player.start()
 
         // 알림에 대한 UI 정보, 작업
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
@@ -73,15 +80,24 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .setContentTitle(remoteMessage.data["header"].toString()) // 제목
             .setContentText(remoteMessage.data["content"].toString()) // 메시지 내용
             .setAutoCancel(true) // 알람클릭시 삭제여부
-            .setSound(soundUri)  // 알림 소리
+            .setSound(alarmUri)  // 알림 소리
             .setContentIntent(pendingIntent) // 알림 실행 시 Intent
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // 오레오 버전 이후에는 채널이 필요
+//         오레오 버전 이후에는 채널이 필요
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Notice", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
+//            val channel = NotificationChannel(channelId, "Notice", NotificationManager.IMPORTANCE_DEFAULT)
+//            notificationManager.createNotificationChannel(channel)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+            val notificationChannel = NotificationChannel(channelId, "Notice", importance)
+            val audioAttributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build()
+            notificationChannel.setSound(alarmUri, audioAttributes)
+            notificationManager.createNotificationChannel(notificationChannel)
         }
 
         // 알림 생성
