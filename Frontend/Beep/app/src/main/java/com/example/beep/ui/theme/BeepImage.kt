@@ -41,7 +41,7 @@ fun BeepImage(
         if (engrave != null) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
