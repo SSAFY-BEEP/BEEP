@@ -20,10 +20,10 @@ public class DictionaryController {
 
     private final DictionaryServiceImpl dictionaryService;
 
-    @GetMapping("/word/{word}")
+    @GetMapping({"/word/{word}", "/word"})
     @ApiOperation(value = "사전 단어 검색", notes = "단어(초성/숫자)로 사전에서 뜻 검색")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<?> FindWord(@PathVariable ("word") String word){
+    public ApiResult<?> FindWord(@PathVariable (value = "word", required = false) String word){
         return new ApiResult<List<DictionaryResponseDto>>(dictionaryService.FindWord(word), HttpStatus.OK);
     }
 

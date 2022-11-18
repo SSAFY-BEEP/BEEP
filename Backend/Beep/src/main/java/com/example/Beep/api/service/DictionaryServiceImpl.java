@@ -18,6 +18,7 @@ public class DictionaryServiceImpl implements DictionaryService{
     private  final DictionaryRepository dictionaryRepository;
 
     public List<DictionaryResponseDto> FindWord(String word) {
+        if(word == null) word = "";
         List<DictionaryResponseDto>dictionaryResponseDtoList=dictionaryRepository.findByWordContaining(word)
                 .stream()
                 .map(Dictionary -> DictionaryResponseDto.builder()
