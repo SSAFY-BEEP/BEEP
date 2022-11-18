@@ -74,7 +74,7 @@ fun JoinScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextField(
+            OutlinedTextField(
                 value = state.phoneNumber,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PhoneNumberChanged(it))
@@ -82,7 +82,7 @@ fun JoinScreen(navController: NavController) {
                 isError = state.phoneNumberError != null,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "phoneNumber")
+                    Text(text = "아이디")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone,
@@ -98,7 +98,7 @@ fun JoinScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = state.password,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PasswordChanged(it))
@@ -125,7 +125,7 @@ fun JoinScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = state.passwordCheck,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PasswordCheckChanged(it))

@@ -23,7 +23,7 @@ import com.example.beep.ui.login.*
 fun RootNavGraph(viewModel: UserViewModel = viewModel()) {
     val navController = rememberNavController()
     val token = MainApplication.sharedPreferencesUtil.getToken()
-    var isLoggedDestination = "login_main_graph"
+    var isLoggedDestination = "login_graph"
     val loginState = viewModel.loginState
     Log.d("실행되고 있는 곳","$loginState")
 
@@ -39,10 +39,6 @@ fun RootNavGraph(viewModel: UserViewModel = viewModel()) {
             val model: UserViewModel = hiltViewModel(it)
             BeepApp()
         }
-        composable("login_main_graph") {
-            val model: UserViewModel = hiltViewModel(it)
-            MainButtonScreen(navController = navController)
-        }
         composable("login_graph") {
             val model : UserViewModel = hiltViewModel(it)
             LoginScreen(navController = navController)
@@ -53,19 +49,3 @@ fun RootNavGraph(viewModel: UserViewModel = viewModel()) {
         }
     }
 }
-
-//fun NavGraphBuilder.authNavGraph(navController: NavController) {
-//    navigation(startDestination = "login_main_graph", route="login_main_graph") {
-//        composable("login_main_graph"){
-//            MainButtonScreen()
-//        }
-//        composable("login_graph"){
-//            val model: UserViewModel = hiltViewModel(it)
-//            LoginScreen()
-//        }
-//        composable("join_graph"){
-//            val model: UserViewModel = hiltViewModel(it)
-//            JoinScreen()
-//        }
-//    }
-//}

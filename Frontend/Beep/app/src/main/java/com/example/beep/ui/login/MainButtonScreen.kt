@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.beep.ui.theme.*
 
@@ -17,7 +18,6 @@ import com.example.beep.ui.theme.*
 fun MainButtonScreen(navController: NavController) {
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(visible) {
-        Log.d("launchEffect 실행", "$visible")
         if (!visible) {
             visible = true
         }
@@ -37,7 +37,11 @@ fun MainButtonScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "BEEP", modifier = Modifier)
+            Text(
+                text = "BEEP",
+                modifier = Modifier,
+                fontSize = 40.sp,
+            )
         }
         AnimatedVisibility(
             visible = visible,
@@ -57,7 +61,9 @@ fun MainButtonScreen(navController: NavController) {
             ) {
                 Button(
                     onClick = { navController.navigate("login_graph") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
                 ) {
                     Text(text = "시작하기")
                 }
