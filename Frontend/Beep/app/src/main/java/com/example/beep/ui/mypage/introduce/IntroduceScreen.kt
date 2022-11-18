@@ -14,9 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.util.S3_CONSTANT_URI
@@ -25,7 +31,9 @@ import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
+fun IntroduceScreen(
+    navController: NavController,
+    viewModel: IntroduceViewModel = viewModel()) {
     var isRecordScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = isRecordScreen) {
@@ -37,6 +45,25 @@ fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
             .padding(bottom = 70.dp),
         verticalArrangement = Arrangement.Top
     ) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier
+        ) {
+            Icon(
+                modifier = Modifier.size(17.dp),
+                painter = painterResource(R.drawable.backbutton_gray),
+                contentDescription = "뒤로가기"
+            )
+        }
+
+        Text(
+            modifier = Modifier
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+            textAlign = TextAlign.Center,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold,
+            text = "인사말 설정"
+        )
         Text(text = "나의 인사말")
         if (isRecordScreen) {
             RecordVoiceScreen() {

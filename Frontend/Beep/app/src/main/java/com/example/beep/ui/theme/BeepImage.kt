@@ -10,6 +10,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 
 @Composable
 fun BeepImage(modifier: Modifier = Modifier, text: String = "",selectBeepImage : Int= 3, selectFontStyle : Int=1) {

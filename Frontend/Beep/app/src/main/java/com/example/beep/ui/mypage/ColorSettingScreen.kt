@@ -9,13 +9,16 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.home.getKeyboard
 import com.example.beep.ui.theme.BeepImage
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ColorSettingScreen( model: MyPageViewModel) {
+fun ColorSettingScreen(
+    navController: NavController,
+    model: MyPageViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +50,7 @@ fun ColorSettingScreen( model: MyPageViewModel) {
             }
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Button(onClick = {  }) {
+            Button(onClick = { navController.popBackStack()  }) {
                 Text(text = "뒤로가기")
             }
             Button(onClick = {
