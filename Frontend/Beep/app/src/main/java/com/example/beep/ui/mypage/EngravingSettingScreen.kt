@@ -111,7 +111,8 @@ fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, m
                 ),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
-                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF")),
+                    backgroundColor = Color.White
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
