@@ -82,7 +82,6 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(),
             KeyboardVsAddressChoice()
         }
     }
-
 }
 
 

@@ -116,7 +116,7 @@ fun BeepAppBar(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .width(70.dp),
                 painter = painterResource(id = R.drawable.beepicon),
-                contentDescription = "로딩중",
+                contentDescription = "삡 아이콘",
                 alignment =  Alignment.Center,
             )
         }
