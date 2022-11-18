@@ -25,7 +25,7 @@ fun BbibbiShowMessage(
     receivedMsg: String,
     homeViewModel: HomeViewModel = viewModel(),
 ) {
-    Log.d("PageMove", "Moved to ShowMessage")
+    Log.d("PageMove", "Moved to ShowMessage, receivedMsg = $receivedMsg")
 
     Button(
         // 연락처 입력 페이지로
