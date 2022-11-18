@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -102,7 +103,7 @@ fun LoginScreen(
                     .imePadding(),
                 singleLine = true,
                 placeholder = {
-                    Text(text = "아이디")
+                    Text(text = "휴대폰 번호")
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
@@ -161,7 +162,7 @@ fun LoginScreen(
                     )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Column(
                 modifier = Modifier
@@ -173,18 +174,28 @@ fun LoginScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    Text(text = "로그인")
+                    Text(
+                        text = "로그인",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
                 Button(
                     onClick = { navController.navigate("join_graph") },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    Text(text = "회원가입")
+                    Text(
+                        text = "회원가입",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
                 }
 
 
