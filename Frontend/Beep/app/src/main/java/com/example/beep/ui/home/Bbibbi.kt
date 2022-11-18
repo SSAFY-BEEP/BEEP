@@ -65,7 +65,7 @@ fun Bbibbi(
         }
         "DoRecord" -> {
             BbibbiDoRecord(
-                modifier = Modifier.offset(40.dp, 50.dp),
+                modifier = Modifier.offset(0.dp, 50.dp),
                 toSendMsg = { homeViewModel.currentPage = "SendMsg" },
                 toAskRecord = { homeViewModel.currentPage = "AskRecord" }
             )
