@@ -71,6 +71,12 @@ object RemoteDataModule {
         return retrofit.create(S3Api::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun dictionaryApi(@Named("retrofit") retrofit: Retrofit): DictionaryApi {
+        return retrofit.create(DictionaryApi::class.java)
+    }
+
     // OkHttpClient DI
     @Provides
     @Singleton
