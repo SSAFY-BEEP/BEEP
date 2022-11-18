@@ -19,7 +19,8 @@ import com.example.beep.ui.theme.*
 fun FontSettingScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    model: MyPageViewModel) {
+    model: MyPageViewModel
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,15 +53,28 @@ fun FontSettingScreen(
             )
         }
 
-        Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-            TextButton(onClick = {
-                model.fontNum = 1
-                model.changeFont()
-                MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
-
-            }) {
-                Text(text = "갈무리", fontFamily = galmurinineFont)
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 50.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            TextButton(
+                onClick = {
+                    model.fontNum = 1
+                    model.changeFont()
+                    MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
+                }
+            ) {
+                Text(
+                    text = "갈무리",
+                    fontFamily = galmurinineFont,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             TextButton(onClick = {
                 model.fontNum = 2
@@ -68,8 +82,15 @@ fun FontSettingScreen(
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "둥근모", fontFamily = dunggeunmmoFont)
+                Text(
+                    text = "둥근모",
+                    fontFamily = dunggeunmmoFont,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             TextButton(onClick = {
                 model.fontNum = 3
@@ -77,17 +98,33 @@ fun FontSettingScreen(
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "랩디지털", fontFamily = labDigitalFont)
+                Text(
+                    text = "랩디지털",
+                    fontFamily = labDigitalFont,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             TextButton(onClick = {
                 model.fontNum = 4
                 model.changeFont()
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "라나픽셀", fontFamily = lanaPixelFont)
+                Text(
+                    text = "라나픽셀",
+                    fontFamily = lanaPixelFont,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
             }
         }
-        BeepImage(modifier = Modifier,"폰트 테스트",model.themeNum,model.fontNum)
+        
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        BeepImage(modifier = Modifier, "폰트 테스트", model.themeNum, model.fontNum)
     }
 }
