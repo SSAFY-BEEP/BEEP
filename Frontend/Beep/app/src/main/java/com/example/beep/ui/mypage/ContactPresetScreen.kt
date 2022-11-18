@@ -119,7 +119,13 @@ fun ContactPresetSuccessScreen(
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "단축키 ${clickNum.value}번 설정", fontWeight = FontWeight.Bold,modifier = modifier.padding(bottom = 30.dp).height(30.dp))
+                        Text(
+                            text = "단축키 ${clickNum.value}번 설정",
+                            fontWeight = FontWeight.Bold,
+                            modifier = modifier
+                                .padding(bottom = 30.dp)
+                                .height(30.dp)
+                        )
                     },
                     text = {
                         TextField(
@@ -130,7 +136,12 @@ fun ContactPresetSuccessScreen(
                         )
                     },
                     buttons = {
-                        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
                             Button(
                                 colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Color.Gray,
@@ -161,11 +172,12 @@ fun ContactPresetSuccessScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 for (num in 0..9) {
                     Row(
-                        modifier = modifier.fillMaxSize(),
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -182,9 +194,8 @@ fun ContactPresetSuccessScreen(
                             ),
                             shape = RoundedCornerShape(100),
                             modifier = Modifier
-//                                .wrapContentSize()
-                                .width(44.dp)
-                                .height(44.dp)
+                                .width(50.dp)
+                                .height(50.dp)
                                 .background(
                                     brush = Brush.verticalGradient(listOf(BLUE500, PINK500)),
                                     shape = CircleShape,
@@ -192,14 +203,16 @@ fun ContactPresetSuccessScreen(
                                 ),
                             elevation = null
                         ) {
+
                             Text(
                                 text = "$num",
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.CenterVertically)
                             )
+
+
                         }
 
                         TextButton(modifier = modifier
@@ -208,11 +221,15 @@ fun ContactPresetSuccessScreen(
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
                         }) {
+
                             Text(
                                 text = "${presetList[num] ?: "미등록"}",
-                                fontSize = 15.sp,
-                                textAlign = TextAlign.Center
-                            )
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+
+                                )
+
+
                         }
                     }
                 }

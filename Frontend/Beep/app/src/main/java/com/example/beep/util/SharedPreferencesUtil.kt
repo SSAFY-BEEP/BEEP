@@ -18,7 +18,7 @@ class SharedPreferencesUtil(context: Context) {
 
     // font 불러오기
     fun getFont(): Int {
-        return preferences.getInt("font", 1)
+        return preferences.getInt("font", 3)
     }
 
     // theme 저장
@@ -30,7 +30,7 @@ class SharedPreferencesUtil(context: Context) {
 
     // theme 불러오기
     fun getTheme(): Int {
-        return preferences.getInt("theme", 1)
+        return preferences.getInt("theme", 3)
     }
 
     // 각인 저장
@@ -42,7 +42,7 @@ class SharedPreferencesUtil(context: Context) {
 
     // 각인 불러오기
     fun getEngrave() : String? {
-        return preferences.getString("engrave", null)
+        return preferences.getString("engrave", "")
     }
 
     // 토큰 저장
