@@ -23,29 +23,34 @@ fun FontSettingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(bottom = 70.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
     ) {
-        IconButton(
-            onClick = { navController.popBackStack() },
+        Row(
             modifier = Modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                modifier = Modifier.size(17.dp),
-                painter = painterResource(R.drawable.backbutton_gray),
-                contentDescription = "뒤로가기"
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(17.dp),
+                    painter = painterResource(R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                text = "폰트 설정"
             )
         }
-
-        Text(
-            modifier = modifier
-                .padding(10.dp, 0.dp, 0.dp, 0.dp),
-            textAlign = TextAlign.Center,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Bold,
-            text = "폰트 설정"
-        )
 
         Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
             TextButton(onClick = {

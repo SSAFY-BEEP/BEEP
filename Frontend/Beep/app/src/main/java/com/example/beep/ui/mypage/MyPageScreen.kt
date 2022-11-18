@@ -69,7 +69,8 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                 Text(
                     text = "설정",
                     modifier = Modifier
-                        .padding(30.dp, 12.dp).align(Alignment.CenterVertically),
+                        .padding(30.dp, 12.dp)
+                        .align(Alignment.CenterVertically),
                     textAlign = TextAlign.Center,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold
@@ -147,7 +148,10 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
 
                         Button(
                             onClick = {MainApplication.sharedPreferencesUtil.deleteToken()},
-                            modifier = Modifier.fillMaxWidth().height(43.dp).padding(10.dp, 0.dp,0.dp,0.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(43.dp)
+                                .padding(10.dp, 0.dp, 0.dp, 0.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                             elevation = null
                         ) {
@@ -167,11 +171,9 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                         }
 
                         CustomText1({ onClickMenu("") }, "회원 탈퇴", signout)
+                        CustomText1({ onClickMenu("blockScreen") }, "차단 목록", signout)
                     }
                 }
-
-
-
             }
         }
     }
@@ -181,7 +183,10 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
 fun CustomText1(onClickMenu: () -> Unit, text: String, painter: Painter) {
     Button(
         onClick = onClickMenu,
-        modifier = Modifier.fillMaxWidth().height(43.dp).padding(10.dp, 0.dp,0.dp,0.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(43.dp)
+            .padding(10.dp, 0.dp, 0.dp, 0.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
         elevation = null
     ) {

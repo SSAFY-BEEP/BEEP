@@ -26,16 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 
 @Composable
-fun BlockScreen(blockViewModel: BlockViewModel = viewModel()) {
+fun BlockScreen(
+    navController: NavController,
+    blockViewModel: BlockViewModel = viewModel()) {
     val screenState: BlockScreenState = blockViewModel.blockScreenState
     when (screenState.currentState) {
         BlockScreenResult.Success -> {
             BlockSuccessScreen(
+                navController,
                 blockList = screenState.blockList,
                 onAskCancelBlock = { message: MessageResponse ->
                     blockViewModel.onEvent(
@@ -94,6 +98,7 @@ fun CancelBlockPopup(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit
 
 @Composable
 fun BlockSuccessScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     blockList: List<MessageResponse>,
     onAskCancelBlock: (MessageResponse) -> Unit,

@@ -21,9 +21,8 @@ import com.example.beep.ui.theme.BeepImage
 //@Preview
 @Composable
 fun EngravingSettingScreen(navController: NavController, modifier: Modifier = Modifier, model: MyPageViewModel) {
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
         when (val currentUiState = model.userDataScreenState) {
             is UiState.Loading -> {
@@ -45,10 +44,13 @@ fun EngravingSettingScreen(navController: NavController, modifier: Modifier = Mo
 @Composable
 fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, model: MyPageViewModel) {
     val selectImage = MainApplication.sharedPreferencesUtil.getTheme()
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+
+    Row(
+        modifier = Modifier
+            .height(80.dp)
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 0.dp, 0.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             onClick = { navController.popBackStack() },
@@ -62,13 +64,20 @@ fun EngraveScreen(navController: NavController, modifier: Modifier = Modifier, m
         }
 
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .padding(10.dp, 0.dp, 0.dp, 0.dp),
             textAlign = TextAlign.Center,
             fontSize = 17.sp,
             fontWeight = FontWeight.Bold,
             text = "각인 설정"
         )
+    }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
 
         BeepImage(Modifier,"",selectImage)
         TextField(value = model.engraveText, onValueChange = { model.engraveText = it })

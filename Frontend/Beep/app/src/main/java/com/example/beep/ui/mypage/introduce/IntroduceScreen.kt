@@ -45,26 +45,33 @@ fun IntroduceScreen(
             .padding(bottom = 70.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        IconButton(
-            onClick = { navController.popBackStack() },
+        Row(
             modifier = Modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(10.dp,0.dp,0.dp,0.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                modifier = Modifier.size(17.dp),
-                painter = painterResource(R.drawable.backbutton_gray),
-                contentDescription = "뒤로가기"
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(17.dp),
+                    painter = painterResource(R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                text = "인사말 설정"
             )
         }
-
-        Text(
-            modifier = Modifier
-                .padding(10.dp, 0.dp, 0.dp, 0.dp),
-            textAlign = TextAlign.Center,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Bold,
-            text = "인사말 설정"
-        )
-        Text(text = "나의 인사말")
         if (isRecordScreen) {
             RecordVoiceScreen() {
                 isRecordScreen = !isRecordScreen

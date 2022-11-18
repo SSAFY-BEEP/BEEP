@@ -10,10 +10,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beep.R
-import com.example.beep.di.MainApplication
 
 @Composable
-fun BeepImage(modifier: Modifier = Modifier, text: String = "",selectBeepImage : Int= 3, selectFontStyle : Int=1) {
+fun BeepImage(
+    modifier: Modifier = Modifier, text: String = "",
+    selectBeepImage: Int= 3, selectFontStyle: Int=1, engrave: String? ="") {
 
     Box(modifier = modifier) {
         Image(
@@ -31,6 +32,8 @@ fun BeepImage(modifier: Modifier = Modifier, text: String = "",selectBeepImage :
                 .width(320.dp),
             contentScale = ContentScale.FillWidth
         )
+        // 각인 자리 어떻게 넣을지 offset을 맞춰주면 될듯
+        Text(text="$engrave")
 
         Text(modifier = modifier
             .align(Alignment.Center)
