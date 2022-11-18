@@ -52,14 +52,22 @@ fun FontSettingScreen(
             )
         }
 
-        Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+        Column(modifier = modifier
+            .offset(30.dp)
+            .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start
+        ) {
             TextButton(onClick = {
                 model.fontNum = 1
                 model.changeFont()
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "갈무리", fontFamily = galmurinineFont)
+                Text(
+                    text = "갈무리",
+                    fontFamily = galmurinineFont,
+                    fontSize = 16.sp
+                )
             }
 
             TextButton(onClick = {
@@ -68,7 +76,11 @@ fun FontSettingScreen(
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "둥근모", fontFamily = dunggeunmmoFont)
+                Text(
+                    text = "둥근모", 
+                    fontFamily = dunggeunmmoFont,
+                    fontSize = 16.sp
+                )
             }
 
             TextButton(onClick = {
@@ -77,7 +89,11 @@ fun FontSettingScreen(
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "랩디지털", fontFamily = labDigitalFont)
+                Text(
+                    text = "랩디지털", 
+                    fontFamily = labDigitalFont,
+                    fontSize = 16.sp
+                )
             }
             TextButton(onClick = {
                 model.fontNum = 4
@@ -85,9 +101,14 @@ fun FontSettingScreen(
                 MainApplication.sharedPreferencesUtil.saveFont(model.fontNum)
 
             }) {
-                Text(text = "라나픽셀", fontFamily = lanaPixelFont)
+                Text(
+                    text = "라나픽셀", 
+                    fontFamily = lanaPixelFont,
+                    fontSize = 16.sp
+                )
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
         BeepImage(modifier = Modifier,"폰트 테스트",model.themeNum,model.fontNum)
     }
 }
