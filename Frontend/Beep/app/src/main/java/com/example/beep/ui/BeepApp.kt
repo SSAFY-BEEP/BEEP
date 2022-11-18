@@ -29,6 +29,7 @@ import com.example.beep.di.MainApplication
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
 import com.example.beep.ui.theme.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import kotlinx.coroutines.selects.select
 
 val galmurinineFont = FontFamily(
@@ -101,15 +102,24 @@ fun BeepApp() {
 
 @Composable
 fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
-        Text(
-            text = "BEEP",
-            modifier = modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            color = PINK500,
-            fontFamily = galmurinineFont,
-            fontSize = 25.sp
-        )
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+        ,
+        backgroundColor = BACKGROUND_WHITE,
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier
+                    .width(70.dp),
+                painter = painterResource(id = R.drawable.beepicon),
+                contentDescription = "로딩중",
+                alignment =  Alignment.Center,
+            )
+        }
     }
 }
 
