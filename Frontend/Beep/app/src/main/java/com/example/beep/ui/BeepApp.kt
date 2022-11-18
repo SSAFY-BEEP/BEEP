@@ -1,16 +1,13 @@
 package com.example.beep.ui
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Message
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -33,6 +30,7 @@ import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
 import com.example.beep.ui.theme.*
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import kotlinx.coroutines.selects.select
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -41,6 +39,15 @@ val galmurinineFont = FontFamily(
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
+    val settingFullGray = painterResource(R.drawable.settingsfull_gray500)
+    val settingFullPink = painterResource(R.drawable.settingsfull_pink)
+    val userGray = painterResource(R.drawable.users_gray500)
+    val userPink = painterResource(R.drawable.users_pink)
+    val mailGray = painterResource(R.drawable.mail_gray500)
+    val mailPink = painterResource(R.drawable.mail_pink)
+    val homeGray = painterResource(R.drawable.home_gray500)
+    val homePink = painterResource(R.drawable.home_pink)
+
     val navController = rememberNavController()
     val viewModel = viewModel<UserViewModel>()
     var loginState = viewModel.loginState
@@ -58,33 +65,29 @@ fun BeepApp() {
             .fillMaxHeight()
             .statusBarsPadding()
             .navigationBarsPadding()
-            .background(BACKGROUND_WHITE)
-        ,
+            .background(BACKGROUND_WHITE),
         topBar = { BeepAppBar() },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(
                     BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
+                        name = "Message",
+                        route = "messageList",
+                        icon = mailGray,
+                        selectIcon = mailPink
                     ),
                     BottomNavItem(
-                        name = "Message",
-                        route = "message",
-                        icon = Icons.Outlined.Message,
-                        badgeCount = 24
+                        name = "Home",
+                        route = "home",
+                        icon = homeGray,
+                        selectIcon = homePink
                     ),
                     BottomNavItem(
                         name = "Settings",
-                        route = "settings",
-                        icon = Icons.Outlined.Settings
+                        route = "myPage",
+                        icon = settingFullGray,
+                        selectIcon = settingFullPink
                     ),
-//                    BottomNavItem(
-//                        name = "SavedMessage",
-//                        route = "savedMessage",
-//                        icon = Icons.Default.Person
-//                    )
                 ),
                 navController = navController,
                 onItemClick = {
@@ -117,7 +120,6 @@ fun BeepAppBar(modifier: Modifier = Modifier) {
                 alignment =  Alignment.Center,
             )
         }
-
     }
 }
 
@@ -137,7 +139,8 @@ fun BottomNavigationBar(
     ) {
         BottomNavigation(
             modifier = modifier.clip(
-                RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)),
+                RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)
+            ),
             backgroundColor = BLUE100,
             elevation = 10.dp
         ) {
@@ -148,28 +151,27 @@ fun BottomNavigationBar(
                 BottomNavigationItem(
                     selected = selected,
                     onClick = { onItemClick(item) },
-                    selectedContentColor = PINK500,
-                    unselectedContentColor = GRAY500,
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.name
-                            )
-                            // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
-//                        if (selected) {
-//                            Text(
-//                                text = item.name,
-//                                textAlign = TextAlign.Center,
-//                                fontSize = 10.sp
-//                            )
-//                        }
+                            if (selected) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    painter = item.selectIcon,
+                                    contentDescription = item.name
+                                )
+                            } else {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                   painter = item.icon,
+                                   contentDescription = item.name
+                                )
+                            }
                         }
                     }
                 )
             }
         }
     }
-
-
 }

@@ -1,8 +1,10 @@
 package com.example.beep.data
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 
-data class BottomNavItem(val name: String,
-                         val route: String,
-                         val icon: ImageVector,
-                         val badgeCount: Int = 0)
+data class BottomNavItem(
+    val name: String,
+    val route: String,
+    val icon: Painter,
+    val selectIcon: Painter
+    )

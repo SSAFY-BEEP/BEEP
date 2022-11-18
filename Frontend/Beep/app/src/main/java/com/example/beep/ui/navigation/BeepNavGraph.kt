@@ -97,19 +97,19 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("greetingPreset") {
             val model: IntroduceViewModel = hiltViewModel(it)
             val model2: RecordVoiceViewModel = hiltViewModel(it)
-            IntroduceScreen(viewModel = model)
+            IntroduceScreen(navController, viewModel = model)
         }
         composable("colorSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            ColorSettingScreen(model = model)
+            ColorSettingScreen(navController, model = model)
         }
         composable("engravingSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            EngravingSettingScreen(model = model)
+            EngravingSettingScreen(navController, model = model)
         }
         composable("fontSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            FontSettingScreen(model = model)
+            FontSettingScreen(navController, model = model)
         }
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
