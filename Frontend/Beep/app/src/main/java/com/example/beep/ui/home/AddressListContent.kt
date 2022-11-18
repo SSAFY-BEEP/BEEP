@@ -198,7 +198,7 @@ fun AddressListContent(
         Button(
             onClick = changeToAddAddress,
             modifier = Modifier
-                .offset(250.dp, 170.dp)
+                .offset(260.dp, 162.dp)
                 .width(28.dp)
                 .height(28.dp),
             elevation = ButtonDefaults.elevation(
