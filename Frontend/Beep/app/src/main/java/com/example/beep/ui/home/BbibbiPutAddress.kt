@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 
 @ExperimentalComposeUiApi
 @Composable
@@ -28,6 +30,7 @@ fun BbibbiPutAddress(
     ResetButton(
         modifier = Modifier
     ) {
+        SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
         homeViewModel.resetMessageToSend()
         // 연락처 입력해놓은거 리셋시키기
         viewModel.onAction(KeyboardAction.Clear)
@@ -36,6 +39,7 @@ fun BbibbiPutAddress(
     Button(
         // 메시지 입력 페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             homeViewModel.setMessageReceiverNum(viewModel.state.number1)
             viewModel.onAction(KeyboardAction.Clear)
             /* go버튼 */

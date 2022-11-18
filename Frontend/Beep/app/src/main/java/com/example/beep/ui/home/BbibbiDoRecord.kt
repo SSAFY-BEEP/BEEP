@@ -21,6 +21,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.mypage.introduce.startRecording
 import com.example.beep.ui.mypage.introduce.stopPlaying
 import com.example.beep.ui.mypage.introduce.stopRecording
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -70,6 +72,7 @@ fun BbibbiDoRecord(
         Spacer(modifier = modifier.height(35.dp))
         Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
             CancelBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before, RecordMessageState.Greeting -> {
                         toAskRecord()
@@ -96,6 +99,7 @@ fun BbibbiDoRecord(
                 }
             })
             LeftBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before -> {}
                     RecordMessageState.Recording -> {}
@@ -105,6 +109,7 @@ fun BbibbiDoRecord(
                 }
             })
             RightBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before -> {}
                     RecordMessageState.Recording -> {}
@@ -123,6 +128,7 @@ fun BbibbiDoRecord(
                 }
             })
             ConfirmBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Greeting -> {
                         homeViewModel.stopGreeting()

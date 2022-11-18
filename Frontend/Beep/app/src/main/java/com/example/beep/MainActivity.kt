@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.example.beep.di.MainApplication
 import com.example.beep.ui.navigation.RootNavGraph
 import com.example.beep.ui.theme.BeepTheme
 import com.example.beep.util.CHANNEL_ID
+import com.example.beep.util.SoundEffectPlayer
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
@@ -42,8 +44,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-
             BeepTheme {
+                SoundEffectPlayer.readyEffects(LocalContext.current)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
@@ -54,6 +56,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SoundEffectPlayer.releaseEffects()
     }
 
     private fun getFirebaseToken() {

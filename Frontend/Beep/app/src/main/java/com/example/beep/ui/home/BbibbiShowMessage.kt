@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 
 @Composable
 fun BbibbiShowMessage(
@@ -28,6 +30,7 @@ fun BbibbiShowMessage(
     Button(
         // 연락처 입력 페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* cancel 버튼 */
             toPutAddress()
             Log.d("BUTTON", "CLICKED")
@@ -48,6 +51,7 @@ fun BbibbiShowMessage(
     Button(
         // 바로 메시지 입력 페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* go버튼 */
             toPutMsg(
                 /* 수신한 메시지의 발신자 연락처 */
