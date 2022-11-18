@@ -19,6 +19,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.beep.R
+import com.example.beep.ui.dictionary.DictionaryScreen
+import com.example.beep.ui.dictionary.DictionaryViewModel
 import com.example.beep.ui.home.*
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
@@ -60,6 +62,7 @@ fun BeepNavGraph(
             HomeScreen()
         }
         messageGraph(navController)
+        dictionaryGraph(navController)
         myPageGraph(navController)
         composable("login_main_graph") {
             MainButtonScreen(navController=navController)
@@ -78,6 +81,16 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
         composable("savedMessage") {
             val model: SavedMessageViewModel = hiltViewModel(it)
             SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun NavGraphBuilder.dictionaryGraph(navController: NavController) {
+    navigation(startDestination = "dictionaryList", route = "dictionary") {
+        composable("dictionaryList") {
+            val model: DictionaryViewModel = hiltViewModel(it)
+            DictionaryScreen(model) { route: String -> navController.navigate(route) }
         }
     }
 }

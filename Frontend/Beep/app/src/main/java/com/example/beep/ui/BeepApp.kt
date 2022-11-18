@@ -83,6 +83,12 @@ fun BeepApp() {
                         selectIcon = homePink
                     ),
                     BottomNavItem(
+                        name = "Dictionary",
+                        route = "dictionary",
+                        icon = settingFullGray,
+                        selectIcon = settingFullPink
+                    ),
+                    BottomNavItem(
                         name = "Settings",
                         route = "myPage",
                         icon = settingFullGray,
