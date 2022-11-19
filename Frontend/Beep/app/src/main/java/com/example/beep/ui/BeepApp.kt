@@ -5,14 +5,20 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -48,6 +54,7 @@ fun BeepApp() {
     val homeGray = painterResource(R.drawable.home_gray500)
     val homePink = painterResource(R.drawable.home_pink)
 
+
     val navController = rememberNavController()
     val viewModel = viewModel<UserViewModel>()
     var loginState = viewModel.loginState
@@ -66,7 +73,7 @@ fun BeepApp() {
             .statusBarsPadding()
             .navigationBarsPadding()
             .background(BACKGROUND_WHITE),
-        topBar = { BeepAppBar() },
+        topBar = { BeepAppBar(navController = navController) },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(
@@ -81,12 +88,6 @@ fun BeepApp() {
                         route = "home",
                         icon = homeGray,
                         selectIcon = homePink
-                    ),
-                    BottomNavItem(
-                        name = "Dictionary",
-                        route = "dictionary",
-                        icon = settingFullGray,
-                        selectIcon = settingFullPink
                     ),
                     BottomNavItem(
                         name = "Settings",
@@ -107,7 +108,23 @@ fun BeepApp() {
 }
 
 @Composable
-fun BeepAppBar(modifier: Modifier = Modifier) {
+fun BeepAppBar(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+//    val navController = rememberNavController()
+    val dictGray = painterResource(R.drawable.dictionary_black)
+    val dictPink = painterResource(R.drawable.dictionary_pink)
+    var dictSelected = remember {
+        mutableStateOf(false)
+    }
+
+    val icon = if (dictSelected.value) {
+        painterResource(R.drawable.dictionary_pink)
+    } else {
+        painterResource(R.drawable.dictionary_black)
+    }
+
     TopAppBar(
         modifier = modifier
             .fillMaxWidth()
@@ -118,13 +135,50 @@ fun BeepAppBar(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                modifier = Modifier
-                    .width(70.dp),
-                painter = painterResource(id = R.drawable.beepicon),
-                contentDescription = "삡 아이콘",
-                alignment =  Alignment.Center,
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(30.dp)
+                )
+                Image(
+                    modifier = Modifier
+                        .width(70.dp),
+                    painter = painterResource(id = R.drawable.beepicon),
+                    contentDescription = "삡 아이콘",
+                    alignment =  Alignment.Center,
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(30.dp)
+                        .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                        .background(color = BLUE400.copy(0.0F))
+                        .clickable {
+                            if(dictSelected.value) {
+                                navController.navigate("home")
+                            } else {
+                                navController.navigate("dictionaryList")
+                            }
+                            dictSelected.value = !dictSelected.value
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .width(25.dp)
+                        ,
+                        painter = icon,
+                        contentDescription = "사전",
+                        )
+                }
+            }
+
         }
     }
 }

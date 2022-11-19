@@ -89,26 +89,6 @@ fun EngraveScreen(
         ) {
             IconButton(
                 onClick = { navController.popBackStack() },
-                modifier = Modifier
-                    .width(320.dp),
-                singleLine = true,
-                placeholder = { Text(
-                    text = "이니셜을 각인해드려요",
-                    fontFamily = galmurinineFont,
-                    color = BLUE400
-                ) },
-                textStyle = TextStyle(
-                    fontFamily = galmurinineFont,
-                    fontSize = 16.sp
-                ),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
-                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF")),
-                    backgroundColor = Color.White
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
             ) {
                 Icon(
                     modifier = Modifier.size(17.dp),
@@ -116,7 +96,6 @@ fun EngraveScreen(
                     contentDescription = "뒤로가기"
                 )
             }
-
             Text(
                 modifier = Modifier
                     .padding(10.dp, 0.dp, 0.dp, 0.dp),

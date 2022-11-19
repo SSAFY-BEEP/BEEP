@@ -1,5 +1,7 @@
 package com.example.beep.ui.mypage
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,8 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.beep.R
 import com.example.beep.di.MainApplication
-import com.example.beep.ui.theme.BBI_WHITE
-import com.example.beep.ui.theme.BeepImage
+import com.example.beep.ui.theme.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -54,56 +55,105 @@ fun ColorSettingScreen(
                 text = "테마색 설정"
             )
         }
-
-        BeepImage(modifier = Modifier,"",model.themeNum)
-
         Column(
             modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+
         ) {
+            BeepImage(modifier = Modifier,"",model.themeNum)
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Column(
+                modifier = Modifier,
             ) {
-                Button(
-                    onClick = { model.themeNum = 1 },
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "하양")
+                    Button(
+                        onClick = { model.themeNum = 1 },
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp)
+                            .width(70.dp),
+                        colors = ButtonDefaults.buttonColors(Color.White),
+                        border = BorderStroke(1.dp, BBI_YELLOW),
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(
+                            text = "하양",
+                            color = Color(android.graphics.Color.parseColor("#C2A600")),
+                            fontSize = 16.sp
+                        )
+                    }
+                    Button(
+                        onClick = { model.themeNum = 2 },
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp)
+                            .width(70.dp),
+                        colors = ButtonDefaults.buttonColors(Color.DarkGray),
+                        border = BorderStroke(1.dp, Color.DarkGray),
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(
+                            text = "블랙핑크",
+                            color = PINK500,
+                            fontSize = 16.sp
+                        )
+                    }
+                    Button(
+                        onClick = { model.themeNum = 3 },
+                        modifier = Modifier
+                            .padding(10.dp, 0.dp)
+                            .width(70.dp),
+                        colors = ButtonDefaults.buttonColors(BLUE500),
+                        border = BorderStroke(1.dp, BLUE500),
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(
+                            text = "파랑",
+                            color = PINK500,
+                            fontSize = 16.sp
+                        )
+                    }
                 }
-                Button(onClick = { model.themeNum = 2 }
-                ) {
-                    Text(text = "블랙핑크")
+
+                Spacer(modifier = Modifier.height(60.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+//                Button(
+//                    onClick = { navController.popBackStack() }
+//                ) {
+//                    Text(text = "뒤로가기")
+//                }
+//                Spacer(modifier = Modifier.width(40.dp))
+
+                    Button(
+                        onClick = {
+                            model.changeTheme()
+                            MainApplication.sharedPreferencesUtil.saveTheme(model.themeNum)
+                        },
+                        modifier = Modifier
+                            .width(70.dp),
+                        colors = ButtonDefaults.buttonColors(Color.White),
+                        border = BorderStroke(1.dp, BLUE500),
+                    ) {
+                        Text(
+                            text = "설정",
+                            color = BLUE500,
+                            fontSize = 17.sp
+                        )
+                    }
                 }
-                Button(onClick = { model.themeNum = 3 }
-                ) {
-                    Text(text = "파랑")
-                }
+
+                Spacer(modifier = Modifier.height(100.dp))
+
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center) {
-                Button(
-                    onClick = { navController.popBackStack() }
-                ) {
-                    Text(text = "뒤로가기")
-                }
-                Spacer(modifier = Modifier.width(40.dp))
-                
-                Button(onClick = {
-                    model.changeTheme()
-                    MainApplication.sharedPreferencesUtil.saveTheme(model.themeNum)
-                }) {
-                    Text(text = "  설정  ")
-                }
-            }
-
         }
     }
 }

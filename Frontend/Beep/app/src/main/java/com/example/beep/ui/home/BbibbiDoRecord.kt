@@ -69,8 +69,13 @@ fun BbibbiDoRecord(
             messageTime = formatSecond(homeViewModel.time),
             duration = formatSecond(homeViewModel.fileLength)
         )
-        Spacer(modifier = modifier.height(35.dp))
-        Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
+        Spacer(modifier = modifier.height(23.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            contentAlignment = Alignment.BottomStart
+        ) {
             CancelBtn(onClick = {
                 SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
@@ -197,7 +202,10 @@ fun ConfirmBtn(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.height(67.dp),
+        modifier = modifier
+            .offset(214.dp, 20.dp)
+            .width(83.dp)
+            .height(64.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
         onClick = onClick,
@@ -208,13 +216,18 @@ fun ConfirmBtn(
 
 @Composable
 fun RightBtn(
-    modifier: Modifier = Modifier, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(154.dp, 20.dp)
+            .width(68.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp, 0.dp, 40.dp, 5.dp)
     ) {
 
     }
@@ -225,10 +238,14 @@ fun LeftBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(93.dp, 20.dp)
+            .width(60.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp)
     ) {
 
     }
@@ -239,10 +256,14 @@ fun CancelBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(24.dp, 20.dp)
+            .width(69.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
 
     }
@@ -264,17 +285,17 @@ fun DoRecordScreen(
             Text(text = "상대의 인사말이 없습니다.")
         }
         RecordMessageState.Greeting -> {
-            Text(text = "인사말 재생중...", fontSize = 15.sp)
-            Text(text = "$messageTime/$duration", fontSize = 14.sp)
+            Text(text = "인사말 재생중...", fontSize = 16.sp)
+            Text(text = "$messageTime/$duration", fontSize = 14.sp, modifier = Modifier.padding(0.dp, 4.dp))
         }
         RecordMessageState.Before -> {
-            Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ 취소    ● 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
             Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
         }
         RecordMessageState.Finished -> {
-            Text(text = "\\ 다시 녹음  > 재생  ● 전송", fontSize = 17.sp)
+            Text(text = "\\ 재녹음  ▶ 재생  ● 전송", fontSize = 17.sp)
         }
         RecordMessageState.Playing -> {
             Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)
