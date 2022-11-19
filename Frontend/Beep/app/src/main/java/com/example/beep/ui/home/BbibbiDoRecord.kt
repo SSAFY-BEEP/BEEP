@@ -69,7 +69,7 @@ fun BbibbiDoRecord(
             messageTime = formatSecond(homeViewModel.time),
             duration = formatSecond(homeViewModel.fileLength)
         )
-        Spacer(modifier = modifier.height(32.dp))
+        Spacer(modifier = modifier.height(23.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -285,11 +285,11 @@ fun DoRecordScreen(
             Text(text = "상대의 인사말이 없습니다.")
         }
         RecordMessageState.Greeting -> {
-            Text(text = "인사말 재생중...", fontSize = 15.sp)
-            Text(text = "$messageTime/$duration", fontSize = 14.sp)
+            Text(text = "인사말 재생중...", fontSize = 16.sp)
+            Text(text = "$messageTime/$duration", fontSize = 14.sp, modifier = Modifier.padding(0.dp, 4.dp))
         }
         RecordMessageState.Before -> {
-            Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ : 취소    ● : 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
             Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
