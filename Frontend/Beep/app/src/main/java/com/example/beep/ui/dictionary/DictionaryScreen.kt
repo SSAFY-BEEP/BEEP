@@ -1,20 +1,30 @@
 package com.example.beep.ui.dictionary
 
-import android.graphics.Color
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -112,9 +122,77 @@ fun SearchBar(
     viewModel: DictionaryViewModel,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier.padding(8.dp)) {
-        TextField(value = viewModel.searchWord, onValueChange = { viewModel.searchWord = it })
+    Row(
+        modifier = modifier
+            .padding(10.dp, 0.dp, 10.dp, 10.dp)
+            .height(70.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(4f)
+                .height(50.dp)
+                .padding(0.dp),
+            Alignment.TopStart
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(0.dp, 6.dp, 0.dp, 0.dp)
+                    .height(44.dp)
+                    .background(Color.White, shape = RoundedCornerShape(5.dp))
+                    .border(
+                        width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                        shape = RoundedCornerShape(5.dp)
+                    ),
+//            verticalAlignment = Alignment.CenterVertically,
+            ) {
+                BasicTextField(
+                    value = viewModel.searchWord,
+                    onValueChange = { viewModel.searchWord = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp, 10.dp, 0.dp, 0.dp)
+                    ,
+                    textStyle = TextStyle(
+                    fontFamily = com.example.beep.ui.home.galmurinineFont,
+                        fontSize = 16.sp
+                    ),
+                )
+            }
+            Row() {
+                Box(
+                    modifier = Modifier
+                        .width(8.dp)
+                        .height(7.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .padding(0.dp, 5.dp)
+                        .width(102.dp)
+                        .height(2.dp)
+                        .background(color = Color.White)
+                ) {
+
+                }
+            }
+            Text(
+                text = "암호를 검색해보세요",
+                modifier = Modifier
+                    .offset(12.dp, 0.dp)
+                    ,
+                fontSize = 10.sp,
+                color = BLUE500
+            )
+        }
+
         Button(
+            contentPadding = PaddingValues(0.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(0.dp, 6.dp, 0.dp, 0.dp)
+                .height(44.dp),
+            shape = RoundedCornerShape(5.dp),
             onClick = {
                 if (viewModel.searchedState) {
                     viewModel.searchWord = ""
@@ -124,15 +202,31 @@ fun SearchBar(
                     if (viewModel.searchWord != "") viewModel.searchedState = true
                     viewModel.getDictionary()
                 }
-            }, modifier = modifier
-                .padding(4.dp),
+            },
+
             colors = if (viewModel.searchedState) ButtonDefaults.buttonColors(
-                backgroundColor = PINK500
+                backgroundColor = Color.White
             )
-            else ButtonDefaults.buttonColors(backgroundColor = BLUE500)
+            else ButtonDefaults.buttonColors(
+                backgroundColor = BLUE500
+            ),
+            border = BorderStroke(1.dp, BLUE500),
+            elevation = ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                disabledElevation = 0.dp
+            ),
+
         ) {
-            if (!viewModel.searchedState) Text(text = "검색")
-            else Text(text = "취소")
+            if (!viewModel.searchedState) Text(
+                text = "검색",
+                color = Color.White
+            )
+            else
+                Text(
+                    text = "초기화",
+                    color = BLUE500
+                )
         }
     }
 }
@@ -142,7 +236,11 @@ fun DictionaryList(
     modifier: Modifier = Modifier,
     dictionaryList: List<DictionaryResponse>,
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp, 10.dp, 0.dp)
+    ) {
         items(dictionaryList) {
             DictionaryItem(dictionary = it)
         }
@@ -154,11 +252,11 @@ fun DictionaryItem(
     dictionary: DictionaryResponse,
     modifier: Modifier = Modifier,
 ) {
-    Card(elevation = 4.dp, modifier = modifier.padding(4.dp)) {
+    Card(elevation = 2.dp, modifier = modifier.padding(0.dp, 6.dp)) {
         Column {
             Row(
                 modifier = modifier
-                    .padding(6.dp)
+                    .padding(10.dp, 7.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
