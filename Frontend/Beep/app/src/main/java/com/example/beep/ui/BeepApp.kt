@@ -115,11 +115,14 @@ fun BeepAppBar(
 //    val navController = rememberNavController()
     val dictGray = painterResource(R.drawable.dictionary_black)
     val dictPink = painterResource(R.drawable.dictionary_pink)
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    val checkState = backStackEntry.value?.destination?.route
+    Log.d("selected","$checkState")
     var dictSelected = remember {
         mutableStateOf(false)
     }
 
-    val icon = if (dictSelected.value) {
+    val icon = if (checkState == "dictionaryList") {
         painterResource(R.drawable.dictionary_pink)
     } else {
         painterResource(R.drawable.dictionary_black)
@@ -160,7 +163,7 @@ fun BeepAppBar(
                         .padding(0.dp, 0.dp, 20.dp, 0.dp)
                         .background(color = BLUE400.copy(0.0F))
                         .clickable {
-                            if(dictSelected.value) {
+                            if(checkState == "dictionaryList") {
                                 navController.navigate("home")
                             } else {
                                 navController.navigate("dictionaryList")
@@ -208,6 +211,7 @@ fun BottomNavigationBar(
             items.forEach { item ->
                 // 뷰의 활동 상태를 백스택에 담아 저장합니다.
                 val selected = item.route == backStackEntry.value?.destination?.route
+                Log.d("selected","${item.route}, ${backStackEntry.value?.destination?.route}")
                 BottomNavigationItem(
                     selected = selected,
                     onClick = { onItemClick(item) },
