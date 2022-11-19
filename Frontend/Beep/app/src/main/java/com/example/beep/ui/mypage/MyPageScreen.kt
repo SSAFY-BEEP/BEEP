@@ -44,8 +44,9 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
         val password = painterResource(R.drawable.setting_password)
         val theme = painterResource(R.drawable.setting_theme)
         val engrave = painterResource(R.drawable.setting_engrave)
-        val logout = painterResource(R.drawable.setting_logout)
         val signout = painterResource(R.drawable.setting_signout)
+        val logout = painterResource(R.drawable.setting_logout)
+        val ban = painterResource(R.drawable.setting_ban)
 
 
         Column(
@@ -151,14 +152,14 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(43.dp)
-                                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                                .padding(4.dp, 0.dp, 0.dp, 0.dp),
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                             elevation = null
                         ) {
                             Image(
                                 painter = logout,
                                 contentDescription = "아이콘",
-                                modifier = Modifier.width(20.dp),
+                                modifier = Modifier.width(32.dp),
                                 contentScale = ContentScale.FillWidth
                             )
                             Text(
@@ -171,7 +172,7 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                         }
 
                         CustomText1({ onClickMenu("") }, "회원 탈퇴", signout)
-                        CustomText1({ onClickMenu("blockScreen") }, "차단 목록", signout)
+                        CustomText1({ onClickMenu("blockScreen") }, "차단 목록", ban)
                     }
                 }
             }

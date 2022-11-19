@@ -32,11 +32,7 @@ import com.example.beep.data.dto.message.Message24Response
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.galmurinineFont
-import com.example.beep.ui.savedmessage.AudioBtn
-import com.example.beep.ui.savedmessage.MessageOptions
-import com.example.beep.ui.savedmessage.SwitchReceivedSent
 import com.example.beep.ui.theme.PINK500
-import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.S3_REDIS_URI
 import com.example.beep.util.VoicePlayer
 
@@ -510,9 +506,9 @@ fun Message24AudioBtn(
     isPlaying: Boolean
 ) {
     IconButton(enabled = enabled, onClick = { if (isPlaying) onPlay() else onStop() }) {
-        val color = if (isPlaying) Color.Green else Color.Black
+        val color = if (isPlaying) PINK500 else Color.Black
         Icon(
-            imageVector = Icons.Filled.Mic,
+            imageVector = Icons.Filled.PlayArrow,
             tint = color,
             contentDescription = "message audio button",
         )
