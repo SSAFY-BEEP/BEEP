@@ -113,7 +113,6 @@ fun BbibbiAskToSend(
             if (go) {
                 // 메시지보내기 action
                 homeViewModel.sendMsg(filepath)
-                homeViewModel.resetMessageToSend()
                 keyboardViewModel.onAction(KeyboardAction.Clear)
             } else {
                 //  첫 페이지로
@@ -157,11 +156,9 @@ fun BbibbiAskToSend(
         Button(
             // 메시지 보내기
             onClick = {
-
+                keyboardViewModel.onAction(KeyboardAction.Clear)
                 /* yes버튼 */
                 homeViewModel.sendMsg(filepath)
-                homeViewModel.resetMessageToSend()
-                keyboardViewModel.onAction(KeyboardAction.Clear)
             },
             modifier = Modifier
                 .width(80.dp)

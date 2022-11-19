@@ -245,7 +245,7 @@ fun IntroduceSuccessScreen(
                     Text(text = "인사말 바꾸기")
                 }
                 Button(onClick = { toggleDeletePopup = !toggleDeletePopup }) {
-                    Text(text = "인사말 삭제")
+                    Text(text = " 인사말 삭제 ")
                 }
             }
         }

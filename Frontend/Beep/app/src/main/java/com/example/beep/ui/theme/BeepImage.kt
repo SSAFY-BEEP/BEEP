@@ -13,14 +13,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 
 @Composable
 fun BeepImage(
-    modifier: Modifier = Modifier, text: String = "",
-    selectBeepImage: Int= 3, selectFontStyle: Int=1, engrave: String? ="") {
-
-
-
+    modifier: Modifier = Modifier,
+    text: String = "",
+    selectBeepImage: Int= MainApplication.sharedPreferencesUtil.getTheme(),
+    selectFontStyle: Int= MainApplication.sharedPreferencesUtil.getFont(),
+    engrave: String? = MainApplication.sharedPreferencesUtil.getEngrave()
+) {
     Box(modifier = modifier) {
         Image(
             painter =

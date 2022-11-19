@@ -50,7 +50,7 @@ fun BbibbiPutAddress(
                     /* 입력한 연락처 */
                 )
             } else {
-                Log.d("PutAddress", "Not Valid")
+                Log.d("PutAddress", "Not Valid : ${viewModel.state.number1}")
                 homeViewModel.showToast("010으로 시작하는 11자리 전화번호를 입력해주세요")
             }
         },

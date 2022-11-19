@@ -153,11 +153,12 @@ fun MessagePresetSuccessScreen(
                     .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 for (num in 0..9) {
                     Row(
-                        modifier = modifier.fillMaxSize(),
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -175,27 +176,33 @@ fun MessagePresetSuccessScreen(
                             shape = RoundedCornerShape(100),
                             modifier = Modifier
 //                                .wrapContentSize()
-                                .width(44.dp)
-                                .height(44.dp)
+                                .width(50.dp)
+                                .height(50.dp)
                                 .background(
                                     brush = Brush.verticalGradient(listOf(BLUE500, PINK500)),
                                     shape = CircleShape,
                                     alpha = 0.7f),
                             elevation = null
                         ) {
-                            Text(text = "$num", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterVertically))
+                            Text(text = "$num",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                )
                         }
 
-                        TextButton(modifier = modifier
+                        TextButton(
+                            modifier = modifier
                             .width(200.dp)
-                            .height(50.dp), onClick = {
+                            .height(50.dp),
+                            onClick = {
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
                         }) {
                             Text(
                                 text = "${presetList[num] ?: "미등록"}",
-                                fontSize = 15.sp,
+                                fontSize = 20.sp,
                                 textAlign = TextAlign.Center
                             )
                         }
