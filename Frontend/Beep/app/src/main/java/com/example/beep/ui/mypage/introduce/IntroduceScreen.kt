@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -25,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.theme.BLUE500
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
 import kotlinx.coroutines.delay
@@ -49,7 +51,7 @@ fun IntroduceScreen(
             modifier = Modifier
                 .height(80.dp)
                 .fillMaxWidth()
-                .padding(10.dp,0.dp,0.dp,0.dp),
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
@@ -176,76 +178,112 @@ fun IntroduceSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-//            Text(text = viewModel.introduceUrl)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = {
-                    if (!isPlaying) {
-                        VoicePlayer.nullInstance()
-                        VoicePlayer.getInstance().apply {
-                            setAudioAttributes(
-                                AudioAttributes.Builder()
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                    .build()
-                            )
-                            setDataSource(S3_CONSTANT_URI + audioUrl)
-                            setOnPreparedListener {
-                                voiceLength = it.duration
-                                it.start()
-                                isPlaying = true
-                            }
-                            prepareAsync()
-                            setOnCompletionListener {
-                                if (voiceLength != 0) {
-                                    it.stop()
-                                    it.release()
-                                    isPlaying = false
-//                                cursor = 0
-//                                sliderPosition = 0f
-                                }
-                                isReady = false
-                            }
-                        }
-                    } else {
-                        VoicePlayer.getInstance().stop()
-                        VoicePlayer.getInstance().release()
-                        isPlaying = false
-                        cursor = 0
-                        sliderPosition = 0f
-                    }
-                }, enabled = isReady) {
-                    if (!isPlaying) {
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            tint = MaterialTheme.colors.secondary,
-                            contentDescription = "introduce play button",
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.Stop,
-                            tint = MaterialTheme.colors.secondary,
-                            contentDescription = "introduce stop button",
-                        )
-                    }
-
-                }
-                LinearProgressIndicator(sliderPosition)
+            Spacer(modifier = Modifier.height(10.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "${formatMillisecondToSecond(cursor)}/${
+                    text = "${
+                        formatMillisecondToSecond(
+                            cursor
+                        )
+                    } / ${
                         formatMillisecondToSecond(
                             voiceLength
                         )
                     }"
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(20.dp, 0.dp)
+                ) {
+                    IconButton(onClick = {
+                        if (!isPlaying) {
+                            VoicePlayer.nullInstance()
+                            VoicePlayer.getInstance().apply {
+                                setAudioAttributes(
+                                    AudioAttributes.Builder()
+                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                        .build()
+                                )
+                                setDataSource(S3_CONSTANT_URI + audioUrl)
+                                setOnPreparedListener {
+                                    voiceLength = it.duration
+                                    it.start()
+                                    isPlaying = true
+                                }
+                                prepareAsync()
+                                setOnCompletionListener {
+                                    if (voiceLength != 0) {
+                                        it.stop()
+                                        it.release()
+                                        isPlaying = false
+//                                cursor = 0
+//                                sliderPosition = 0f
+                                    }
+                                    isReady = false
+                                }
+                            }
+                        } else {
+                            VoicePlayer.getInstance().stop()
+                            VoicePlayer.getInstance().release()
+                            isPlaying = false
+                            cursor = 0
+                            sliderPosition = 0f
+                        }
+                    }, enabled = isReady) {
+                        if (!isPlaying) {
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                tint = MaterialTheme.colors.secondary,
+                                contentDescription = "introduce play button",
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.Stop,
+                                tint = MaterialTheme.colors.secondary,
+                                contentDescription = "introduce stop button",
+                            )
+                        }
+
+                    }
+                    LinearProgressIndicator(
+                        sliderPosition,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(30.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.Center
             ) {
-                Button(onClick = toggleScreen) {
-                    Text(text = "인사말 바꾸기")
+                Button(
+                    onClick = { toggleDeletePopup = !toggleDeletePopup },
+                    colors = ButtonDefaults.buttonColors(BLUE500),
+                    modifier = Modifier
+                        .width(130.dp)
+                        .padding(20.dp, 0.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "인사말 삭제",
+                        color = Color.White
+                    )
                 }
-                Button(onClick = { toggleDeletePopup = !toggleDeletePopup }) {
-                    Text(text = " 인사말 삭제 ")
+                Button(
+                    onClick = toggleScreen,
+                    colors = ButtonDefaults.buttonColors(BLUE500),
+                    modifier = Modifier
+                        .width(130.dp)
+                        .padding(20.dp, 0.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "인사말 등록",
+                        color = Color.White
+                    )
                 }
             }
         }

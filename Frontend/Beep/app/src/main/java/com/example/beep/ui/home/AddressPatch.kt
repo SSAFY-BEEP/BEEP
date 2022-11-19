@@ -59,7 +59,7 @@ fun AddressPatch(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
             AddCancelBtn(changeToPatchAddress)
 //            AddToBookBtn()

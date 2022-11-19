@@ -203,7 +203,7 @@ fun ConfirmBtn(
 ) {
     Button(
         modifier = modifier
-            .offset(214.dp, 0.dp)
+            .offset(214.dp, 20.dp)
             .width(83.dp)
             .height(64.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
@@ -221,7 +221,7 @@ fun RightBtn(
 ) {
     Button(
         modifier = Modifier
-            .offset(154.dp, 0.dp)
+            .offset(154.dp, 20.dp)
             .width(68.dp)
             .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
@@ -239,7 +239,7 @@ fun LeftBtn(
 ) {
     Button(
         modifier = Modifier
-            .offset(93.dp, 0.dp)
+            .offset(93.dp, 20.dp)
             .width(60.dp)
             .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
@@ -257,7 +257,7 @@ fun CancelBtn(
 ) {
     Button(
         modifier = Modifier
-            .offset(24.dp, 0.dp)
+            .offset(24.dp, 20.dp)
             .width(69.dp)
             .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
@@ -289,13 +289,13 @@ fun DoRecordScreen(
             Text(text = "$messageTime/$duration", fontSize = 14.sp, modifier = Modifier.padding(0.dp, 4.dp))
         }
         RecordMessageState.Before -> {
-            Text(text = "\\ : 취소    ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ 취소    ● 녹음 시작", fontSize = 19.sp)
         }
         RecordMessageState.Recording -> {
             Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
         }
         RecordMessageState.Finished -> {
-            Text(text = "\\ 다시 녹음  > 재생  ● 전송", fontSize = 17.sp)
+            Text(text = "\\ 재녹음  ▶ 재생  ● 전송", fontSize = 17.sp)
         }
         RecordMessageState.Playing -> {
             Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)
