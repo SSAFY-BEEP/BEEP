@@ -17,10 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.data.dto.message.MessageResponse
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -31,11 +27,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.galmurinineFont
-import com.example.beep.ui.message.ReceiveSendState
 import com.example.beep.ui.mypage.introduce.UiState
+import com.example.beep.ui.theme.PINK500
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
 
@@ -614,9 +611,10 @@ fun SavedMessageInfo(
 @Composable
 fun AudioBtn(enabled: Boolean, onPlay: () -> Unit, onStop: () -> Unit, isPlaying: Boolean) {
     IconButton(enabled = enabled, onClick = { if (isPlaying) onPlay() else onStop() }) {
+        val color = if (isPlaying) PINK500 else Color.Black
         Icon(
-            imageVector = Icons.Filled.Mic,
-            tint = if (isPlaying) Color.Green else Color.Black,
+            imageVector = Icons.Filled.PlayArrow,
+            tint = color,
             contentDescription = "message audio button",
         )
     }
