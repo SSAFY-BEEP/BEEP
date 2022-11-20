@@ -72,6 +72,7 @@ fun Bbibbi(
         }
         "ReceivedMsg" -> {
             var receiveMsg = ""
+            var receiveMsgTime = ""
             var msgSenderNo = ""
             when (val currentUiState = homeViewModel.receivedMessageUiState) {
                 is UiState.Loading -> {
@@ -83,6 +84,8 @@ fun Bbibbi(
                 is UiState.Success -> {
                     receiveMsg =
                         if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].content
+                    receiveMsgTime =
+                        if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].time
                     msgSenderNo =
                         if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].senderPhoneNumber
                 }
@@ -94,7 +97,8 @@ fun Bbibbi(
                     homeViewModel.currentPage = "PutMsg"
                     homeViewModel.setMessageReceiverNum(msgSenderNo)
                 },
-                receivedMsg = receiveMsg
+                receivedMsg = receiveMsg,
+                receiveMsgTime = receiveMsgTime
             )
 
         }

@@ -83,7 +83,7 @@ fun JoinScreen(navController: NavController) {
                 isError = state.phoneNumberError != null,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "아이디")
+                    Text(text = "휴대폰 번호")
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
