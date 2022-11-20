@@ -1,6 +1,5 @@
 package com.example.beep.ui.mypage
 
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -114,7 +113,8 @@ fun MessagePresetSuccessScreen(
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "단축키 ${clickNum.value}번 설정 \n ",
+                        Text(
+                            text = "단축키 ${clickNum.value}번 설정 \n ",
                             fontWeight = FontWeight.Bold,
                             modifier = modifier
                                 .padding(bottom = 30.dp)
@@ -166,20 +166,24 @@ fun MessagePresetSuccessScreen(
                                     .width(60.dp)
                                     .height(35.dp),
                                 onClick = {
-<<<<<<< Frontend/Beep/app/src/main/java/com/example/beep/ui/mypage/MessagePresetScreen.kt
-                                    if(!Pattern.matches("^[ㄱ-ㅎ|0-9|♥|★]*\$", content.value)){
+                                    if (!Pattern.matches("^[ㄱ-ㅎ|0-9|♥|★]*\$", content.value)) {
                                         alert.value = "한글초성,숫자,★,♥만 입력가능합니다."
 //                                        Toast.makeText( this,"한글초성과 숫자만 입력가능합니다.", Toast.LENGTH_SHORT).show()
-                                    } else{
+                                    } else {
                                         alert.value = ""
                                         openDialog.value = false;
                                         //api 요청
                                         viewModel.updatePreset(clickNum.value, 1, content.value);
-                                        Toast.makeText(context, "${clickNum.value}번 메시지가 변경되었습니다", Toast.LENGTH_SHORT).show()
+//                                        Toast.makeText(
+//                                            context,
+//                                            "${clickNum.value}번 메시지가 변경되었습니다",
+//                                            Toast.LENGTH_SHORT
+//                                        ).show()
+                                    }
                                 },
                                 contentPadding = PaddingValues(0.dp)
                             ) {
-                                Text("설정")
+                                Text("등록", color = Color.White, fontSize = 15.sp)
                             }
                         }
                     }, shape = RoundedCornerShape(12.dp)
@@ -223,12 +227,13 @@ fun MessagePresetSuccessScreen(
                                 ),
                             elevation = null
                         ) {
-                            Text(text = "$num",
+                            Text(
+                                text = "$num",
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
-                                )
+                            )
                         }
 
                         TextButton(
@@ -236,9 +241,9 @@ fun MessagePresetSuccessScreen(
                                 .width(200.dp)
                                 .height(50.dp),
                             onClick = {
-                            openDialog.value = true; clickNum.value = num; content.value =
-                            "${presetList[num] ?: ""}"
-                        }) {
+                                openDialog.value = true; clickNum.value = num; content.value =
+                                "${presetList[num] ?: ""}"
+                            }) {
                             Text(
                                 text = "${presetList[num] ?: "미등록"}",
                                 fontSize = 20.sp,
