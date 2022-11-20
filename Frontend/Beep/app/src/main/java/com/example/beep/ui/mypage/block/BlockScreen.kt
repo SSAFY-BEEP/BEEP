@@ -197,7 +197,7 @@ fun MessageItem(
         ) {
             Row(
                 modifier = modifier
-                    .padding(8.dp)
+                    .padding(18.dp, 8.dp, 8.dp, 8.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
