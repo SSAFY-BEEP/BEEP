@@ -28,6 +28,7 @@ import com.example.beep.ui.home.PresetViewModel
 import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.theme.BLUE500
 import com.example.beep.ui.theme.PINK500
+import java.util.regex.Pattern
 
 @Composable
 fun MessagePresetScreen(
@@ -67,6 +68,7 @@ fun MessagePresetSuccessScreen(
     val openDialog = remember { mutableStateOf(false) }
     var clickNum = remember { mutableStateOf(0) }     //클릭된 수
     var content = remember { mutableStateOf("${presetList[clickNum.value] ?: ""}") }
+    var alert = remember { mutableStateOf("") }
 
     Box(
         modifier = modifier
@@ -120,12 +122,15 @@ fun MessagePresetSuccessScreen(
                         )
                     },
                     text = {
-                        TextField(
-                            modifier = modifier.padding(top = 30.dp),
-                            value = content.value,
-                            onValueChange = { content.value = it },
-                            singleLine = true
-                        )
+                        Column() {
+                            TextField(
+                                modifier = modifier.padding(top = 30.dp),
+                                value = content.value,
+                                onValueChange = { content.value = it },
+                                singleLine = true
+                            )
+                            Text(text = "${alert.value}", color = PINK500)
+                        }
                     },
                     buttons = {
                         Row(
@@ -161,14 +166,20 @@ fun MessagePresetSuccessScreen(
                                     .width(60.dp)
                                     .height(35.dp),
                                 onClick = {
-                                    openDialog.value = false;
-                                    //api 요청
-                                    viewModel.updatePreset(clickNum.value, 1, content.value)
-                                    Toast.makeText(context, "${clickNum.value}번 메시지가 변경되었습니다", Toast.LENGTH_SHORT).show()
+<<<<<<< Frontend/Beep/app/src/main/java/com/example/beep/ui/mypage/MessagePresetScreen.kt
+                                    if(!Pattern.matches("^[ㄱ-ㅎ|0-9|♥|★]*\$", content.value)){
+                                        alert.value = "한글초성,숫자,★,♥만 입력가능합니다."
+//                                        Toast.makeText( this,"한글초성과 숫자만 입력가능합니다.", Toast.LENGTH_SHORT).show()
+                                    } else{
+                                        alert.value = ""
+                                        openDialog.value = false;
+                                        //api 요청
+                                        viewModel.updatePreset(clickNum.value, 1, content.value);
+                                        Toast.makeText(context, "${clickNum.value}번 메시지가 변경되었습니다", Toast.LENGTH_SHORT).show()
                                 },
                                 contentPadding = PaddingValues(0.dp)
                             ) {
-                                Text("설정", color = Color.White, fontSize = 15.sp)
+                                Text("설정")
                             }
                         }
                     }, shape = RoundedCornerShape(12.dp)
@@ -208,7 +219,8 @@ fun MessagePresetSuccessScreen(
                                 .background(
                                     brush = Brush.verticalGradient(listOf(BLUE500, PINK500)),
                                     shape = CircleShape,
-                                    alpha = 0.7f),
+                                    alpha = 0.7f
+                                ),
                             elevation = null
                         ) {
                             Text(text = "$num",
@@ -221,8 +233,8 @@ fun MessagePresetSuccessScreen(
 
                         TextButton(
                             modifier = modifier
-                            .width(200.dp)
-                            .height(50.dp),
+                                .width(200.dp)
+                                .height(50.dp),
                             onClick = {
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
