@@ -28,6 +28,7 @@ import com.example.beep.ui.home.PresetViewModel
 import com.example.beep.ui.mypage.introduce.UiState
 import com.example.beep.ui.theme.BLUE500
 import com.example.beep.ui.theme.PINK500
+import java.util.regex.Pattern
 
 @Composable
 fun MessagePresetScreen(
@@ -67,6 +68,7 @@ fun MessagePresetSuccessScreen(
     val openDialog = remember { mutableStateOf(false) }
     var clickNum = remember { mutableStateOf(0) }     //클릭된 수
     var content = remember { mutableStateOf("${presetList[clickNum.value] ?: ""}") }
+    var alert = remember { mutableStateOf("") }
 
     Box(
         modifier = modifier
@@ -112,18 +114,25 @@ fun MessagePresetSuccessScreen(
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "단축키 ${clickNum.value}번 설정", fontWeight = FontWeight.Bold,modifier = modifier.padding(bottom = 30.dp).height(30.dp))
+                        Text(text = "단축키 ${clickNum.value}번 설정", fontWeight = FontWeight.Bold,modifier = modifier
+                            .padding(bottom = 30.dp)
+                            .height(30.dp))
                     },
                     text = {
-                        TextField(
-                            modifier = modifier.padding(top = 30.dp),
-                            value = content.value,
-                            onValueChange = { content.value = it },
-                            singleLine = true
-                        )
+                        Column() {
+                            TextField(
+                                modifier = modifier.padding(top = 30.dp),
+                                value = content.value,
+                                onValueChange = { content.value = it },
+                                singleLine = true
+                            )
+                            Text(text = "${alert.value}", color = PINK500)
+                        }
                     },
                     buttons = {
-                        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
                             Button(
                                 colors = ButtonDefaults.buttonColors(
                                     backgroundColor = Color.Gray,
@@ -137,9 +146,15 @@ fun MessagePresetSuccessScreen(
                             Button(
                                 colors = ButtonDefaults.buttonColors(backgroundColor = PINK500),
                                 onClick = {
-                                    openDialog.value = false;
-                                    //api 요청
-                                    viewModel.updatePreset(clickNum.value, 1, content.value);
+                                    if(!Pattern.matches("^[ㄱ-ㅎ|0-9|♥|★]*\$", content.value)){
+                                        alert.value = "한글초성,숫자,★,♥만 입력가능합니다."
+//                                        Toast.makeText( this,"한글초성과 숫자만 입력가능합니다.", Toast.LENGTH_SHORT).show()
+                                    } else{
+                                        alert.value = ""
+                                        openDialog.value = false;
+                                        //api 요청
+                                        viewModel.updatePreset(clickNum.value, 1, content.value);
+                                    }
                                 }) {
                                 Text("설정")
                             }
@@ -181,7 +196,8 @@ fun MessagePresetSuccessScreen(
                                 .background(
                                     brush = Brush.verticalGradient(listOf(BLUE500, PINK500)),
                                     shape = CircleShape,
-                                    alpha = 0.7f),
+                                    alpha = 0.7f
+                                ),
                             elevation = null
                         ) {
                             Text(text = "$num",
@@ -194,8 +210,8 @@ fun MessagePresetSuccessScreen(
 
                         TextButton(
                             modifier = modifier
-                            .width(200.dp)
-                            .height(50.dp),
+                                .width(200.dp)
+                                .height(50.dp),
                             onClick = {
                             openDialog.value = true; clickNum.value = num; content.value =
                             "${presetList[num] ?: ""}"
