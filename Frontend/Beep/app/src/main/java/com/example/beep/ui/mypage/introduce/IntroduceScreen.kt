@@ -4,7 +4,11 @@ import android.media.AudioAttributes
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -12,6 +16,7 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -26,6 +31,7 @@ import androidx.navigation.NavController
 import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.home.galmurinineFont
 import com.example.beep.ui.theme.BLUE500
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
@@ -121,10 +127,35 @@ fun IntroduceSuccessScreen(
     var toggleDeletePopup by remember { mutableStateOf(false) }
 
     if (audioUrl == "") {
-        Text(text = "등록된 소개 메시지가 없습니다.")
-        Button(onClick = toggleScreen) {
-            Text(text = "자기소개 등록")
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(text = "등록된 인사말이 없습니다.")
+            Spacer(modifier = Modifier.height(30.dp))
+            Box(
+                modifier = Modifier
+                    .clickable { toggleScreen() }
+                    .height(40.dp)
+                    .width(100.dp)
+                    .clip(shape = RoundedCornerShape(5.dp))
+                    .background(BLUE500)
+                ,
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "등록하기",
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            }
+//            Button(onClick = toggleScreen) {
+//                Text(text = "등록")
+//            }
         }
+
     } else {
         DisposableEffect(key1 = Unit) {
             VoicePlayer.getInstance()
