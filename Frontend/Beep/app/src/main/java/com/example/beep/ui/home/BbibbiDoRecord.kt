@@ -58,21 +58,24 @@ fun BbibbiDoRecord(
             VoicePlayer.nullInstance()
         }
     }
-    Column(
+    Box(
         modifier = modifier
             .width(320.dp)
             .wrapContentWidth(Alignment.CenterHorizontally),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        contentAlignment = Alignment.TopCenter
+        ) {
         DoRecordScreen(
             currentState = currentState,
             messageTime = formatSecond(homeViewModel.time),
-            duration = formatSecond(homeViewModel.fileLength)
+            duration = formatSecond(homeViewModel.fileLength),
+            modifier = Modifier
+                .offset(0.dp, 5.dp)
         )
         Spacer(modifier = modifier.height(23.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .offset(0.dp, 42.dp)
                 .height(64.dp),
             contentAlignment = Alignment.BottomStart
         ) {
@@ -279,26 +282,26 @@ fun DoRecordScreen(
 
     when (currentState) {
         RecordMessageState.Loading -> {
-            Text(text = "로딩중..")
+            Text(text = "로딩중..", modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.NoIntroduce -> {
-            Text(text = "상대의 인사말이 없습니다.")
+            Text(text = "상대의 인사말이 없습니다.", modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Greeting -> {
             Text(text = "인사말 재생중...", fontSize = 16.sp)
-            Text(text = "$messageTime/$duration", fontSize = 14.sp, modifier = Modifier.padding(0.dp, 4.dp))
+            Text(text = "$messageTime/$duration", fontSize = 11.sp, modifier = Modifier.padding(0.dp, 23.dp), color = Color.DarkGray)
         }
         RecordMessageState.Before -> {
-            Text(text = "\\ 취소    ● 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ 취소    ● 녹음 시작", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Recording -> {
-            Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
+            Text(text = "녹음중 $messageTime/$duration", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Finished -> {
-            Text(text = "\\ 재녹음  ▶ 재생  ● 전송", fontSize = 17.sp)
+            Text(text = "\\ 재녹음  ▶ 재생  ● 전송", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Playing -> {
-            Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)
+            Text(text = "재생중 $messageTime/$duration", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
     }
 }
