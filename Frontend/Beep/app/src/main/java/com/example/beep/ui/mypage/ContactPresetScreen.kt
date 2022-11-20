@@ -180,7 +180,7 @@ fun ContactPresetSuccessScreen(
                                     openDialog.value = false;
                                     //api 요청
                                     viewModel.updatePreset(clickNum.value, 2, content.value);
-                                    Toast.makeText(context, "${clickNum.value}번 연락처가 변경되었습니다", Toast.LENGTH_SHORT).show()
+//                                    Toast.makeText(context, "${clickNum.value}번 연락처가 변경되었습니다", Toast.LENGTH_SHORT).show()
 
                                 },
                                 contentPadding = PaddingValues(0.dp)
