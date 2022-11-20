@@ -215,7 +215,106 @@
         ports:
           - "6379:6379"
     ```
+## Nginx 설정
+
+1. nginx와 letsencrypt 설치
     
+    ```bash
+    sudo apt-get update
+    sudo apt install nginx -y
+    sudo apt install letsencrypt -y 
+    ```
+    
+2. nginx 중지 후 인증서 발급
+    
+    ```bash
+    sudo systemctl stop nginx    # 중지 (상태 확인 필요)
+    sudo letsencrypt certonly --standalone -d <domain>   # 발급
+    ```
+    
+    a. 이메일 입력
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/14b80064-f84d-4e52-844c-95605b393f98/Untitled.png)
+    
+    b. 약관 동의 (A)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/10688bde-34b9-4c3f-8d5a-e47d82c4945e/Untitled.png)
+    
+    c. 정기 간행물 구독 (N)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/39384809-4cc7-4022-a5e1-a8a36af12283/Untitled.png)
+    
+- 발급 완료되면 인증서가 저장된 위치가 뜸
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2707cc74-c821-4382-a570-2a28ac157733/Untitled.png)
+
+- `sudo certbot certificates` 명령어를 통해 인증서 확인 가능
+    - `certbot renew` 명령어를 통해 재발급 가능
+3. nginx 설정 파일 수정
+    - 컨테이너의 `/etc/nginx/sites-available`의 `default.conf` 파일을 수정
+    - sudo 권한 필요 `sudo vim default`
+    - `root` 부분을 프론트 빌드된 폴더로 설정
+
+```bash
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name k7a406.p.ssafy.io;
+	index index.html index.htm;
+	# 프론트 빌드 폴더의 위치
+	#root /home/ubuntu/dnti/dist;
+
+	location ~ /.well-known/acme-challenge {
+		allow all;
+		root /var/www/html;
+	}
+
+	location / {
+		rewrite ^ https://$host$request_uri? permanent;
+		try_files $uri $uri/ /index.html;
+	}
+
+	location /api {
+  		proxy_pass http://k7a406.p.ssafy.io:8081;
+	}
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name k7a406.p.ssafy.io;
+
+	index index.html index.htm;
+	# 프론트 빌드 폴더의 위치
+	# root /home/ubuntu/dnti/dist;
+
+	server_tokens off;
+	client_max_body_size 100M;
+
+	ssl_certificate /etc/letsencrypt/live/k7a406.p.ssafy.io/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/k7a406.p.ssafy.io/privkey.pem;
+
+	add_header X-Frame-Options "SAMEORIGIN" always;
+	add_header X-XSS-Protection "1; mode=block" always;
+	add_header X-Content-Type-Options "nosniff" always;
+	add_header Referrer-Policy "no-referrer-when-downgrade" always;
+	add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+	# add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+	# enable strict transport security only if you understand the implications
+
+	location / {
+		try_files $uri /index.html;
+	}
+
+	location /api {
+  		proxy_pass http://k7a406.p.ssafy.io:8081;
+	}
+}
+```
+
+4. nginx 재시작
+- `sudo systemctl start nginx`
 
 ## BackEnd 배포
 
