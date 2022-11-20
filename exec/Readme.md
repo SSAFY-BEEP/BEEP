@@ -43,7 +43,7 @@
 1. 실행 후에 왼쪽 상단의 Session 클릭
 2. SSH 연결
 
-![원격접속.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/33ac2d99-7442-4b6a-8392-5b40b99b320a/%EC%9B%90%EA%B2%A9%EC%A0%91%EC%86%8D.png)
+![원격접속.png](./images/원격접속.png)
 
 - Remote host에 Public IP 입력 (k7a406.p.ssafy.io)
 - Specify username에 사용할 유저 이름 입력 (현 프로젝트는 ubuntu 사용)
@@ -234,19 +234,19 @@
     
     a. 이메일 입력
     
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/14b80064-f84d-4e52-844c-95605b393f98/Untitled.png)
+    ![이메일 입력](./images/이메일입력.png)
     
     b. 약관 동의 (A)
     
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/10688bde-34b9-4c3f-8d5a-e47d82c4945e/Untitled.png)
+    ![약관 동의](./images/약관동의.png)
     
     c. 정기 간행물 구독 (N)
     
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/39384809-4cc7-4022-a5e1-a8a36af12283/Untitled.png)
+    ![간행물 구독](./images/간행물구독.png)
     
 - 발급 완료되면 인증서가 저장된 위치가 뜸
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2707cc74-c821-4382-a570-2a28ac157733/Untitled.png)
+![인증서위치](./images/인증서위치.png)
 
 - `sudo certbot certificates` 명령어를 통해 인증서 확인 가능
     - `certbot renew` 명령어를 통해 재발급 가능
@@ -472,34 +472,34 @@ server {
 
 1. 안드로이드 스튜디오에서 Build - Generate Signed Bundle or APK 선택
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ffd262f2-d161-4704-a555-74851e23fd08/Untitled.png)
+![Untitled](./images/1.png)
 
 2. APK 를 선택하고 Next
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cca433a4-ba48-4e45-9391-4b0e465f353b/Untitled.png)
+![Untitled](./images/2.png)
 
 3. Key Store Path - Create New 클릭
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4c339c78-e6a3-4aca-960d-376f86495cab/Untitled.png)
+![Untitled](http./images/3.png)
 
 4. Key 저장 위치 선택
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cfdb7d77-59c8-41d3-921b-86c776831fe7/Untitled.png)
+![Untitled](./images/4.png)
 
 5. 폴더를 생성 및 선택하고 원하는 파일 이름을 설정 (C드라이브 안쪽에 저장을 권장)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a21e144c-4d9a-4531-9b96-0bda7983ddef/Untitled.png)
+![Untitled](./images/5.png)
 
 6. 원하는 JKS 비밀번호와 키 비밀번호를 설정 후 Certificate에는 앱의 메타데이터 정보를 넣음
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f54273ff-fbe3-4e35-aeff-908463133ba9/Untitled.png)
+![Untitled](./images/6.png)
 
 7. Next 클릭 후 Build Variant를 release로 선택
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/77c42318-5735-442e-a26b-ead3c6a0f0d6/Untitled.png)
+![Untitled](./images/7.png)
 
 8. Finish를 누르면 빌드가 시작되고 완료 후에 프로젝트 폴더 안에서 확인 가능
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1af87a0d-4c66-4774-bd8e-adc903a81a5d/Untitled.png)
+![Untitled](./images/8.png)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6439a6bb-e508-4175-b3d1-20c2b8666236/Untitled.png)
+![Untitled](./images/9.png)
