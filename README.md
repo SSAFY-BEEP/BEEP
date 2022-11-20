@@ -24,7 +24,7 @@
 <br>
 
 
-## [포팅매뉴얼]("https://lab.ssafy.com/s07-final/S07P31A406/-/edit/develop/exec")
+## [포팅매뉴얼]("exec/Readme.md")
 
 ## 주요 기능
 - **메시지 송/수신**
