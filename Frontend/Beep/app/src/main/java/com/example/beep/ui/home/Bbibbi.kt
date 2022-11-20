@@ -71,7 +71,9 @@ fun Bbibbi(
             )
         }
         "ReceivedMsg" -> {
-            var receiveMsg = when (val currentUiState = homeViewModel.receivedMessageUiState) {
+            var receiveMsg = ""
+            var msgSenderNo = ""
+            when (val currentUiState = homeViewModel.receivedMessageUiState) {
                 is UiState.Loading -> {
                     "로딩중..."
                 }
@@ -79,13 +81,19 @@ fun Bbibbi(
                     "ERROR"
                 }
                 is UiState.Success -> {
-                    if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].content
+                    receiveMsg =
+                        if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].content
+                    msgSenderNo =
+                        if (currentUiState.data.isEmpty()) "" else currentUiState.data[0].senderPhoneNumber
                 }
             }
             BbibbiShowMessage(
                 /* 메시지 내용 String, 발신인 */
                 toPutAddress = { homeViewModel.currentPage = "PutAddress" },
-                toPutMsg = { homeViewModel.currentPage = "PutMsg" },
+                toPutMsg = {
+                    homeViewModel.currentPage = "PutMsg"
+                    homeViewModel.setMessageReceiverNum(msgSenderNo)
+                },
                 receivedMsg = receiveMsg
             )
 
