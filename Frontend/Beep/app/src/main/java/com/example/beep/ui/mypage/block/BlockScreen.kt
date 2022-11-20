@@ -21,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -109,6 +112,33 @@ fun BlockSuccessScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        Row(
+            modifier = modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(17.dp),
+                    painter = painterResource(com.example.beep.R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
+            }
+
+            Text(
+                modifier = modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                text = "차단 목록"
+            )
+        }
         if (blockList.isEmpty())
             Box(modifier = modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Text(text = "메시지가 없습니다.")

@@ -1,5 +1,6 @@
 package com.example.beep.ui.mypage
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -164,10 +166,13 @@ fun EngraveScreen(
                                 color = Color.White,
                             )
                         }
+                        val context = LocalContext.current
                         Button(
                             onClick = {
                                 model.writeEngrave()
                                 MainApplication.sharedPreferencesUtil.saveEngrave(model.engraveText)
+                                Toast.makeText(context, "이니셜이 등록되었습니다", Toast.LENGTH_SHORT).show()
+                                navController.popBackStack()
                             },
                             modifier = Modifier
                                 .padding(20.dp, 0.dp, 0.dp, 0.dp)

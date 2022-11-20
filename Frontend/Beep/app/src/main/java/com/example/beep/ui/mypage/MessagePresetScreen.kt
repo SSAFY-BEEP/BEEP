@@ -1,11 +1,10 @@
 package com.example.beep.ui.mypage
 
-import androidx.compose.foundation.background
+import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -114,9 +114,12 @@ fun MessagePresetSuccessScreen(
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "단축키 ${clickNum.value}번 설정", fontWeight = FontWeight.Bold,modifier = modifier
-                            .padding(bottom = 30.dp)
-                            .height(30.dp))
+                        Text(text = "단축키 ${clickNum.value}번 설정 \n ",
+                            fontWeight = FontWeight.Bold,
+                            modifier = modifier
+                                .padding(bottom = 30.dp)
+                                .height(30.dp)
+                        )
                     },
                     text = {
                         Column() {
@@ -130,22 +133,40 @@ fun MessagePresetSuccessScreen(
                         }
                     },
                     buttons = {
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
-                            Button(
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Gray,
-                                    contentColor = Color.White
-                                ),
-                                onClick = {
-                                    openDialog.value = false
-                                }) {
-                                Text("취소", color = Color.White)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .border(
+                                        width = 1.dp,
+                                        color = BLUE500,
+                                        shape = RoundedCornerShape(5.dp)
+                                    )
+                                    .clickable { openDialog.value = false }
+                                    .background(color = Color.White)
+                                    .width(60.dp)
+                                    .height(35.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("취소", color = BLUE500, fontSize = 15.sp)
                             }
+                            val context = LocalContext.current
                             Button(
-                                colors = ButtonDefaults.buttonColors(backgroundColor = PINK500),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = BLUE500),
+                                modifier = Modifier
+                                    .border(
+                                        width = 1.dp,
+                                        color = BLUE500,
+                                        shape = RoundedCornerShape(5.dp)
+                                    )
+                                    .width(60.dp)
+                                    .height(35.dp),
                                 onClick = {
+<<<<<<< Frontend/Beep/app/src/main/java/com/example/beep/ui/mypage/MessagePresetScreen.kt
                                     if(!Pattern.matches("^[ㄱ-ㅎ|0-9|♥|★]*\$", content.value)){
                                         alert.value = "한글초성,숫자,★,♥만 입력가능합니다."
 //                                        Toast.makeText( this,"한글초성과 숫자만 입력가능합니다.", Toast.LENGTH_SHORT).show()
@@ -154,8 +175,10 @@ fun MessagePresetSuccessScreen(
                                         openDialog.value = false;
                                         //api 요청
                                         viewModel.updatePreset(clickNum.value, 1, content.value);
-                                    }
-                                }) {
+                                        Toast.makeText(context, "${clickNum.value}번 메시지가 변경되었습니다", Toast.LENGTH_SHORT).show()
+                                },
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
                                 Text("설정")
                             }
                         }
