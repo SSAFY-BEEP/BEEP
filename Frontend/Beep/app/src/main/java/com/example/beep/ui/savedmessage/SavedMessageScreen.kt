@@ -277,7 +277,7 @@ fun TagDialog(
                                         .height(20.dp)
                                 )
                             },
-                            placeholder = { Text(text = "태그가 비어있어요!") },
+                            placeholder = { Text(text = "태그를 작성해주세요.") },
                             value = txtField.value,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             onValueChange = {
@@ -297,7 +297,7 @@ fun TagDialog(
                                     .fillMaxWidth()
                                     .height(50.dp)
                             ) {
-                                Text(text = "Done")
+                                Text(text = "등록", color = Color.White)
                             }
                         }
                     }
@@ -387,7 +387,7 @@ fun SwitchReceivedSent(
                     DropdownMenuItem(
                         onClick = { onClickMenu("messageList") }
                     ) {
-                        Text(text = "24 메시지")
+                        Text(text = "24시간 메시지")
                     }
                 }
             }
@@ -601,7 +601,7 @@ fun SavedMessageInfo(
     ) {
         Text(text = content, fontSize = 18.sp)
         Column() {
-            Text(text = tag ?: "", fontSize = 13.sp)
+            Text(text = if(tag == null || tag=="") "" else "#$tag", fontSize = 13.sp)
             Text(text = localDateTime.substring(0, 10), fontSize = 11.sp)
         }
 
