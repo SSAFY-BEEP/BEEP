@@ -494,8 +494,9 @@ fun MessageInfo(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = content, fontSize = 18.sp)
-        Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
-    }
+//            Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
+            Text(text = localDateTime.substring(11, 16), fontSize = 12.sp)
+        }
 }
 
 @Composable
