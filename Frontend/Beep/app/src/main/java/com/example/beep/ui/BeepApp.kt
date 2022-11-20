@@ -210,7 +210,19 @@ fun BottomNavigationBar(
             // items 배열에 담긴 모든 항목을 추가합니다.
             items.forEach { item ->
                 // 뷰의 활동 상태를 백스택에 담아 저장합니다.
-                val selected = item.route == backStackEntry.value?.destination?.route
+                // savedMessage, messageList
+                val backSelect = backStackEntry.value?.destination?.route
+                var selected = false
+                if (item.route == "messageList" && (backSelect == "savedMessage" || backSelect == "messageList")) {
+                    selected = true
+                }
+                if (item.route == "home" && backSelect == "home") {
+                    selected = true
+                }
+                if (item.route == "myPage" && (backSelect == "myPage" || backSelect == "contactPreset" || backSelect == "messagePreset" || backSelect == "greetingPreset" || backSelect == "colorSetting" || backSelect == "engravingSetting" || backSelect == "fontSetting")) {
+                    selected = true
+                }
+
                 Log.d("selected","${item.route}, ${backStackEntry.value?.destination?.route}")
                 BottomNavigationItem(
                     selected = selected,
