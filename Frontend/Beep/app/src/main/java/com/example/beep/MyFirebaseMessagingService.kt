@@ -70,7 +70,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         val channelId = "test_channel"
         // 알림 소리
 //        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val alarmUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + R.raw.pager);
+        val alarmUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + applicationContext.packageName + "/" + R.raw.pager2);
 //        val player: MediaPlayer = MediaPlayer.create(this, R.raw.pager)
 //        player.start()
 
