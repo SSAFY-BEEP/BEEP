@@ -145,7 +145,7 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CustomText1({ onClickMenu("passwordChange") }, "비밀번호 변경", password)
+//                        CustomText1({ onClickMenu("passwordChange") }, "비밀번호 변경", password)
 
                         Button(
                             onClick = {MainApplication.sharedPreferencesUtil.deleteToken()},
@@ -171,7 +171,7 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                             )
                         }
 
-                        CustomText1({ onClickMenu("") }, "회원 탈퇴", signout)
+//                        CustomText1({ onClickMenu("") }, "회원 탈퇴", signout)
                         CustomText1({ onClickMenu("blockScreen") }, "차단 목록", ban)
                     }
                 }
