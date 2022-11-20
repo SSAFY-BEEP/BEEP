@@ -1,5 +1,6 @@
 package com.example.beep.ui.mypage
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -83,7 +85,7 @@ fun ColorSettingScreen(
                         contentPadding = PaddingValues(0.dp),
                     ) {
                         Text(
-                            text = "하양",
+                            text = "화이트",
                             color = Color(android.graphics.Color.parseColor("#C2A600")),
                             fontSize = 16.sp
                         )
@@ -98,8 +100,8 @@ fun ColorSettingScreen(
                         contentPadding = PaddingValues(0.dp),
                     ) {
                         Text(
-                            text = "블랙핑크",
-                            color = PINK500,
+                            text = "블랙",
+                            color = BLUE400,
                             fontSize = 16.sp
                         )
                     }
@@ -113,7 +115,7 @@ fun ColorSettingScreen(
                         contentPadding = PaddingValues(0.dp),
                     ) {
                         Text(
-                            text = "파랑",
+                            text = "블루",
                             color = PINK500,
                             fontSize = 16.sp
                         )
@@ -132,11 +134,13 @@ fun ColorSettingScreen(
 //                    Text(text = "뒤로가기")
 //                }
 //                Spacer(modifier = Modifier.width(40.dp))
-
+                    val context = LocalContext.current
                     Button(
                         onClick = {
                             model.changeTheme()
                             MainApplication.sharedPreferencesUtil.saveTheme(model.themeNum)
+                            Toast.makeText(context, "테마색이 변경되었습니다", Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
                         },
                         modifier = Modifier
                             .width(70.dp),
@@ -144,7 +148,7 @@ fun ColorSettingScreen(
                         border = BorderStroke(1.dp, BLUE500),
                     ) {
                         Text(
-                            text = "설정",
+                            text = "등록",
                             color = BLUE500,
                             fontSize = 17.sp
                         )
