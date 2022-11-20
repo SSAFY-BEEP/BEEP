@@ -1,0 +1,61 @@
+#server:
+#  servlet:
+#    encoding:
+#      force: 'true'
+#      enabled: 'true'
+#      charset: UTF-8
+#    context-path: /api
+#  port: '8081'
+#spring:
+#  redis:
+#    password: ssafyA406
+#    host: k7a406.p.ssafy.io
+#    port: '6379'
+#  jpa:
+#    database: mysql
+#    defer-datasource-initialization: 'true'
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        format_sql: 'true'
+#        show_sql: 'true'
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/BEEP?serverTimezone=UTC
+#    password: ssafyA406
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: a406
+#  jackson:
+#    serialization:
+#      FAIL_ON_EMPTY_BEANS: 'false'
+#  cache:
+#    type: redis
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  sql:
+#    init:
+#      encoding: UTF-8
+#
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: 2592000
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    s3:
+      bucket: beep-a406 # 버킷명
+      bucket2: persistent-beep
+    region:
+      static: ap-northeast-2 # 리전
+    stack:
+      auto: false # Spring Cloud는 환경 또는 스택을 기반으로 이를 자동으로 감지
+
+sms:
+  api_key: ${SMS_KEY}
+  api_secret: ${SMS_SECRET}
+  from: ${SMS_FROM}
