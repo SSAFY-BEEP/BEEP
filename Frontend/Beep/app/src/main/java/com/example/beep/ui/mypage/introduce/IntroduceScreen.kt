@@ -313,7 +313,8 @@ fun IntroduceSuccessScreen(
                 ) {
                     Text(
                         text = "인사말 등록",
-                        color = Color.White
+                        color = Color.White,
+                        fontSize = 15.sp
                     )
                 }
             }

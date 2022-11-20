@@ -106,13 +106,11 @@ fun RecordSuccessScreen(
             fontSize = 18.sp
         )
 
-
-        }
         Spacer(modifier = Modifier.height(50.dp))
         Row(
             modifier = modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .width(150.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -139,39 +137,7 @@ fun RecordSuccessScreen(
                     fontSize = 15.sp
                 )
             }
-            Button(
-                enabled = viewModel.currentState == RecordState.AFTER_RECORDING
-                        || viewModel.currentState == RecordState.ON_PLAYING
-                        || viewModel.currentState == RecordState.ASK_POST,
-                onClick = {
-                    viewModel.postIntroduce(
-                        filepath = filepath,
-                        togglePopup = {togglePopup()}
-                    )
-                },
-                shape = RoundedCornerShape(5.dp),
-                contentPadding = PaddingValues(0.dp),
-                modifier = Modifier
-                    .height(40.dp)
-                    ,
-                elevation = ButtonDefaults.elevation(0.dp),
-            ) {
-                Text(
-                    text = "재녹음",
-                    color =
-                        if(
-                        viewModel.currentState == RecordState.AFTER_RECORDING
-                        || viewModel.currentState == RecordState.ON_PLAYING
-                        || viewModel.currentState == RecordState.ASK_POST
-                    ) {
-                        Color.White
-                    } else {
-                        BLUE500
-                    }
-                    ,
-                    fontSize = 15.sp
-                )
-            }
+
             RecordButton(
                 state = viewModel.currentState) {
                 when (viewModel.currentState) {
@@ -220,9 +186,51 @@ fun RecordSuccessScreen(
                         viewModel.currentState = RecordState.BEFORE_RECORDING
                     }
                 }
+            }
+
         }
 
-    }
+        Spacer(modifier = Modifier.height(15.dp))
+        if(viewModel.currentState == RecordState.AFTER_RECORDING
+            || viewModel.currentState == RecordState.ON_PLAYING
+            || viewModel.currentState == RecordState.ASK_POST) {
+            Button(
+//                enabled = viewModel.currentState == RecordState.AFTER_RECORDING
+//                        || viewModel.currentState == RecordState.ON_PLAYING
+//                        || viewModel.currentState == RecordState.ASK_POST,
+                onClick = {
+                    viewModel.postIntroduce(
+                        filepath = filepath,
+                        togglePopup = {togglePopup()}
+                    )
+                },
+                shape = RoundedCornerShape(5.dp),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(150.dp)
+                ,
+                elevation = ButtonDefaults.elevation(0.dp),
+            ) {
+                Text(
+                    text = "등록",
+                    color =
+                    if(
+                        viewModel.currentState == RecordState.AFTER_RECORDING
+                        || viewModel.currentState == RecordState.ON_PLAYING
+                        || viewModel.currentState == RecordState.ASK_POST
+                    ) {
+                        Color.White
+                    } else {
+                        BLUE500
+                    }
+                    ,
+                    fontSize = 16.sp
+                )
+            }
+        }
+        }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -293,7 +301,7 @@ fun stopPlaying() {
 fun RecordButton(state: RecordState, action: () -> Unit) {
     val text = when (state) {
         RecordState.BEFORE_RECORDING -> {
-            "녹음하기"
+            "녹음"
         }
         RecordState.ON_RECORDING -> {
             "녹음중지"
@@ -305,13 +313,14 @@ fun RecordButton(state: RecordState, action: () -> Unit) {
             "재생중지"
         }
         RecordState.ASK_POST -> {
-            "다시 녹음하기"
+            "재녹음"
         }
     }
     Button(
         onClick = action,
         modifier = Modifier
-            .height(40.dp)
+            .height(40.dp),
+        contentPadding = PaddingValues(5.dp, 0.dp)
     ) {
         Text(
             text = text,

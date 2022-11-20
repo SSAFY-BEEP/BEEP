@@ -23,7 +23,8 @@ fun BbibbiShowMessage(
     toPutAddress: () -> Unit,
     toPutMsg: () -> Unit,
     receivedMsg: String,
-    homeViewModel: HomeViewModel = viewModel(),
+    receiveMsgTime : String,
+//    homeViewModel: HomeViewModel = viewModel(),
 ) {
     Log.d("PageMove", "Moved to ShowMessage, receivedMsg = $receivedMsg")
 
@@ -72,12 +73,19 @@ fun BbibbiShowMessage(
 
     }
     Text(
+        text = if (receiveMsgTime.isNotEmpty()) { receiveMsgTime.substring(11, 16) } else {""},
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.Start)
+            .padding(55.dp, 38.dp, 0.dp, 0.dp),
+        fontSize = 10.sp,
+    )
+    Text(
         text = receivedMsg,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(top = 48.dp),
         fontSize = 19.sp,
-        fontFamily = galmurinineFont
     )
 }
