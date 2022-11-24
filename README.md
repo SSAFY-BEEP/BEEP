@@ -52,7 +52,6 @@
     <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
 </p>
 
-<br>
 
 <h3 align="center">DB</h3>
 <p align="center">
@@ -61,7 +60,7 @@
 	<img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazon s3&logoColor=white">
 </p>
 
-<br>
+
 
 <h3 align="center">CI/CD</h3>
 <p align="center">
@@ -71,44 +70,100 @@
     <img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=amazon ec2&logoColor=white">
 </p>
 
-<br>
 
 ## 주요 기능
 
-- **메시지 송/수신**
-    - 초성과 숫자만 사용
-    - 연락처 목록에서 바로 송신 가능
-    - 최근에 받은 메시지에서 상대에게 답장 가능
-    - 익명으로 송/수신 됨
-    - 음성을 녹음해서 메시지와 함께 송신 가능
-    - 음성을 녹음하기 전에 상대방의 인사말을 들을 수 있음
+### 메시지 송/수신
+<table>
+    <tr>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%B2%88%ED%98%B8%EC%86%A1%EC%8B%A0.gif" alt="번호로 송신" width="200" />  
+            <h5>번호로 송신</h5>
+        </td>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%9D%B8%EC%82%AC%EB%A7%90%EB%93%A3%EA%B8%B0.gif" alt="인사말듣기" width="200"/> 
+            <h5>인사말 듣기</h5>
+        </td> 
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%85%B9%EC%9D%8C%EB%B0%8F%EC%A0%84%EC%86%A1.gif" alt="녹음및전송" width="200"/> 
+            <h5>녹음 및 송신</h5>
+        </td>
+    </tr>
+</table>
+
+- 초성과 숫자만 사용
+- 연락처 목록에서 바로 송신 가능
+- 최근에 받은 메시지에서 상대에게 답장 가능
+- 익명으로 송/수신 됨
+- 음성을 녹음해서 메시지와 함께 송신 가능
+- 음성을 녹음하기 전에 상대방의 인사말을 들을 수 있음
 
 </br>
 
-- **메시지 목록**
-    - 24시간 후에 사라짐
-    - 메시지 보관으로 영구 보관 가능
-    - 메시지에서 상대를 차단
-    - 음성 메시지를 재생 가능
+### 메시지 목록
+
+<table>
+    <tr>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%B3%B4%EA%B4%80.gif" alt="보관" width="200" />  
+            <h5>메시지 보관</h5>
+        </td>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%83%9C%EA%B7%B8.gif" alt="태그" width="200" />  
+            <h5>메시지 태깅</h5>
+        </td> 
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%B0%A8%EB%8B%A8.gif" alt="차단" width="200" />  
+            <h5>메시지 차단</h5>
+        </td>
+    </tr>
+</table>
+
+- 24시간 후에 사라짐
+- 메시지 보관으로 영구 보관 가능
+- 메시지에서 상대를 차단
+- 음성 메시지를 재생 가능
 
 </br>
 
-- **삐삐 사전**
-    - 예전에 삐삐에서 사용한 숫자 암호를 사전으로 구성
-    - 숫자 단어를 통해서 검색 가능
+### 삐삐 사전
+<img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%82%AC%EC%A0%84.gif" alt="사전" width="200" />
+
+- 예전에 삐삐에서 사용한 숫자 암호를 사전으로 구성
+- 숫자 단어를 통해서 검색 가능
 
 </br>
 
-- **메시지 및 연락처 단축키**
-    - 메시지 송신에서 번호를 길게 눌러서 사용
-    - 설정 화면에서 메시지, 연락처 별로 설정 가능
+### 메시지 및 연락처 단축키
+<img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%8B%A8%EC%B6%95%ED%82%A4.gif" alt="단축키" width="200" />
+
+- 메시지 송신에서 번호를 길게 눌러서 사용
+- 설정 화면에서 메시지, 연락처 별로 설정 가능
 
 </br>
 
-- **삐삐 꾸미기**
-    - 메인 화면의 삐삐 색 변경 가능 (테마)
-    - 앱의 전체적인 폰트 변경 가능
-    - 삐삐에 자신만의 각인 설정 가능
+### 삐삐 꾸미기
+
+<table>
+    <tr>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%85%8C%EB%A7%88.gif" alt="테마" width="200" />
+            <h5>테마 설정</h5>
+        </td>
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EA%B0%81%EC%9D%B8.gif" alt="각인" width="200" />
+            <h5>각인 설정</h5>
+        </td> 
+        <td align="center">
+            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%8F%B0%ED%8A%B8.gif" alt="폰트" width="200" />
+            <h5>폰트 설정</h5>
+        </td>
+    </tr>
+</table>
+
+- 메인 화면의 삐삐 색 변경 가능 (테마)
+- 앱의 전체적인 폰트 변경 가능
+- 삐삐에 자신만의 각인 설정 가능
 
 
 
