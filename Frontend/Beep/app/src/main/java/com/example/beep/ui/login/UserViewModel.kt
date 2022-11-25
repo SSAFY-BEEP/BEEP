@@ -32,7 +32,6 @@ class UserViewModel @Inject constructor(
     private val validateTerms: ValidateTerms = ValidateTerms(),
     private val validateLoginPhoneNumber: ValidateLoginPhoneNumber = ValidateLoginPhoneNumber(),
     private val validateLoginPassword: ValidateLoginPassword = ValidateLoginPassword()
-//    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     var authState by mutableStateOf(AuthState())

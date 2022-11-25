@@ -35,10 +35,6 @@ import com.example.beep.ui.savedmessage.SavedMessageScreen
 import com.example.beep.ui.savedmessage.SavedMessageViewModel
 import com.example.beep.ui.theme.BACKGROUND_WHITE
 
-val galmurinineFont = FontFamily(
-    Font(R.font.galmurinine)
-)
-
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

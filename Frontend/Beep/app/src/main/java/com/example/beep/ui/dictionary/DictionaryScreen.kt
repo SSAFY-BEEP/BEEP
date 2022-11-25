@@ -70,9 +70,6 @@ fun DictionarySuccessScreen(
     viewModel: DictionaryViewModel,
     onClickMenu: (String) -> Unit
 ) {
-//    LaunchedEffect(key1 = viewModel.searchWord) {
-//        viewModel.getDictionary()
-//    }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -145,7 +142,6 @@ fun SearchBar(
                         width = 1.dp, color = Color(android.graphics.Color.parseColor("#7AA8FF")),
                         shape = RoundedCornerShape(5.dp)
                     ),
-//            verticalAlignment = Alignment.CenterVertically,
             ) {
                 BasicTextField(
                     value = viewModel.searchWord,
