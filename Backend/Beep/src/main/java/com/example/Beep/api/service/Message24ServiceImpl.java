@@ -56,9 +56,9 @@ public class Message24ServiceImpl implements  Message24Service{
             }
         }
         Collections.sort(result, (a, b) -> {
-            if(a.getTime().isBefore(b.getTime())) return -1;
+            if(a.getTime().isBefore(b.getTime())) return 1;
             else if(a.getTime().isEqual(b.getTime())) return 0;
-            else return 1;
+            else return -1;
         });
 
         return result;
@@ -70,9 +70,9 @@ public class Message24ServiceImpl implements  Message24Service{
         String senderNum = SecurityUtil.getCurrentUsername().get();
         List<Message24> list = repository.findAllBySenderNumAndOwnerNum(senderNum, senderNum);
         Collections.sort(list, (a, b) -> {
-            if(a.getTime().isBefore(b.getTime())) return -1;
+            if(a.getTime().isBefore(b.getTime())) return 1;
             else if(a.getTime().isEqual(b.getTime())) return 0;
-            else return 1;
+            else return -1;
         });
         return list;
     }

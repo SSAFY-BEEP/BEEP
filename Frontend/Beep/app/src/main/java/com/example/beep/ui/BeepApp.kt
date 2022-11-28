@@ -1,20 +1,25 @@
 package com.example.beep.ui
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Message
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +35,8 @@ import com.example.beep.di.MainApplication
 import com.example.beep.ui.login.UserViewModel
 import com.example.beep.ui.navigation.BeepNavGraph
 import com.example.beep.ui.theme.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import kotlinx.coroutines.selects.select
 
 val galmurinineFont = FontFamily(
     Font(R.font.galmurinine)
@@ -38,6 +45,16 @@ val galmurinineFont = FontFamily(
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun BeepApp() {
+    val settingFullGray = painterResource(R.drawable.settingsfull_gray500)
+    val settingFullPink = painterResource(R.drawable.settingsfull_pink)
+    val userGray = painterResource(R.drawable.users_gray500)
+    val userPink = painterResource(R.drawable.users_pink)
+    val mailGray = painterResource(R.drawable.mail_gray500)
+    val mailPink = painterResource(R.drawable.mail_pink)
+    val homeGray = painterResource(R.drawable.home_gray500)
+    val homePink = painterResource(R.drawable.home_pink)
+
+
     val navController = rememberNavController()
     val viewModel = viewModel<UserViewModel>()
     var loginState = viewModel.loginState
@@ -55,33 +72,29 @@ fun BeepApp() {
             .fillMaxHeight()
             .statusBarsPadding()
             .navigationBarsPadding()
-            .background(BACKGROUND_WHITE)
-        ,
-        topBar = { BeepAppBar() },
+            .background(BACKGROUND_WHITE),
+        topBar = { BeepAppBar(navController = navController) },
         bottomBar = {
             BottomNavigationBar(
                 items = listOf(
                     BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
+                        name = "Message",
+                        route = "messageList",
+                        icon = mailGray,
+                        selectIcon = mailPink
                     ),
                     BottomNavItem(
-                        name = "Message",
-                        route = "message",
-                        icon = Icons.Outlined.Message,
-                        badgeCount = 24
+                        name = "Home",
+                        route = "home",
+                        icon = homeGray,
+                        selectIcon = homePink
                     ),
                     BottomNavItem(
                         name = "Settings",
-                        route = "settings",
-                        icon = Icons.Outlined.Settings
+                        route = "myPage",
+                        icon = settingFullGray,
+                        selectIcon = settingFullPink
                     ),
-//                    BottomNavItem(
-//                        name = "SavedMessage",
-//                        route = "savedMessage",
-//                        icon = Icons.Default.Person
-//                    )
                 ),
                 navController = navController,
                 onItemClick = {
@@ -95,11 +108,81 @@ fun BeepApp() {
 }
 
 @Composable
-fun BeepAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(modifier = modifier.fillMaxWidth(), backgroundColor = BACKGROUND_WHITE) {
-        Text(text = "BEEP", modifier = modifier.fillMaxWidth(), textAlign = TextAlign.Center, color= PINK500,
-            fontFamily = galmurinineFont, fontSize = 25.sp
-        )
+fun BeepAppBar(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+//    val navController = rememberNavController()
+    val dictGray = painterResource(R.drawable.dictionary_black)
+    val dictPink = painterResource(R.drawable.dictionary_pink)
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    val checkState = backStackEntry.value?.destination?.route
+    Log.d("selected","$checkState")
+    var dictSelected = remember {
+        mutableStateOf(false)
+    }
+
+    val icon = if (checkState == "dictionaryList") {
+        painterResource(R.drawable.dictionary_pink)
+    } else {
+        painterResource(R.drawable.dictionary_black)
+    }
+
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+        ,
+        backgroundColor = BACKGROUND_WHITE,
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(30.dp)
+                )
+                Image(
+                    modifier = Modifier
+                        .width(70.dp),
+                    painter = painterResource(id = R.drawable.beepicon),
+                    contentDescription = "삡 아이콘",
+                    alignment =  Alignment.Center,
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(30.dp)
+                        .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                        .background(color = BLUE400.copy(0.0F))
+                        .clickable {
+                            if(checkState == "dictionaryList") {
+                                navController.navigate("home")
+                            } else {
+                                navController.navigate("dictionaryList")
+                            }
+                            dictSelected.value = !dictSelected.value
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .width(25.dp)
+                        ,
+                        painter = icon,
+                        contentDescription = "사전",
+                        )
+                }
+            }
+
+        }
     }
 }
 
@@ -119,39 +202,52 @@ fun BottomNavigationBar(
     ) {
         BottomNavigation(
             modifier = modifier.clip(
-                RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)),
+                RoundedCornerShape(35.dp, 35.dp, 0.dp, 0.dp)
+            ),
             backgroundColor = BLUE100,
             elevation = 10.dp
         ) {
             // items 배열에 담긴 모든 항목을 추가합니다.
             items.forEach { item ->
                 // 뷰의 활동 상태를 백스택에 담아 저장합니다.
-                val selected = item.route == backStackEntry.value?.destination?.route
+                // savedMessage, messageList
+                val backSelect = backStackEntry.value?.destination?.route
+                var selected = false
+                if (item.route == "messageList" && (backSelect == "savedMessage" || backSelect == "messageList")) {
+                    selected = true
+                }
+                if (item.route == "home" && backSelect == "home") {
+                    selected = true
+                }
+                if (item.route == "myPage" && (backSelect == "myPage" || backSelect == "contactPreset" || backSelect == "messagePreset" || backSelect == "greetingPreset" || backSelect == "colorSetting" || backSelect == "engravingSetting" || backSelect == "fontSetting")) {
+                    selected = true
+                }
+
+                Log.d("selected","${item.route}, ${backStackEntry.value?.destination?.route}")
                 BottomNavigationItem(
                     selected = selected,
                     onClick = { onItemClick(item) },
-                    selectedContentColor = PINK500,
-                    unselectedContentColor = GRAY500,
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.name
-                            )
-                            // 아이콘이 선택 되었을 때, 아이콘 밑에 텍스트를 표시합니다.
-//                        if (selected) {
-//                            Text(
-//                                text = item.name,
-//                                textAlign = TextAlign.Center,
-//                                fontSize = 10.sp
-//                            )
-//                        }
+                            if (selected) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    painter = item.selectIcon,
+                                    contentDescription = item.name
+                                )
+                            } else {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                   painter = item.icon,
+                                   contentDescription = item.name
+                                )
+                            }
                         }
                     }
                 )
             }
         }
     }
-
-
 }

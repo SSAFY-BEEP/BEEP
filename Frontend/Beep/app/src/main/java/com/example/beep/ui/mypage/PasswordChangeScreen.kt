@@ -60,7 +60,6 @@ fun CheckNewPasswordFragment(
 ) {
         Text(text = "새 비밀번호 확인", fontSize = 24.sp)
         BeepForTest(text = if (newPasswordCheck == "") "새 비밀번호를 한번 더 입력해주세요" else newPasswordCheck)
-        getKeyboard()
         CancelConfirmButtons(
             onConfirmBtnClicked = { /* 비밀번호 변경 HTTP 요청 */ },
             onCancelBtnClicked = { changeUiState(PasswordChangeState.New) })
@@ -71,7 +70,7 @@ fun CheckNewPasswordFragment(
 fun EnterNewPasswordFragment(newPassword: String, changeUiState: (PasswordChangeState) -> Unit) {
     Text(text = "새 비밀번호 입력", fontSize = 24.sp)
     BeepForTest(text = if (newPassword == "") "변경할 비밀번호를 입력해주세요" else newPassword)
-    getKeyboard()
+//    getKeyboard()
     CancelConfirmButtons(
         onConfirmBtnClicked = { changeUiState(PasswordChangeState.CheckNew) },
         onCancelBtnClicked = { changeUiState(PasswordChangeState.Previous) })
@@ -82,7 +81,7 @@ fun EnterNewPasswordFragment(newPassword: String, changeUiState: (PasswordChange
 fun CheckPreviousFragment(password: String, changeUiState: (PasswordChangeState) -> Unit) {
     Text(text = "기존 비밀번호 확인", fontSize = 24.sp)
     BeepForTest(text = if (password == "") "비밀번호를 입력해주세요" else password)
-    getKeyboard()
+//    getKeyboard()
     CancelConfirmButtons(
         onConfirmBtnClicked = { changeUiState(PasswordChangeState.New) },
         onCancelBtnClicked = { /* 마이페이지 메인으로 돌아가는 코드 */})

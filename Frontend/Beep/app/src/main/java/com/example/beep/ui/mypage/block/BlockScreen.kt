@@ -21,21 +21,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.beep.data.dto.message.MessageResponse
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 
 @Composable
-fun BlockScreen(blockViewModel: BlockViewModel = viewModel()) {
+fun BlockScreen(
+    navController: NavController,
+    blockViewModel: BlockViewModel = viewModel()) {
     val screenState: BlockScreenState = blockViewModel.blockScreenState
     when (screenState.currentState) {
         BlockScreenResult.Success -> {
             BlockSuccessScreen(
+                navController,
                 blockList = screenState.blockList,
                 onAskCancelBlock = { message: MessageResponse ->
                     blockViewModel.onEvent(
@@ -94,6 +101,7 @@ fun CancelBlockPopup(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit
 
 @Composable
 fun BlockSuccessScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     blockList: List<MessageResponse>,
     onAskCancelBlock: (MessageResponse) -> Unit,
@@ -104,6 +112,33 @@ fun BlockSuccessScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        Row(
+            modifier = modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(17.dp),
+                    painter = painterResource(com.example.beep.R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
+            }
+
+            Text(
+                modifier = modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                text = "차단 목록"
+            )
+        }
         if (blockList.isEmpty())
             Box(modifier = modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Text(text = "메시지가 없습니다.")
@@ -162,7 +197,7 @@ fun MessageItem(
         ) {
             Row(
                 modifier = modifier
-                    .padding(8.dp)
+                    .padding(18.dp, 8.dp, 8.dp, 8.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {

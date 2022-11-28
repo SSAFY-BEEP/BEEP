@@ -6,14 +6,23 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.beep.R
+import com.example.beep.di.MainApplication
 
 @Composable
-fun BeepImage(modifier: Modifier = Modifier, text: String = "",selectBeepImage : Int= 3, selectFontStyle : Int=1) {
-
+fun BeepImage(
+    modifier: Modifier = Modifier,
+    text: String = "",
+    selectBeepImage: Int= MainApplication.sharedPreferencesUtil.getTheme(),
+    selectFontStyle: Int= MainApplication.sharedPreferencesUtil.getFont(),
+    engrave: String? = MainApplication.sharedPreferencesUtil.getEngrave()
+) {
     Box(modifier = modifier) {
         Image(
             painter =
@@ -30,6 +39,25 @@ fun BeepImage(modifier: Modifier = Modifier, text: String = "",selectBeepImage :
                 .width(320.dp),
             contentScale = ContentScale.FillWidth
         )
+        // 각인 자리 어떻게 넣을지 offset을 맞춰주면 될듯
+        if (engrave != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text="$engrave",
+                    modifier = Modifier
+                        .offset(0.dp, 100.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 15.sp,
+                    color = Color(android.graphics.Color.parseColor("#505050")),
+                    fontFamily = lanaPixelFont
+                )
+            }
+        }
+
 
         Text(modifier = modifier
             .align(Alignment.Center)

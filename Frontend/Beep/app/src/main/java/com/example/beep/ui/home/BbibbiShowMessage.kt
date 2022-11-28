@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 
 @Composable
 fun BbibbiShowMessage(
@@ -21,13 +23,15 @@ fun BbibbiShowMessage(
     toPutAddress: () -> Unit,
     toPutMsg: () -> Unit,
     receivedMsg: String,
-    homeViewModel: HomeViewModel = viewModel(),
+    receiveMsgTime : String,
+//    homeViewModel: HomeViewModel = viewModel(),
 ) {
-    Log.d("PageMove", "Moved to ShowMessage")
+    Log.d("PageMove", "Moved to ShowMessage, receivedMsg = $receivedMsg")
 
     Button(
         // 연락처 입력 페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* cancel 버튼 */
             toPutAddress()
             Log.d("BUTTON", "CLICKED")
@@ -48,6 +52,7 @@ fun BbibbiShowMessage(
     Button(
         // 바로 메시지 입력 페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* go버튼 */
             toPutMsg(
                 /* 수신한 메시지의 발신자 연락처 */
@@ -68,12 +73,19 @@ fun BbibbiShowMessage(
 
     }
     Text(
+        text = if (receiveMsgTime.isNotEmpty()) { receiveMsgTime.substring(11, 16) } else {""},
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.Start)
+            .padding(55.dp, 38.dp, 0.dp, 0.dp),
+        fontSize = 10.sp,
+    )
+    Text(
         text = receivedMsg,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(top = 48.dp),
         fontSize = 19.sp,
-        fontFamily = galmurinineFont
     )
 }

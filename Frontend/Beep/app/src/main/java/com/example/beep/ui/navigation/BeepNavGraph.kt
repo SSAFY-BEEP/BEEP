@@ -19,11 +19,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.beep.R
+import com.example.beep.ui.dictionary.DictionaryScreen
+import com.example.beep.ui.dictionary.DictionaryViewModel
 import com.example.beep.ui.home.*
 import com.example.beep.ui.login.MainButtonScreen
 import com.example.beep.ui.message.MessageScreen
 import com.example.beep.ui.message.MessageViewModel
 import com.example.beep.ui.mypage.*
+import com.example.beep.ui.mypage.block.BlockScreen
+import com.example.beep.ui.mypage.block.BlockViewModel
 import com.example.beep.ui.mypage.introduce.IntroduceScreen
 import com.example.beep.ui.mypage.introduce.IntroduceViewModel
 import com.example.beep.ui.mypage.introduce.RecordVoiceViewModel
@@ -43,7 +47,10 @@ fun BeepNavGraph(
 ) {
     NavHost(navController = navController,
         startDestination = "home",
-        modifier = Modifier.imePadding().padding(0.dp,0.dp,0.dp,56.dp).background(BACKGROUND_WHITE)) {
+        modifier = Modifier
+            .imePadding()
+            .padding(0.dp, 0.dp, 0.dp, 56.dp)
+            .background(BACKGROUND_WHITE)) {
         composable("home") {
             val model: AddressViewModel = hiltViewModel(it)
             val postAddress: AddressPostSelfViewModel = hiltViewModel(it)
@@ -55,6 +62,7 @@ fun BeepNavGraph(
             HomeScreen()
         }
         messageGraph(navController)
+        dictionaryGraph(navController)
         myPageGraph(navController)
         composable("login_main_graph") {
             MainButtonScreen(navController=navController)
@@ -73,6 +81,16 @@ fun NavGraphBuilder.messageGraph(navController: NavController) {
         composable("savedMessage") {
             val model: SavedMessageViewModel = hiltViewModel(it)
             SavedMessageScreen(navigateTo = { route: String -> navController.navigate(route) })
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun NavGraphBuilder.dictionaryGraph(navController: NavController) {
+    navigation(startDestination = "dictionaryList", route = "dictionary") {
+        composable("dictionaryList") {
+            val model: DictionaryViewModel = hiltViewModel(it)
+            DictionaryScreen(model) { route: String -> navController.navigate(route) }
         }
     }
 }
@@ -97,23 +115,27 @@ fun NavGraphBuilder.myPageGraph(navController: NavController) {
         composable("greetingPreset") {
             val model: IntroduceViewModel = hiltViewModel(it)
             val model2: RecordVoiceViewModel = hiltViewModel(it)
-            IntroduceScreen(viewModel = model)
+            IntroduceScreen(navController, viewModel = model)
         }
         composable("colorSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            ColorSettingScreen(model = model)
+            ColorSettingScreen(navController, model = model)
         }
         composable("engravingSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            EngravingSettingScreen(model = model)
+            EngravingSettingScreen(navController, model = model)
         }
         composable("fontSetting") {
             val model: MyPageViewModel = hiltViewModel(it)
-            FontSettingScreen(model = model)
+            FontSettingScreen(navController, model = model)
         }
         composable("passwordChange") {
             val model: MyPageViewModel = hiltViewModel(it)
             PasswordChangeScreen(viewModel = model)
+        }
+        composable("blockScreen") {
+            val model: BlockViewModel = hiltViewModel(it)
+            BlockScreen(navController)
         }
     }
 }

@@ -21,6 +21,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.mypage.introduce.startRecording
 import com.example.beep.ui.mypage.introduce.stopPlaying
 import com.example.beep.ui.mypage.introduce.stopRecording
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -56,20 +58,29 @@ fun BbibbiDoRecord(
             VoicePlayer.nullInstance()
         }
     }
-    Column(
+    Box(
         modifier = modifier
             .width(320.dp)
             .wrapContentWidth(Alignment.CenterHorizontally),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        contentAlignment = Alignment.TopCenter
+        ) {
         DoRecordScreen(
             currentState = currentState,
             messageTime = formatSecond(homeViewModel.time),
-            duration = formatSecond(homeViewModel.fileLength)
+            duration = formatSecond(homeViewModel.fileLength),
+            modifier = Modifier
+                .offset(0.dp, 5.dp)
         )
-        Spacer(modifier = modifier.height(35.dp))
-        Row(modifier = Modifier.height(60.dp), verticalAlignment = Alignment.Bottom) {
+        Spacer(modifier = modifier.height(23.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(0.dp, 42.dp)
+                .height(64.dp),
+            contentAlignment = Alignment.BottomStart
+        ) {
             CancelBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before, RecordMessageState.Greeting -> {
                         toAskRecord()
@@ -96,6 +107,7 @@ fun BbibbiDoRecord(
                 }
             })
             LeftBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before -> {}
                     RecordMessageState.Recording -> {}
@@ -105,6 +117,7 @@ fun BbibbiDoRecord(
                 }
             })
             RightBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Before -> {}
                     RecordMessageState.Recording -> {}
@@ -123,6 +136,7 @@ fun BbibbiDoRecord(
                 }
             })
             ConfirmBtn(onClick = {
+                SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
                 when (currentState) {
                     RecordMessageState.Greeting -> {
                         homeViewModel.stopGreeting()
@@ -191,7 +205,10 @@ fun ConfirmBtn(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.height(67.dp),
+        modifier = modifier
+            .offset(214.dp, 20.dp)
+            .width(83.dp)
+            .height(64.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         shape = RoundedCornerShape(65.dp, 20.dp, 50.dp, 0.dp),
         onClick = onClick,
@@ -202,13 +219,18 @@ fun ConfirmBtn(
 
 @Composable
 fun RightBtn(
-    modifier: Modifier = Modifier, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(154.dp, 20.dp)
+            .width(68.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp, 0.dp, 40.dp, 5.dp)
     ) {
 
     }
@@ -219,10 +241,14 @@ fun LeftBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(93.dp, 20.dp)
+            .width(60.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp)
     ) {
 
     }
@@ -233,10 +259,14 @@ fun CancelBtn(
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier,
+        modifier = Modifier
+            .offset(24.dp, 20.dp)
+            .width(69.dp)
+            .height(42.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent.copy(0.0F)),
         onClick = onClick,
-        elevation = null
+        elevation = null,
+        shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 30.dp)
     ) {
 
     }
@@ -252,25 +282,26 @@ fun DoRecordScreen(
 
     when (currentState) {
         RecordMessageState.Loading -> {
-            Text(text = "로딩중..")
+            Text(text = "로딩중..", modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.NoIntroduce -> {
-            Text(text = "상대의 인사말이 없습니다.")
+            Text(text = "상대의 인사말이 없습니다.", modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Greeting -> {
-            Text(text = "인사말 재생중 $messageTime/$duration")
+            Text(text = "인사말 재생중...", fontSize = 16.sp)
+            Text(text = "$messageTime/$duration", fontSize = 11.sp, modifier = Modifier.padding(0.dp, 23.dp), color = Color.DarkGray)
         }
         RecordMessageState.Before -> {
-            Text(text = "\\ : 취소 | ● : 녹음 시작", fontSize = 19.sp)
+            Text(text = "\\ 취소    ● 녹음 시작", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Recording -> {
-            Text(text = "녹음중 $messageTime/$duration", fontSize = 19.sp)
+            Text(text = "녹음중 $messageTime/$duration", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Finished -> {
-            Text(text = "\\ 다시 녹음  > 재생  ● 전송", fontSize = 17.sp)
+            Text(text = "\\ 재녹음  ▶ 재생  ● 전송", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
         RecordMessageState.Playing -> {
-            Text(text = "재생중 $messageTime/$duration", fontSize = 19.sp)
+            Text(text = "재생중 $messageTime/$duration", fontSize = 17.sp, modifier = Modifier.padding(0.dp, 5.dp))
         }
     }
 }

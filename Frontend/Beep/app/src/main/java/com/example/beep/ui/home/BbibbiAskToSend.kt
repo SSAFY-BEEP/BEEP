@@ -14,6 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.beep.util.SoundEffectPlayer
+import com.example.beep.util.SoundEffectType
 import java.io.File
 
 @Composable
@@ -43,6 +45,7 @@ fun BbibbiAskToSend(
     Button(
         // 메시지 입력 페이지로(메시지 내용 살아있음)
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* cancel 버튼 */
                   toPutMsg()
         },
@@ -63,6 +66,7 @@ fun BbibbiAskToSend(
     Button(
         // <-
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             go = !go
         },
         modifier = Modifier
@@ -83,6 +87,7 @@ fun BbibbiAskToSend(
     Button(
         // ->
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             go = !go
         },
         modifier = Modifier
@@ -103,10 +108,12 @@ fun BbibbiAskToSend(
     Button(
         // 녹음페이지로
         onClick = {
+            SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* go버튼 */
             if (go) {
                 // 메시지보내기 action
                 homeViewModel.sendMsg(filepath)
+                keyboardViewModel.onAction(KeyboardAction.Clear)
             } else {
                 //  첫 페이지로
                 homeViewModel.resetMessageToSend()
@@ -149,7 +156,7 @@ fun BbibbiAskToSend(
         Button(
             // 메시지 보내기
             onClick = {
-
+                keyboardViewModel.onAction(KeyboardAction.Clear)
                 /* yes버튼 */
                 homeViewModel.sendMsg(filepath)
             },

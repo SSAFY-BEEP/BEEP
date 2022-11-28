@@ -5,13 +5,22 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -20,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
 import com.example.beep.ui.home.formatSecond
+import com.example.beep.ui.theme.BLUE500
 import com.google.accompanist.permissions.isGranted
 import java.io.File
 
@@ -86,87 +96,141 @@ fun RecordSuccessScreen(
     }
 
     Column(
-        modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "${formatSecond(viewModel.time)}:${formatSecond(viewModel.fileLength)}")
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "${formatSecond(viewModel.time)} / ${formatSecond(viewModel.fileLength)}",
+            fontSize = 18.sp
+        )
 
-        RecordButton(state = viewModel.currentState) {
-            when (viewModel.currentState) {
-                RecordState.BEFORE_RECORDING -> {
-                    if (!voicePermissionState.status.isGranted) {
-                        voicePermissionState.launchPermissionRequest()
+        Spacer(modifier = Modifier.height(50.dp))
+        Row(
+            modifier = modifier
+                .width(150.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = Color.White)
+                    .height(40.dp)
+                    .width(60.dp)
+                    .border(width = 1.dp, color = BLUE500, shape = RoundedCornerShape(5.dp))
+                    .clickable {
+                        when (viewModel.currentState) {
+                            RecordState.ON_RECORDING -> {
+                                stopRecording()
+                            }
+                            RecordState.ON_PLAYING -> {
+                                stopPlaying()
+                            }
+                        }
+                        togglePopup()
+                    },
+            ) {
+                Text(
+                    text = "취소",
+                    color = BLUE500,
+                    fontSize = 15.sp
+                )
+            }
+
+            RecordButton(
+                state = viewModel.currentState) {
+                when (viewModel.currentState) {
+                    RecordState.BEFORE_RECORDING -> {
+                        if (!voicePermissionState.status.isGranted) {
+                            voicePermissionState.launchPermissionRequest()
+                        }
+                        if (voicePermissionState.status.isGranted) {
+                            viewModel.fileLength = 30
+                            startRecording(context, filepath)
+                            viewModel.startTimer()
+                            viewModel.currentState = RecordState.ON_RECORDING
+                        }
                     }
-                    if (voicePermissionState.status.isGranted) {
-                        viewModel.fileLength = 30
-                        startRecording(context, filepath)
+                    RecordState.ON_RECORDING -> {
+                        stopRecordingIntroduce(filepath,
+                            onComplete = {
+                                stopPlaying()
+                                viewModel.stopTimer()
+                                viewModel.currentState = RecordState.ASK_POST
+                            },
+                            onPrepared = { duration: Int ->
+                                viewModel.fileLength = duration
+                            })
+                        viewModel.stopTimer()
+                        var files = context.cacheDir.listFiles()
+                        for (file in files) {
+                            Log.d("Files", file.absolutePath)
+                        }
+                        viewModel.currentState = RecordState.AFTER_RECORDING
+                    }
+                    RecordState.AFTER_RECORDING -> {
+                        VoicePlayer.getInstance().start()
                         viewModel.startTimer()
-                        viewModel.currentState = RecordState.ON_RECORDING
+                        viewModel.currentState = RecordState.ON_PLAYING
                     }
-                }
-                RecordState.ON_RECORDING -> {
-                    stopRecordingIntroduce(filepath,
-                        onComplete = {
-                            stopPlaying()
-                            viewModel.stopTimer()
-                            viewModel.currentState = RecordState.ASK_POST
-                        },
-                        onPrepared = { duration: Int ->
-                            viewModel.fileLength = duration
-                        })
-                    viewModel.stopTimer()
-                    var files = context.cacheDir.listFiles()
-                    for (file in files) {
-                        Log.d("Files", file.absolutePath)
+                    RecordState.ON_PLAYING -> {
+                        stopPlaying()
+                        viewModel.stopTimer()
+                        viewModel.currentState = RecordState.ASK_POST
                     }
-                    viewModel.currentState = RecordState.AFTER_RECORDING
-                }
-                RecordState.AFTER_RECORDING -> {
-                    VoicePlayer.getInstance().start()
-                    viewModel.startTimer()
-                    viewModel.currentState = RecordState.ON_PLAYING
-                }
-                RecordState.ON_PLAYING -> {
-                    stopPlaying()
-                    viewModel.stopTimer()
-                    viewModel.currentState = RecordState.ASK_POST
-                }
-                RecordState.ASK_POST -> {
-                    viewModel.fileLength = 30
-                    VoiceRecorder.nullInstance()
-                    VoicePlayer.nullInstance()
-                    viewModel.currentState = RecordState.BEFORE_RECORDING
+                    RecordState.ASK_POST -> {
+                        viewModel.fileLength = 30
+                        VoiceRecorder.nullInstance()
+                        VoicePlayer.nullInstance()
+                        viewModel.currentState = RecordState.BEFORE_RECORDING
+                    }
                 }
             }
+
         }
-        Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+
+        Spacer(modifier = Modifier.height(15.dp))
+        if(viewModel.currentState == RecordState.AFTER_RECORDING
+            || viewModel.currentState == RecordState.ON_PLAYING
+            || viewModel.currentState == RecordState.ASK_POST) {
             Button(
-                enabled = viewModel.currentState == RecordState.AFTER_RECORDING
-                        || viewModel.currentState == RecordState.ON_PLAYING
-                        || viewModel.currentState == RecordState.ASK_POST,
+//                enabled = viewModel.currentState == RecordState.AFTER_RECORDING
+//                        || viewModel.currentState == RecordState.ON_PLAYING
+//                        || viewModel.currentState == RecordState.ASK_POST,
                 onClick = {
                     viewModel.postIntroduce(
                         filepath = filepath,
                         togglePopup = {togglePopup()}
                     )
-                }) {
-                Text(text = "바꾸기")
-            }
-            Button(onClick = {
-                when (viewModel.currentState) {
-                    RecordState.ON_RECORDING -> {
-                        stopRecording()
+                },
+                shape = RoundedCornerShape(5.dp),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(150.dp)
+                ,
+                elevation = ButtonDefaults.elevation(0.dp),
+            ) {
+                Text(
+                    text = "등록",
+                    color =
+                    if(
+                        viewModel.currentState == RecordState.AFTER_RECORDING
+                        || viewModel.currentState == RecordState.ON_PLAYING
+                        || viewModel.currentState == RecordState.ASK_POST
+                    ) {
+                        Color.White
+                    } else {
+                        BLUE500
                     }
-                    RecordState.ON_PLAYING -> {
-                        stopPlaying()
-                    }
-                }
-                togglePopup()
-            }) {
-                Text(text = "취소")
+                    ,
+                    fontSize = 16.sp
+                )
             }
         }
+        }
 
-    }
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -237,7 +301,7 @@ fun stopPlaying() {
 fun RecordButton(state: RecordState, action: () -> Unit) {
     val text = when (state) {
         RecordState.BEFORE_RECORDING -> {
-            "녹음하기"
+            "녹음"
         }
         RecordState.ON_RECORDING -> {
             "녹음중지"
@@ -249,10 +313,19 @@ fun RecordButton(state: RecordState, action: () -> Unit) {
             "재생중지"
         }
         RecordState.ASK_POST -> {
-            "다시 녹음하기"
+            "재녹음"
         }
     }
-    Button(onClick = action) {
-        Text(text = text)
+    Button(
+        onClick = action,
+        modifier = Modifier
+            .height(40.dp),
+        contentPadding = PaddingValues(5.dp, 0.dp)
+    ) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontSize = 15.sp
+        )
     }
 }

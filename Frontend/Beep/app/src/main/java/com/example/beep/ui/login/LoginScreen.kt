@@ -24,7 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.beep.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -89,17 +91,8 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.image58),
-                contentDescription = "Login",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .blur(6.dp)
-                    .imePadding(),
-                contentScale = ContentScale.Crop
-            )
             Spacer(modifier = Modifier.height(16.dp))
-            TextField(
+            OutlinedTextField(
                 value = loginState.loginPhoneNumber,
                 onValueChange = {
                     viewModel.loginEvent(LoginFormEvent.LoginPhoneNumberChanged(it))
@@ -108,9 +101,14 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding(),
+                singleLine = true,
                 placeholder = {
-                    Text(text = "phoneNumber")
+                    Text(text = "휴대폰 번호")
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -126,7 +124,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = loginState.loginPassword,
                 onValueChange = {
                     viewModel.loginEvent(LoginFormEvent.LoginPasswordChanged(it))
@@ -135,9 +133,14 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding(),
+                singleLine = true,
                 placeholder = {
-                    Text(text = "password")
+                    Text(text = "비밀번호")
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -155,32 +158,47 @@ fun LoginScreen(
                 Text(
                     text = loginState.loginPasswordError,
                     color = MaterialTheme.colors.error,
-                    modifier = Modifier.align(Alignment.End)
-                )
+                    textAlign = TextAlign.Center
+                    )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly
             ){
-                Button(
-                    onClick = { navController.navigate("join_graph") },
-                    modifier = Modifier
-                ) {
-                    Text(text = "회원가입")
-                }
-
                 Button(
                     onClick = {
                         viewModel.loginEvent(LoginFormEvent.Submit)
                     },
                     modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    Text(text = "Submit")
+                    Text(
+                        text = "로그인",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
                 }
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(
+                    onClick = { navController.navigate("join_graph") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text(
+                        text = "회원가입",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                }
+
+
             }
 
 

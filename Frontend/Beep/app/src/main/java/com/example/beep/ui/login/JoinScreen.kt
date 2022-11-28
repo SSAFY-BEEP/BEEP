@@ -18,6 +18,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.beep.di.MainApplication
@@ -74,7 +75,7 @@ fun JoinScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            TextField(
+            OutlinedTextField(
                 value = state.phoneNumber,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PhoneNumberChanged(it))
@@ -82,23 +83,29 @@ fun JoinScreen(navController: NavController) {
                 isError = state.phoneNumberError != null,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "phoneNumber")
+                    Text(text = "휴대폰 번호")
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
+                    keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
                 )
             )
-            if(state.phoneNumberError != null) {
+            if (state.phoneNumberError != null) {
                 Text(
                     text = state.phoneNumberError,
-                    color = MaterialTheme.colors.error
+                    color = MaterialTheme.colors.error,
+                    textAlign = TextAlign.Center
+
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = state.password,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PasswordChanged(it))
@@ -106,26 +113,30 @@ fun JoinScreen(navController: NavController) {
                 isError = state.passwordError != null,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "password")
+                    Text(text = "비밀번호")
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
                 ),
                 visualTransformation = PasswordVisualTransformation()
             )
-            if(state.passwordError != null) {
+            if (state.passwordError != null) {
                 Text(
                     text = state.passwordError,
                     color = MaterialTheme.colors.error,
-                    modifier = Modifier.align(Alignment.End)
+                    textAlign = TextAlign.Center
 
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = state.passwordCheck,
                 onValueChange = {
                     viewModel.onEvent(AuthFormEvent.PasswordCheckChanged(it))
@@ -133,25 +144,31 @@ fun JoinScreen(navController: NavController) {
                 isError = state.passwordCheckError != null,
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "passwordCheck")
+                    Text(text = "비밀번호 확인")
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(android.graphics.Color.parseColor("#7AA8FF")),
+                    unfocusedBorderColor = Color(android.graphics.Color.parseColor("#9DBFFF"))
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Go
                 ),
                 visualTransformation = PasswordVisualTransformation()
             )
-            if(state.passwordCheckError != null) {
+            if (state.passwordCheckError != null) {
                 Text(
                     text = state.passwordCheckError,
                     color = MaterialTheme.colors.error,
-                    modifier = Modifier.align(Alignment.End)
+                    textAlign = TextAlign.Center
 
                 )
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
                     checked = state.acceptedTerms,
@@ -160,25 +177,25 @@ fun JoinScreen(navController: NavController) {
                     }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Accept terms")
+                Text(text = "휴대폰 번호 활용 동의")
             }
 
-            if(state.termError != null) {
+            if (state.termError != null) {
                 Text(
                     text = state.termError,
                     color = MaterialTheme.colors.error,
-                    modifier = Modifier.align(Alignment.End)
+                    textAlign = TextAlign.Center
 
                 )
             }
-            
+
             Button(
                 onClick = {
                     viewModel.onEvent(AuthFormEvent.Submit)
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text(text = "Submit")
+                Text(text = "회원가입")
             }
 
         }

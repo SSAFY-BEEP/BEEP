@@ -4,7 +4,11 @@ import android.media.AudioAttributes
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -12,20 +16,32 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.beep.R
 import com.example.beep.ui.base.ErrorScreen
 import com.example.beep.ui.base.LoadingScreen
+import com.example.beep.ui.home.galmurinineFont
+import com.example.beep.ui.theme.BLUE500
 import com.example.beep.util.S3_CONSTANT_URI
 import com.example.beep.util.VoicePlayer
 import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
+fun IntroduceScreen(
+    navController: NavController,
+    viewModel: IntroduceViewModel = viewModel()) {
     var isRecordScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = isRecordScreen) {
@@ -37,7 +53,33 @@ fun IntroduceScreen(viewModel: IntroduceViewModel = viewModel()) {
             .padding(bottom = 70.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "나의 인사말")
+        Row(
+            modifier = Modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+            ) {
+                Icon(
+                    modifier = Modifier.size(17.dp),
+                    painter = painterResource(R.drawable.backbutton_gray),
+                    contentDescription = "뒤로가기"
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                text = "인사말 설정"
+            )
+        }
         if (isRecordScreen) {
             RecordVoiceScreen() {
                 isRecordScreen = !isRecordScreen
@@ -85,10 +127,35 @@ fun IntroduceSuccessScreen(
     var toggleDeletePopup by remember { mutableStateOf(false) }
 
     if (audioUrl == "") {
-        Text(text = "등록된 소개 메시지가 없습니다.")
-        Button(onClick = toggleScreen) {
-            Text(text = "자기소개 등록")
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(text = "등록된 인사말이 없습니다.")
+            Spacer(modifier = Modifier.height(30.dp))
+            Box(
+                modifier = Modifier
+                    .clickable { toggleScreen() }
+                    .height(40.dp)
+                    .width(100.dp)
+                    .clip(shape = RoundedCornerShape(5.dp))
+                    .background(BLUE500)
+                ,
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "등록하기",
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            }
+//            Button(onClick = toggleScreen) {
+//                Text(text = "등록")
+//            }
         }
+
     } else {
         DisposableEffect(key1 = Unit) {
             VoicePlayer.getInstance()
@@ -142,76 +209,113 @@ fun IntroduceSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-//            Text(text = viewModel.introduceUrl)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = {
-                    if (!isPlaying) {
-                        VoicePlayer.nullInstance()
-                        VoicePlayer.getInstance().apply {
-                            setAudioAttributes(
-                                AudioAttributes.Builder()
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                    .build()
-                            )
-                            setDataSource(S3_CONSTANT_URI + audioUrl)
-                            setOnPreparedListener {
-                                voiceLength = it.duration
-                                it.start()
-                                isPlaying = true
-                            }
-                            prepareAsync()
-                            setOnCompletionListener {
-                                if (voiceLength != 0) {
-                                    it.stop()
-                                    it.release()
-                                    isPlaying = false
-//                                cursor = 0
-//                                sliderPosition = 0f
-                                }
-                                isReady = false
-                            }
-                        }
-                    } else {
-                        VoicePlayer.getInstance().stop()
-                        VoicePlayer.getInstance().release()
-                        isPlaying = false
-                        cursor = 0
-                        sliderPosition = 0f
-                    }
-                }, enabled = isReady) {
-                    if (!isPlaying) {
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow,
-                            tint = MaterialTheme.colors.secondary,
-                            contentDescription = "introduce play button",
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.Stop,
-                            tint = MaterialTheme.colors.secondary,
-                            contentDescription = "introduce stop button",
-                        )
-                    }
-
-                }
-                LinearProgressIndicator(sliderPosition)
+            Spacer(modifier = Modifier.height(10.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "${formatMillisecondToSecond(cursor)}/${
+                    text = "${
+                        formatMillisecondToSecond(
+                            cursor
+                        )
+                    } / ${
                         formatMillisecondToSecond(
                             voiceLength
                         )
                     }"
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(20.dp, 0.dp)
+                ) {
+                    IconButton(onClick = {
+                        if (!isPlaying) {
+                            VoicePlayer.nullInstance()
+                            VoicePlayer.getInstance().apply {
+                                setAudioAttributes(
+                                    AudioAttributes.Builder()
+                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                        .build()
+                                )
+                                setDataSource(S3_CONSTANT_URI + audioUrl)
+                                setOnPreparedListener {
+                                    voiceLength = it.duration
+                                    it.start()
+                                    isPlaying = true
+                                }
+                                prepareAsync()
+                                setOnCompletionListener {
+                                    if (voiceLength != 0) {
+                                        it.stop()
+                                        it.release()
+                                        isPlaying = false
+//                                cursor = 0
+//                                sliderPosition = 0f
+                                    }
+                                    isReady = false
+                                }
+                            }
+                        } else {
+                            VoicePlayer.getInstance().stop()
+                            VoicePlayer.getInstance().release()
+                            isPlaying = false
+                            cursor = 0
+                            sliderPosition = 0f
+                        }
+                    }, enabled = isReady) {
+                        if (!isPlaying) {
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                tint = MaterialTheme.colors.secondary,
+                                contentDescription = "introduce play button",
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.Stop,
+                                tint = MaterialTheme.colors.secondary,
+                                contentDescription = "introduce stop button",
+                            )
+                        }
+
+                    }
+                    LinearProgressIndicator(
+                        sliderPosition,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 0.dp, 20.dp, 0.dp)
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(30.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.Center
             ) {
-                Button(onClick = toggleScreen) {
-                    Text(text = "인사말 바꾸기")
+                Button(
+                    onClick = { toggleDeletePopup = !toggleDeletePopup },
+                    colors = ButtonDefaults.buttonColors(BLUE500),
+                    modifier = Modifier
+                        .width(130.dp)
+                        .padding(20.dp, 0.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "인사말 삭제",
+                        color = Color.White
+                    )
                 }
-                Button(onClick = { toggleDeletePopup = !toggleDeletePopup }) {
-                    Text(text = "인사말 삭제")
+                Button(
+                    onClick = toggleScreen,
+                    colors = ButtonDefaults.buttonColors(BLUE500),
+                    modifier = Modifier
+                        .width(130.dp)
+                        .padding(20.dp, 0.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "인사말 등록",
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
                 }
             }
         }
