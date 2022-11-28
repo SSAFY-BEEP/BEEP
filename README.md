@@ -1,5 +1,5 @@
 # BEEP
-
+<img src="./exec/images/beepalerticon.png" width="300" />
 </br>
 
 ## 프로젝트 개요
