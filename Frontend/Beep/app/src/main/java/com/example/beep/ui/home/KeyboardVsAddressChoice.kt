@@ -68,7 +68,7 @@ fun KeyboardVsAddressChoice() {
                 modifier = Modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center)
-                    .wrapContentWidth(Alignment.CenterHorizontally)
+//                    .wrapContentWidth(Alignment.CenterHorizontally)
 
             ) {
                 Button(
