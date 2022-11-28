@@ -1,5 +1,5 @@
 # BEEP
-
+<img src="./exec/images/beepalerticon.png" width="300" />
 </br>
 
 ## 프로젝트 개요
@@ -77,15 +77,15 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%B2%88%ED%98%B8%EC%86%A1%EC%8B%A0.gif" alt="번호로 송신" width="200" />  
+            <img src="./exec/images/번호송신.gif" alt="번호로 송신" width="200" />  
             <h5>번호로 송신</h5>
         </td>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%9D%B8%EC%82%AC%EB%A7%90%EB%93%A3%EA%B8%B0.gif" alt="인사말듣기" width="200"/> 
+            <img src="./exec/images/인사말듣기.gif" alt="인사말듣기" width="200"/> 
             <h5>인사말 듣기</h5>
         </td> 
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%85%B9%EC%9D%8C%EB%B0%8F%EC%A0%84%EC%86%A1.gif" alt="녹음및전송" width="200"/> 
+            <img src="./exec/images/녹음및전송.gif" alt="녹음및전송" width="200"/> 
             <h5>녹음 및 송신</h5>
         </td>
     </tr>
@@ -105,15 +105,15 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%B3%B4%EA%B4%80.gif" alt="보관" width="200" />  
+            <img src="./exec/images/보관.gif" alt="보관" width="200" />  
             <h5>메시지 보관</h5>
         </td>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%83%9C%EA%B7%B8.gif" alt="태그" width="200" />  
+            <img src="./exec/images/태그.gif" alt="태그" width="200" />  
             <h5>메시지 태깅</h5>
         </td> 
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%B0%A8%EB%8B%A8.gif" alt="차단" width="200" />  
+            <img src="./exec/images/차단.gif" alt="차단" width="200" />  
             <h5>메시지 차단</h5>
         </td>
     </tr>
@@ -127,7 +127,7 @@
 </br>
 
 ### 삐삐 사전
-<img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EC%82%AC%EC%A0%84.gif" alt="사전" width="200" />
+<img src="./exec/images/사전.gif" alt="사전" width="200" />
 
 - 예전에 삐삐에서 사용한 숫자 암호를 사전으로 구성
 - 숫자 단어를 통해서 검색 가능
@@ -135,7 +135,7 @@
 </br>
 
 ### 메시지 및 연락처 단축키
-<img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EB%8B%A8%EC%B6%95%ED%82%A4.gif" alt="단축키" width="200" />
+<img src="./exec/images/단축키.gif" alt="단축키" width="200" />
 
 - 메시지 송신에서 번호를 길게 눌러서 사용
 - 설정 화면에서 메시지, 연락처 별로 설정 가능
@@ -147,15 +147,15 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%85%8C%EB%A7%88.gif" alt="테마" width="200" />
+            <img src="./exec/images/테마.gif" alt="테마" width="200" />
             <h5>테마 설정</h5>
         </td>
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%EA%B0%81%EC%9D%B8.gif" alt="각인" width="200" />
+            <img src="./exec/images/각인.gif" alt="각인" width="200" />
             <h5>각인 설정</h5>
         </td> 
         <td align="center">
-            <img src="https://lab.ssafy.com/s07-final/S07P31A406/-/raw/develop/exec/images/%ED%8F%B0%ED%8A%B8.gif" alt="폰트" width="200" />
+            <img src="./exec/images/폰트.gif" alt="폰트" width="200" />
             <h5>폰트 설정</h5>
         </td>
     </tr>

@@ -207,6 +207,7 @@ fun BeepAlphabetKeyboard(
     changeIsNum: () -> Unit,
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
+    val buttonSpacing = 13.dp
     val maxIdx = 10
     var isLastLetter = viewModel.state.number1.length == 11
 
