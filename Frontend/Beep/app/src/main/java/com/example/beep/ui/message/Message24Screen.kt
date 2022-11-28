@@ -289,7 +289,7 @@ fun MessageItem(
                 }
 
                 MessageInfo(
-                    modifier = modifier.weight(5f),
+                    modifier = modifier.weight(10f),
                     content = message.content,
                     localDateTime = message.time
                 )
@@ -497,7 +497,7 @@ fun MessageInfo(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = content, fontSize = 18.sp)
+        Text(text = content, fontSize = 17.sp)
         Text(text = localDateTime.substring(0, 10), fontSize = 12.sp)
     }
 }
