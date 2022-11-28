@@ -285,7 +285,7 @@ fun MessageItem(
                 }
 
                 MessageInfo(
-                    modifier = modifier.weight(5f),
+                    modifier = modifier.weight(10f),
                     content = message.content,
                     localDateTime = message.time
                 )

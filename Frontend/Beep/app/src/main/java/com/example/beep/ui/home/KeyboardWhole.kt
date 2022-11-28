@@ -208,6 +208,8 @@ fun BeepAlphabetKeyboard(
 ) {
     val viewModel = viewModel<KeyboardViewModel>()
     val buttonSpacing = 13.dp
+    val maxIdx = 10
+    var isLastLetter = viewModel.state.number1.length == 11
 
     val gArr = listOf('ㄱ'.toString(), 'ㅋ'.toString(), 'ㄲ'.toString())
     val nArr = listOf('ㄴ'.toString(), 'ㄹ'.toString())
@@ -230,109 +232,171 @@ fun BeepAlphabetKeyboard(
 
     fun letsGoNumber(currentAlphabet: Char) {
         if(currentAlphabet == 'ㄱ') {
-            if(gCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                nCount = 0
-                dCount = 0
-                bCount = 0
-                sCount = 0
-                jCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in gArr) {
+                    viewModel.onAction(KeyboardAction.Change(gArr[gCount % 3]))
+                    gCount += 1
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(gArr[gCount % 3]))
+                if(gCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    nCount = 0
+                    dCount = 0
+                    bCount = 0
+                    sCount = 0
+                    jCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(gArr[gCount % 3]))
+                }
+                gCount += 1
             }
-            gCount += 1
+
         }
         else if(currentAlphabet == 'ㄴ') {
-            if(nCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                dCount = 0
-                bCount = 0
-                sCount = 0
-                jCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in nArr) {
+                    viewModel.onAction(KeyboardAction.Change(nArr[nCount % 2]))
+                    nCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(nArr[nCount % 2]))
+                if(nCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    dCount = 0
+                    bCount = 0
+                    sCount = 0
+                    jCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(nArr[nCount % 2]))
+                }
+                nCount += 1
             }
-            nCount += 1
+
         }
         else if(currentAlphabet == 'ㄷ') {
-            if(dCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                nCount = 0
-                bCount = 0
-                sCount = 0
-                jCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in dArr) {
+                    viewModel.onAction(KeyboardAction.Change(dArr[dCount % 3]))
+                    dCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(dArr[dCount % 3]))
+                if(dCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    nCount = 0
+                    bCount = 0
+                    sCount = 0
+                    jCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(dArr[dCount % 3]))
+                }
+                dCount += 1
             }
-            dCount += 1
+
         }
         else if(currentAlphabet == 'ㅂ') {
-            if(bCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                nCount = 0
-                dCount = 0
-                sCount = 0
-                jCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in bArr) {
+                    viewModel.onAction(KeyboardAction.Change(bArr[bCount % 3]))
+                    bCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(bArr[bCount % 3]))
+                if(bCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    nCount = 0
+                    dCount = 0
+                    sCount = 0
+                    jCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(bArr[bCount % 3]))
+                }
+                bCount += 1
             }
-            bCount += 1
+
         }
         else if(currentAlphabet == 'ㅅ') {
-            if(sCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                nCount = 0
-                dCount = 0
-                bCount = 0
-                jCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in sArr) {
+                    viewModel.onAction(KeyboardAction.Change(sArr[sCount % 3]))
+                    sCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(sArr[sCount % 3]))
+                if(sCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    nCount = 0
+                    dCount = 0
+                    bCount = 0
+                    jCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(sArr[sCount % 3]))
+                }
+                sCount += 1
             }
-            sCount += 1
+
         }
         else if(currentAlphabet == 'ㅈ') {
-            if(jCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                nCount = 0
-                dCount = 0
-                bCount = 0
-                sCount = 0
-                yCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in jArr) {
+                    viewModel.onAction(KeyboardAction.Change(jArr[jCount % 3]))
+                    jCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(jArr[jCount % 3]))
+                if(jCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    nCount = 0
+                    dCount = 0
+                    bCount = 0
+                    sCount = 0
+                    yCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(jArr[jCount % 3]))
+                }
+                jCount += 1
             }
-            jCount += 1
+
         }
         else if(currentAlphabet == 'ㅇ') {
-            if(yCount == 0) {
-                viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
-                gCount = 0
-                nCount = 0
-                dCount = 0
-                bCount = 0
-                sCount = 0
-                jCount = 0
-                spaceCount = 0
+            if (isLastLetter) {
+                if (viewModel.state.number1.substring(maxIdx) in yArr) {
+                    viewModel.onAction(KeyboardAction.Change(yArr[yCount % 2]))
+                    yCount += 1
+
+                }
             } else {
-                viewModel.onAction(KeyboardAction.Change(yArr[yCount % 2]))
+                if(yCount == 0) {
+                    viewModel.onAction(KeyboardAction.Number(currentAlphabet.toString()))
+                    gCount = 0
+                    nCount = 0
+                    dCount = 0
+                    bCount = 0
+                    sCount = 0
+                    jCount = 0
+                    spaceCount = 0
+                } else {
+                    viewModel.onAction(KeyboardAction.Change(yArr[yCount % 2]))
+                }
+                yCount += 1
             }
-            yCount += 1
+
         }
         else if(currentAlphabet == 'n') {
             gCount = 0
