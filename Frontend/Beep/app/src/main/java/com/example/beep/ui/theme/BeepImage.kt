@@ -39,7 +39,6 @@ fun BeepImage(
                 .width(320.dp),
             contentScale = ContentScale.FillWidth
         )
-        // 각인 자리 어떻게 넣을지 offset을 맞춰주면 될듯
         if (engrave != null) {
             Box(
                 modifier = Modifier

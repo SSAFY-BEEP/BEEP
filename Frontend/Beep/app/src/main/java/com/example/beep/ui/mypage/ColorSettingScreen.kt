@@ -128,12 +128,6 @@ fun ColorSettingScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center) {
-//                Button(
-//                    onClick = { navController.popBackStack() }
-//                ) {
-//                    Text(text = "뒤로가기")
-//                }
-//                Spacer(modifier = Modifier.width(40.dp))
                     val context = LocalContext.current
                     Button(
                         onClick = {

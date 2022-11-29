@@ -192,7 +192,6 @@ fun IntroduceSuccessScreen(
         }
         LaunchedEffect(key1 = isPlaying) {
             cursor = 0
-//            voiceLength = VoicePlayer.getInstance().duration
             while (isPlaying && cursor < voiceLength) {
                 cursor += 100
                 if (cursor >= voiceLength) {

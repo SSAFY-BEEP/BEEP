@@ -29,12 +29,6 @@ fun LoadingScreen() {
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Image(
-//                modifier = Modifier
-//                    .width(100.dp),
-//                painter = painterResource(id = R.drawable.beepicon),
-//                contentDescription = "로딩중"
-//            )
             Text(
                 text = "LOADING...",
                 fontFamily = galmurinineFont,
