@@ -27,6 +27,7 @@ fun BbibbiShowMessage(
 //    homeViewModel: HomeViewModel = viewModel(),
 ) {
     Log.d("PageMove", "Moved to ShowMessage, receivedMsg = $receivedMsg")
+    val keyboardViewModel = viewModel<KeyboardViewModel>()
 
     Button(
         // 연락처 입력 페이지로
@@ -34,6 +35,7 @@ fun BbibbiShowMessage(
             SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* cancel 버튼 */
             toPutAddress()
+            keyboardViewModel.onAction(KeyboardAction.Clear)
             Log.d("BUTTON", "CLICKED")
         },
         modifier = Modifier
@@ -54,9 +56,8 @@ fun BbibbiShowMessage(
         onClick = {
             SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* go버튼 */
-            toPutMsg(
-                /* 수신한 메시지의 발신자 연락처 */
-            )
+            toPutMsg()
+            keyboardViewModel.onAction(KeyboardAction.Clear)
         },
         modifier = Modifier
             .width(83.dp)

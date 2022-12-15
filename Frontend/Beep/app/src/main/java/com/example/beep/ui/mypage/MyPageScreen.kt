@@ -129,7 +129,8 @@ fun MyPageScreen(onClickMenu: (String) -> Unit) {
                     ) {
                         CustomText1({ onClickMenu("colorSetting") }, "테마색 설정" ,theme)
                         CustomText1({ onClickMenu("engravingSetting") }, "각인 설정", engrave)
-                        CustomText1({ onClickMenu("fontSetting") }, "폰트 설정", font)
+                        // 폰트 변경에 따른 사이즈 이슈로 인하여 페이지 접근 제한
+                        // CustomText1({ onClickMenu("fontSetting") }, "폰트 설정", font)
                     }
                 }
 

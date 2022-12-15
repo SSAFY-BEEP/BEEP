@@ -36,10 +36,6 @@ import java.util.*
 import javax.inject.Inject
 
 
-enum class ReceivedMessageType {
-    SEND, RECEIVED, BLOCKED
-}
-
 enum class RecordMessageState {
     Greeting, Before, Recording, Finished, Playing, Error, Loading, NoIntroduce
 }

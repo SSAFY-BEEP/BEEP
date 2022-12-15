@@ -42,7 +42,7 @@ fun BbibbiAskToRecord(
     }
 
     Button(
-        // 메시지 입력 페이지로(메시지 내용 살아있음)
+        // 메시지 입력 페이지로(메시지 내용 지워짐)
         onClick = {
             SoundEffectPlayer.playSoundEffect(SoundEffectType.BeepBtn)
             /* cancel 버튼 */
