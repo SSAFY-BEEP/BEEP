@@ -50,20 +50,27 @@ fun HomeScreen(
     val vibrationPermissionState = rememberPermissionState(
         Manifest.permission.VIBRATE
     )
+    val smallTxt = 12
+    val largeTxt = 16
 
-    var viewMsgTxtSize = 14
-    var addressTxtSize = 14
-    var typeMsgTxtSize = 14
-    var recordTxtSize = 14
+    var viewMsgTxtSize = smallTxt
+    var addressTxtSize = smallTxt
+    var typeMsgTxtSize = smallTxt
+    var recordTxtSize = smallTxt
 
-    if (homeViewModel.currentPage == "ReceivedMsg") {
-        viewMsgTxtSize = 18
-    } else if (homeViewModel.currentPage == "PutAddress") {
-        addressTxtSize = 18
-    } else if (homeViewModel.currentPage == "PutMsg") {
-        typeMsgTxtSize = 18
-    } else {
-        recordTxtSize = 18
+    when (homeViewModel.currentPage) {
+        "ReceivedMsg" -> {
+            viewMsgTxtSize = largeTxt
+        }
+        "PutAddress" -> {
+            addressTxtSize = largeTxt
+        }
+        "PutMsg" -> {
+            typeMsgTxtSize = largeTxt
+        }
+        else -> {
+            recordTxtSize = largeTxt
+        }
     }
 
     val context = LocalContext.current
@@ -104,7 +111,7 @@ fun HomeScreen(
                     modifier = Modifier
                     ,
                     fontSize = viewMsgTxtSize.sp,
-                    color = if(viewMsgTxtSize == 18) {
+                    color = if(viewMsgTxtSize == largeTxt) {
                         BLUE500
                     } else {
                         Color.Gray
@@ -115,7 +122,7 @@ fun HomeScreen(
                     modifier = Modifier
                     ,
                     fontSize = addressTxtSize.sp,
-                    color = if(addressTxtSize == 18) {
+                    color = if(addressTxtSize == largeTxt) {
                         BLUE500
                     } else {
                         Color.Gray
@@ -126,7 +133,7 @@ fun HomeScreen(
                     modifier = Modifier
                     ,
                     fontSize = typeMsgTxtSize.sp,
-                    color = if(typeMsgTxtSize == 18) {
+                    color = if(typeMsgTxtSize == largeTxt) {
                         BLUE500
                     } else {
                         Color.Gray
@@ -137,7 +144,7 @@ fun HomeScreen(
                     modifier = Modifier
                     ,
                     fontSize = recordTxtSize.sp,
-                    color = if(recordTxtSize == 18) {
+                    color = if(recordTxtSize == largeTxt) {
                         BLUE500
                     } else {
                         Color.Gray
