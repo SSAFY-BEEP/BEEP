@@ -63,6 +63,7 @@ fun BbibbiPutMsg(
                 homeViewModel.setMessageContent(keyboardViewModel.state.number1)
                 // 음성을 녹음하시겠습니까
                 changeContentString(defaultNameString)
+                keyboardViewModel.onAction(KeyboardAction.Clear)
                 toAskRecord()
             }
         },
