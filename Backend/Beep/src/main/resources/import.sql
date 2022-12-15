@@ -163,10 +163,10 @@ insert into dictionary (value,word) values ('할 이야기가 너무 많다(구�
 insert into dictionary (value,word) values ('행운을 빌어','9999');
 
 
- insert into User (authority,fcm_token,password,phone_number) values ("ROLE_USER","string","$2a$10$PZksvg1TXbZgVQOZ/gZA0uk/NNfqmzGKXIrmuorv0Wn3A7Zyd2A5G","01012345678");
- insert into user(phone_number, password, authority, fcm_token) values ("01050123883", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_ADMIN", "0");
- insert into user(phone_number, password, authority, fcm_token) values ("01020178439", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
- insert into user(phone_number, password, authority, fcm_token) values ("01074794185", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
- insert into user(phone_number, password, authority, fcm_token) values ("01026778997", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
- insert into user(phone_number, password, authority, fcm_token) values ("01034511945", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
- insert into user(phone_number, password, authority, fcm_token) values ("01038964701", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
+--  insert into User (authority,fcm_token,password,phone_number) values ("ROLE_USER","string","$2a$10$PZksvg1TXbZgVQOZ/gZA0uk/NNfqmzGKXIrmuorv0Wn3A7Zyd2A5G","01012345678");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01050123883", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_ADMIN", "0");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01020178439", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01074794185", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01026778997", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01034511945", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
+--  insert into user(phone_number, password, authority, fcm_token) values ("01038964701", "$2a$10$9r/Io6GJbIFtcY7x/d7.b.s6ZiOM6kTPzhzgKYaqUTxgAgt4lMZ5O", "ROLE_USER", "0");
