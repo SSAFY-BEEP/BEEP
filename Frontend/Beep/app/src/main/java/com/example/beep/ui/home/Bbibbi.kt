@@ -2,7 +2,6 @@ package com.example.beep.ui.home
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -25,7 +24,6 @@ fun Bbibbi(
 
     var contentString = ""
 
-    val context = LocalContext.current
     var sendText by remember { mutableStateOf(false) }
 
     when (homeViewModel.currentPage) {
