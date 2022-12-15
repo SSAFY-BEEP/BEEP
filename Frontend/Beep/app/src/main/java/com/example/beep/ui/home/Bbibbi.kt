@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beep.ui.mypage.introduce.UiState
@@ -22,7 +23,6 @@ fun Bbibbi(
 
 
     var contentString = ""
-
 
     var sendText by remember { mutableStateOf(false) }
 
@@ -94,8 +94,13 @@ fun Bbibbi(
                 /* 메시지 내용 String, 발신인 */
                 toPutAddress = { homeViewModel.currentPage = "PutAddress" },
                 toPutMsg = {
-                    homeViewModel.currentPage = "PutMsg"
-                    homeViewModel.setMessageReceiverNum(msgSenderNo)
+                    /* 수신한 메시지의 발신자 연락처 */
+                    if (homeViewModel.checkAddress(msgSenderNo)) {
+                        homeViewModel.setMessageReceiverNum(msgSenderNo)
+                        homeViewModel.currentPage = "PutMsg"
+                    } else {
+                        homeViewModel.showToast("메시지의 연락처가 유효하지 않습니다.")
+                    }
                 },
                 receivedMsg = receiveMsg,
                 receiveMsgTime = receiveMsgTime
