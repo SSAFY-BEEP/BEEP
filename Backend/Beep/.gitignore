@@ -39,3 +39,7 @@ out/
 ### serviceKey ###
 !**/src/main/resources/serviceAccountKey.json
 .json
+
+##API-KEY
+serviceAccountKey.json
+application-API-KEY.properties

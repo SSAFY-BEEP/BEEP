@@ -45,11 +45,11 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: ${ACCESS_KEY}
-      secret-key: ${SECRET_KEY}
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
     s3:
-      bucket: beep-a406 # 버킷명
-      bucket2: persistent-beep
+      bucket: beep-24 # 버킷명
+      bucket2: beep-save
     region:
       static: ap-northeast-2 # 리전
     stack:
