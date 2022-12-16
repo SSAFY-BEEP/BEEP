@@ -1,5 +1,7 @@
 package com.example.beep.ui.login
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.Alignment
@@ -19,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.beep.di.MainApplication
@@ -177,6 +180,11 @@ fun JoinScreen(navController: NavController) {
                 Checkbox(
                     checked = state.acceptedTerms,
                     onCheckedChange = {
+                        if (!viewModel.authState.acceptedTerms) {
+                            val uri = "https://sites.google.com/view/beep661661/%ED%99%88"
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                            startActivity(context, browserIntent, null)
+                        }
                         viewModel.onEvent(AuthFormEvent.AcceptTerms(it))
                     }
                 )
