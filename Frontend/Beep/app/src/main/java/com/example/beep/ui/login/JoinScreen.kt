@@ -183,7 +183,7 @@ fun JoinScreen(navController: NavController) {
                         if (!viewModel.authState.acceptedTerms) {
                             val uri = "https://sites.google.com/view/beep661661/%ED%99%88"
                             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-                            startActivity(context, browserIntent, null)
+                            context.startActivity(browserIntent)
                         }
                         viewModel.onEvent(AuthFormEvent.AcceptTerms(it))
                     }
