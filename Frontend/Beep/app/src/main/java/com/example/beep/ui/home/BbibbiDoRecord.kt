@@ -18,13 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.beep.ui.mypage.introduce.startRecording
-import com.example.beep.ui.mypage.introduce.stopPlaying
-import com.example.beep.ui.mypage.introduce.stopRecording
 import com.example.beep.util.SoundEffectPlayer
 import com.example.beep.util.SoundEffectType
 import com.example.beep.util.VoicePlayer
+import com.example.beep.util.VoicePlayer.Companion.stopPlaying
 import com.example.beep.util.VoiceRecorder
+import com.example.beep.util.VoiceRecorder.Companion.stopRecording
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -152,13 +151,13 @@ fun BbibbiDoRecord(
                                 File(filepath).delete()
                             }
                             homeViewModel.fileLength = 31
-                            startRecording(context, filepath)
+                            VoiceRecorder.startRecording(context, filepath)
                             homeViewModel.startTimer()
                             homeViewModel.recordMessageState = RecordMessageState.Recording
                         }
                     }
                     RecordMessageState.Recording -> {
-                        stopRecording()
+                        VoiceRecorder.stopRecording()
                         homeViewModel.stopTimer()
                         homeViewModel.recordMessageState = RecordMessageState.Finished
                     }

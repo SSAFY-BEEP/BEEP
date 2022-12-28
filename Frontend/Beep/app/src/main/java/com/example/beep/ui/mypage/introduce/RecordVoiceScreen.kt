@@ -95,6 +95,7 @@ fun RecordSuccessScreen(
             }
             VoicePlayer.nullInstance()
             viewModel.currentState = RecordState.BEFORE_RECORDING
+            viewModel.fileLength = 30;
             Log.d("DisposableEffect", "onDispose Called!!")
             if (file.exists())
                 file.delete()
@@ -106,17 +107,15 @@ fun RecordSuccessScreen(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "${formatSecond(viewModel.time)} / ${formatSecond(viewModel.fileLength)}",
-            fontSize = 18.sp
-        )
+
 
         Spacer(modifier = Modifier.height(30.dp))
         Row(
             modifier = modifier
-                .width(150.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .height(50.dp).padding(30.dp, 0.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             PlayButton(state = viewModel.currentState) {
                 when (viewModel.currentState) {
@@ -149,6 +148,19 @@ fun RecordSuccessScreen(
                     }
                 }
             }
+            Text(
+                text = "${formatSecond(viewModel.time)} / ${formatSecond(viewModel.fileLength)}",
+                fontSize = 18.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
             RecordButton(
                 state = viewModel.currentState
             ) {
@@ -192,9 +204,8 @@ fun RecordSuccessScreen(
             }
 
         }
-
-        Spacer(modifier = Modifier.height(30.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Spacer(modifier = Modifier.height(50.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -212,7 +223,6 @@ fun RecordSuccessScreen(
                     fontSize = 15.sp
                 )
             }
-
             Button(
                 enabled = viewModel.currentState == RecordState.AFTER_RECORDING,
                 onClick = {
@@ -248,50 +258,29 @@ fun RecordSuccessScreen(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
-fun startRecording(context: Context, filepath: String) {
-    VoiceRecorder.nullInstance()
-    VoiceRecorder.getInstance(context).apply {
-        setAudioSource(MediaRecorder.AudioSource.MIC)
-        setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-        setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        setOutputFile(filepath)
-        prepare()
-    }.start()
-}
 
-@RequiresApi(Build.VERSION_CODES.S)
-fun stopRecording() {
-    VoiceRecorder.getInstanceWithoutContext()?.run {
-        stop()
-        release()
-    }
-    VoiceRecorder.nullInstance()
-}
 
-fun stopPlaying() {
-    VoicePlayer.getInstance().release()
-    VoicePlayer.nullInstance()
-}
+
 
 @Composable
 fun RecordButton(state: RecordState, action: () -> Unit) {
-    IconButton(
+    Button(
         onClick = action,
-        modifier = Modifier.height(40.dp),
+        modifier = Modifier.size(100.dp),
+        shape = RoundedCornerShape(100.dp),
         enabled = (state != RecordState.ON_PLAYING)
     ) {
-        val color = if (state == RecordState.ON_RECORDING) PINK500 else Color.Black
+        val color = PINK500
         when (state) {
             RecordState.ON_RECORDING -> {
-                Icon(
+                Icon(modifier = Modifier.size(72.dp),
                     imageVector = Icons.Filled.Stop,
                     tint = color,
                     contentDescription = "stop recording introduce"
                 )
             }
             else -> {
-                Icon(
+                Icon(modifier = Modifier.size(72.dp),
                     imageVector = Icons.Filled.FiberManualRecord,
                     tint = color,
                     contentDescription = "record introduce",
@@ -306,7 +295,7 @@ fun RecordButton(state: RecordState, action: () -> Unit) {
 fun PlayButton(state: RecordState, action: () -> Unit) {
     IconButton(
         onClick = action,
-        modifier = Modifier.height(40.dp),
+        modifier = Modifier,
         enabled = (state == RecordState.AFTER_RECORDING || state == RecordState.ON_PLAYING)
     ) {
         val color = if (state == RecordState.ON_PLAYING) PINK500 else Color.Black

@@ -30,5 +30,10 @@ class VoicePlayer {
 
         fun hasInstance() = instance != null
 
+        fun stopPlaying() {
+            getInstance().release()
+            nullInstance()
+        }
+
     }
 }

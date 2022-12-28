@@ -31,6 +31,27 @@ class VoiceRecorder {
         }
 
         fun hasInstance() = instance != null
+
+        @RequiresApi(Build.VERSION_CODES.S)
+        fun startRecording(context: Context, filepath: String) {
+            nullInstance()
+            getInstance(context).apply{
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                setOutputFile(filepath)
+                prepare()
+            }.start()
+        }
+
+        @RequiresApi(Build.VERSION_CODES.S)
+        fun stopRecording() {
+            getInstanceWithoutContext()?.run {
+                stop()
+                release()
+            }
+            nullInstance()
+        }
     }
 
 
