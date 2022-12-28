@@ -1,6 +1,7 @@
 package com.example.beep.ui.mypage.introduce
 
 import android.os.Build
+import android.speech.tts.Voice
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import com.example.beep.domain.S3UseCase
 import com.example.beep.util.ResultType
 import com.example.beep.util.VoicePlayer
 import com.example.beep.util.VoiceRecorder
+import com.google.firebase.messaging.FcmBroadcastProcessor.reset
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -50,22 +52,17 @@ class RecordVoiceViewModel @Inject constructor(private val s3UseCase: S3UseCase)
     @RequiresApi(Build.VERSION_CODES.S)
     fun stopTimer() {
         timerTask?.cancel()
-
-        time = 0
         isRunning = false
         if (currentState == RecordState.ON_RECORDING) {
-            VoiceRecorder.getInstanceWithoutContext()?.run {
-                stop()
-                release()
-                currentState = RecordState.AFTER_RECORDING
-            }
+            VoiceRecorder.getInstanceWithoutContext()?.stop()
+            fileLength = time
         } else if (currentState == RecordState.ON_PLAYING) {
-            VoicePlayer.getInstance().run {
-                stop()
-                release()
-                currentState = RecordState.ASK_POST
-            }
+            VoicePlayer.getInstance().stop()
         }
+        time = 0
+        VoiceRecorder.nullInstance()
+        VoicePlayer.nullInstance()
+        currentState = RecordState.AFTER_RECORDING
     }
 
     fun postIntroduce(filepath: String, togglePopup: () -> Unit) {

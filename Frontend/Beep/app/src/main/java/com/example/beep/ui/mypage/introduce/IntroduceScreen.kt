@@ -104,7 +104,7 @@ fun IntroducePlayer(
             LoadingScreen()
         }
         is UiState.Success<String> -> {
-            IntroduceSuccessScreen(audioUrl, lifecycleOwner, toggleScreen)
+            IntroduceSuccessScreen(audioUrl, toggleScreen)
         }
         is UiState.Error -> {
             ErrorScreen()
@@ -115,7 +115,6 @@ fun IntroducePlayer(
 @Composable
 fun IntroduceSuccessScreen(
     audioUrl: String,
-    lifecycleOwner: LifecycleOwner,
     toggleScreen: () -> Unit,
     viewModel: IntroduceViewModel = viewModel(),
 ) {
